@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TippTrainer StBW – 10-Finger-Training für die Steuerberaterprüfung</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Menü öffnen">☰</button>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>⌨️ TippTrainer</h1>
+                <div class="subtitle">Steuerberaterprüfung Baden-Württemberg</div>
+            </div>
+
+            <div class="xp-section">
+                <div class="xp-label">
+                    <span id="xpLevel">Level 1</span>
+                    <span id="xpPoints">0 XP</span>
+                </div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-list">
+                    <li class="nav-item active" data-view="dashboard">
+                        <span class="nav-icon">🏠</span> Dashboard
+                    </li>
+                    <li class="nav-item" data-view="levels">
+                        <span class="nav-icon">📚</span> Levelauswahl
+                    </li>
+                    <li class="nav-item" data-view="calendar">
+                        <span class="nav-icon">📅</span> Kalender
+                    </li>
+                    <li class="nav-item" data-view="achievements">
+                        <span class="nav-icon">🏆</span> Achievements
+                    </li>
+                    <li class="nav-item" data-view="progress">
+                        <span class="nav-icon">📈</span> Fortschritt
+                    </li>
+                    <li class="nav-item" data-view="settings">
+                        <span class="nav-icon">⚙️</span> Einstellungen
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="countdown" id="sidebarCountdown"></span> Tage bis zur Prüfung
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- ===== DASHBOARD ===== -->
+            <div class="view active" id="view-dashboard">
+                <div class="dashboard-header">
+                    <h2>Willkommen zurück!</h2>
+                    <div class="countdown-badge" id="dashboardCountdown"></div>
+                </div>
+
+                <div class="stats-grid" id="dashboardStats"></div>
+
+                <h3 class="section-title">Themenbereiche</h3>
+                <div class="topics-grid" id="dashboardTopics"></div>
+
+                <h3 class="section-title">Letzte Übungen</h3>
+                <div id="recentSessions"></div>
+            </div>
+
+            <!-- ===== LEVEL SELECT ===== -->
+            <div class="view" id="view-levels">
+                <div class="level-header">
+                    <button class="back-btn" id="backToDashboard">← Zurück</button>
+                    <h2 id="levelTitle">Levelauswahl</h2>
+                </div>
+
+                <div class="difficulty-tabs" id="difficultyTabs"></div>
+                <div class="levels-grid" id="levelsGrid"></div>
+
+                <div id="levelProgressInfo" style="margin-top: 24px;"></div>
+            </div>
+
+            <!-- ===== TYPING ===== -->
+            <div class="view" id="view-typing">
+                <div class="typing-container">
+                    <div class="typing-info-bar">
+                        <div class="typing-meta">
+                            <span id="typingTopic"></span>
+                            <span id="typingLevel"></span>
+                            <span id="typingDifficulty"></span>
+                        </div>
+                        <button class="btn btn-sm btn-secondary" id="typingBack">← Zurück</button>
+                    </div>
+
+                    <div class="typing-stats-bar">
+                        <div class="typing-stat wpm">
+                            <span class="stat-val" id="liveWPM">0</span>
+                            <span class="stat-lbl">WPM</span>
+                        </div>
+                        <div class="typing-stat accuracy">
+                            <span class="stat-val" id="liveAccuracy">100%</span>
+                            <span class="stat-lbl">Genauigkeit</span>
+                        </div>
+                        <div class="typing-stat time">
+                            <span class="stat-val" id="liveTime">0:00</span>
+                            <span class="stat-lbl">Zeit</span>
+                        </div>
+                    </div>
+
+                    <div class="typing-text-display">
+                        <div class="text-container" id="typingText"></div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="typingProgress"></div>
+                        </div>
+                    </div>
+
+                    <div class="typing-input-area">
+                        <input
+                            type="text"
+                            class="typing-input"
+                            id="typingInput"
+                            placeholder="Klicke hier und beginne zu tippen..."
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        >
+                        <div class="typing-actions">
+                            <button class="btn btn-secondary" id="btnRestart">🔄 Neustart</button>
+                            <button class="btn btn-secondary" id="btnSkip">⏭️ Nächster Text</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CALENDAR ===== -->
+            <div class="view" id="view-calendar">
+                <h2 style="margin-bottom: 24px;">📅 Übungskalender</h2>
+
+                <div class="calendar-container">
+                    <div class="calendar-nav">
+                        <button class="btn btn-sm btn-secondary" id="calPrev">←</button>
+                        <h3 id="calTitle"></h3>
+                        <button class="btn btn-sm btn-secondary" id="calNext">→</button>
+                    </div>
+
+                    <div class="calendar-grid">
+                        <div class="calendar-weekdays">
+                            <span>Mo</span><span>Di</span><span>Mi</span>
+                            <span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+                        </div>
+                        <div class="calendar-days" id="calendarDays"></div>
+                        <div class="calendar-legend">
+                            <span>Weniger</span>
+                            <div class="legend-block" style="background: rgba(63,185,80,0.15)"></div>
+                            <div class="legend-block" style="background: rgba(63,185,80,0.3)"></div>
+                            <div class="legend-block" style="background: rgba(63,185,80,0.5)"></div>
+                            <div class="legend-block" style="background: rgba(63,185,80,0.7)"></div>
+                            <div class="legend-block" style="background: rgba(63,185,80,0.9)"></div>
+                            <span>Mehr</span>
+                        </div>
+                    </div>
+
+                    <div class="calendar-stats" id="calendarStats"></div>
+                </div>
+            </div>
+
+            <!-- ===== ACHIEVEMENTS ===== -->
+            <div class="view" id="view-achievements">
+                <h2 style="margin-bottom: 8px;">🏆 Achievements</h2>
+                <div class="achievement-summary" id="achievementSummary"></div>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+
+            <!-- ===== PROGRESS ===== -->
+            <div class="view" id="view-progress">
+                <h2 style="margin-bottom: 24px;">📈 Fortschritt</h2>
+
+                <div class="progress-filters" id="progressFilters">
+                    <select id="filterTopic">
+                        <option value="">Alle Themen</option>
+                    </select>
+                    <select id="filterLevel">
+                        <option value="">Alle Level</option>
+                    </select>
+                    <select id="filterDifficulty">
+                        <option value="">Alle Schwierigkeiten</option>
+                    </select>
+                </div>
+
+                <div class="stats-grid" id="progressStats"></div>
+
+                <div class="progress-chart">
+                    <div class="chart-title">WPM-Entwicklung</div>
+                    <div class="bar-chart" id="wpmChart"></div>
+                </div>
+
+                <div class="progress-chart">
+                    <div class="chart-title">Genauigkeit-Entwicklung</div>
+                    <div class="bar-chart" id="accuracyChart"></div>
+                </div>
+
+                <div class="progress-chart">
+                    <div class="chart-title">Letzte Übungen</div>
+                    <div style="overflow-x: auto;">
+                        <table class="sessions-table" id="sessionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Thema</th>
+                                    <th>Level</th>
+                                    <th>Schwierigkeit</th>
+                                    <th>WPM</th>
+                                    <th>Genauigkeit</th>
+                                    <th>Zeit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessionsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SETTINGS ===== -->
+            <div class="view" id="view-settings">
+                <h2 style="margin-bottom: 24px;">⚙️ Einstellungen</h2>
+
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3>Prüfung</h3>
+                        <div class="settings-row">
+                            <label>Prüfungsdatum</label>
+                            <div class="setting-control">
+                                <input type="date" id="targetDateInput">
+                            </div>
+                        </div>
+                        <div class="settings-row">
+                            <label id="daysUntilLabel"></label>
+                            <div class="setting-control"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Daten</h3>
+                        <div class="settings-row">
+                            <label>Fortschritt exportieren</label>
+                            <div class="setting-control">
+                                <button class="btn btn-sm btn-secondary" id="btnExport">📥 Exportieren</button>
+                            </div>
+                        </div>
+                        <div class="settings-row">
+                            <label>Fortschritt importieren</label>
+                            <div class="setting-control">
+                                <input type="file" id="importFile" accept=".json" style="display:none">
+                                <button class="btn btn-sm btn-secondary" id="btnImport">📤 Importieren</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section danger-zone">
+                        <h3>⚠️ Gefahrenzone</h3>
+                        <div class="settings-row">
+                            <label>Level-Fortschritt zurücksetzen</label>
+                            <div class="setting-control">
+                                <button class="btn btn-sm btn-danger" id="btnResetLevels">Zurücksetzen</button>
+                            </div>
+                        </div>
+                        <div class="settings-row">
+                            <label>Alle Daten löschen</label>
+                            <div class="setting-control">
+                                <button class="btn btn-sm btn-danger" id="btnResetAll">Alles löschen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Result Overlay -->
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-card" id="resultCard"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts (Dependency Order) -->
+    <script src="js/storage.js"></script>
+    <script src="js/texts.js"></script>
+    <script src="js/texts-extra.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/typing.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

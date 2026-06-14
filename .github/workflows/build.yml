@@ -30,7 +30,7 @@ jobs:
         run: npm run syntax-check
 
       - name: Electron-AppImage bauen
-        run: npm run dist:appimage
+        run: npm run dist:appimage -- --publish never
 
       - name: Artefakte hochladen
         uses: actions/upload-artifact@v4

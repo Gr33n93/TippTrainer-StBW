@@ -1,0 +1,76 @@
+# electron-builder Konfiguration
+# Siehe: https://www.electron.build/configuration
+#
+# Baut Linux-Artefakte: AppImage, deb, tar.gz, flatpak
+# Web-App wird 1:1 ohne Aenderungen mitgeliefert.
+
+appId: de.gr33n93.TippTrainer
+productName: TippTrainer StBW
+copyright: Copyright (c) 2026 gr33n93
+artifactName: ${productName}-${version}-${arch}.${ext}
+
+directories:
+  output: dist-electron
+  buildResources: build
+
+# Dateien, die in die App gepackt werden
+# Wichtig: nur die Web-App + Electron-Wrapper, NICHT node_modules oder build-tools
+files:
+  - index.html
+  - css/**/*
+  - js/**/*
+  - data/**/*
+  - electron/main.cjs
+  - electron/preload.cjs
+  - electron/icon.png
+  - package.json
+  - "!**/*.{md,markdown}"
+  - "!**/.{eslintrc,prettierrc,editorconfig,gitignore,github,vscode,idea}*"
+  - "!**/{node_modules,dist,dist-electron,build}/**"
+  - "!**/*.{log,lock}"
+
+# Linux-Konfiguration
+linux:
+  target:
+    - AppImage
+    - deb
+    - tar.gz
+    - flatpak
+  category: Education
+  maintainer: gr33n93
+  vendor: gr33n93
+  synopsis: 10-Finger-Tipptrainer für die Steuerberaterprüfung
+  icon: build/icon.png
+  desktop:
+    Icon: de.gr33n93.TippTrainer
+
+# Flatpak-spezifisch
+flatpak:
+  base: org.electronjs.Electron2.BaseApp
+  baseVersion: '23.08'
+  runtime: org.freedesktop.Platform
+  runtimeVersion: '23.08'
+  sdk: org.freedesktop.Sdk
+  finishArgs:
+    - --share=ipc
+    - --socket=x11
+    - --socket=wayland
+    - --device=dri
+    - --filesystem=home
+
+# AppImage
+appImage:
+  artifactName: ${productName}-${version}-${arch}.AppImage
+
+# Deb (Debian/Ubuntu)
+deb:
+  depends:
+    - libgtk-3-0
+    - libnotify4
+    - libnss3
+    - libxss1
+    - libxtst6
+    - xdg-utils
+    - libatspi2.0-0
+    - libdrm2
+    - libgbm1

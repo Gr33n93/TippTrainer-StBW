@@ -1,0 +1,107 @@
+/* Levelauswahl-View: Header, Difficulty-Tabs, Level-Grid */
+.level-header {
+    margin-bottom: 24px;
+}
+
+.level-header .back-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    transition: all var(--transition);
+}
+
+.level-header .back-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.level-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.difficulty-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.diff-tab {
+    padding: 8px 20px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all var(--transition);
+}
+
+.diff-tab:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+}
+
+.diff-tab.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--text-on-accent);
+}
+
+.diff-tab.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.level-btn {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.level-btn:hover:not(.locked) {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.level-btn.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.level-btn.completed {
+    border-color: var(--success-dim);
+    background: var(--success-bg);
+}
+
+.level-btn .level-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+}
+
+.level-btn .level-status {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.level-btn.completed .level-status {
+    color: var(--success);
+}

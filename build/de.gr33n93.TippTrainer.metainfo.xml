@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>de.gr33n93.TippTrainer</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>TippTrainer StBW</name>
+  <summary>10-Finger-Tipptrainer für die Steuerberaterprüfung</summary>
+  <description>
+    <p>
+      Browserbasierter 10-Finger-Tipptrainer mit Fokus auf Inhalte der
+      Steuerberaterprüfung (Steuerberaterkammer Baden-Württemberg). Trainiert
+      Tippgeschwindigkeit und -genauigkeit mit prüfungsrelevanten Fachtexten
+      aus Buchführung, Steuerrecht, Bilanzen/EÜR sowie Kosten- und
+      Leistungsrechnung.
+    </p>
+    <ul>
+      <li>4 Themenbereiche mit je 10 Leveln</li>
+      <li>4 Schwierigkeitsstufen (leicht, normal, schwer, sehr schwer)</li>
+      <li>2.240+ Prüfungstexte mit fachlich korrektem Inhalt</li>
+      <li>Echtzeit-Feedback (WPM, CPM, Genauigkeit)</li>
+      <li>Gamification: XP-System, 32 Achievements</li>
+      <li>Übungskalender mit Streak-Tracking</li>
+      <li>Fortschrittsstatistiken mit Verlaufsdiagrammen</li>
+      <li>Komplett clientseitig – kein Backend, läuft offline</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">tipptrainer-stbw.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Gr33n93/TippTrainer-StBW/main/build/screenshot.png</image>
+      <caption>Dashboard mit Themenübersicht</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/Gr33n93/TippTrainer-StBW</url>
+  <url type="bugtracker">https://github.com/Gr33n93/TippTrainer-StBW/issues</url>
+  <url type="repository">https://github.com/Gr33n93/TippTrainer-StBW.git</url>
+  <developer_name>gr33n93</developer_name>
+  <provides>
+    <id>de.gr33n93.TippTrainer.desktop</id>
+  </provides>
+  <releases>
+    <release version="1.0.0" date="2026-04-12">
+      <description>
+        <p>Erstveröffentlichung.</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+  </content_rating>
+</component>

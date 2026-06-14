@@ -25,7 +25,8 @@ const Texts = (() => {
     const DIFFICULTY_NAMES = {
         leicht: 'Leicht',
         normal: 'Normal',
-        schwer: 'Schwer'
+        schwer: 'Schwer',
+        sehrSchwer: 'Sehr Schwer'
     };
 
     const texts = {
@@ -414,7 +415,7 @@ const Texts = (() => {
                     'Die Einkünfte aus Gewerbebetrieb werden durch Betriebsvermögensvergleich oder durch Einnahmenüberschussrechnung ermittelt, wobei der Betriebsvermögensvergleich zwingend bei Buchführungspflicht anzuwenden ist.',
                     'Die Verlustverrechnung unterliegt Beschränkungen, insbesondere bei Verlusten aus gewerblicher Tierzucht, bei Verlusten aus Termingeschäften und bei Verlusten aus der Veräußerung von Beteiligungen.',
                     'Bei der Ermittlung der Einkünfte aus Vermietung und Verpachtung dürfen alle Werbungskosten abgezogen werden, die mit der Erzielung der Einnahmen in wirtschaftlichem Zusammenhang stehen.',
-                    'Der Progressionsvorbehalt greift bei bestimmten steuerfreien Einkünften, die nevertheless in die Berechnung des Steuersatzes einbezogen werden und so den Steuersatz auf die übrigen Einkünfte erhöhen.'
+                    'Der Progressionsvorbehalt greift bei bestimmten steuerfreien Einkünften, die dennoch in die Berechnung des Steuersatzes einbezogen werden und so den Steuersatz auf die übrigen Einkünfte erhöhen.'
                 ]
             },
             3: {
@@ -1336,7 +1337,9 @@ const Texts = (() => {
 
     function getAvailableLevels(topic) {
         if (!texts[topic]) return [];
-        return Object.keys(texts[topic]).map(Number).sort((a, b) => a - b);
+        return Object.keys(texts[topic])
+            .map(Number)
+            .sort((a, b) => a - b);
     }
 
     function getAvailableDifficulties(topic, level) {
@@ -1368,6 +1371,28 @@ const Texts = (() => {
         return count;
     }
 
+    /**
+     * Fuegt weitere Texte hinzu (fuer Erweiterungs-Module wie texts-extra/texts-sehrSchwer).
+     * @param {string} topic - Themen-Key (z. B. 'buchfuehrung')
+     * @param {number} level - Level-Nummer (1-10)
+     * @param {string} difficulty - Schwierigkeit ('leicht'|'normal'|'schwer'|'sehrSchwer')
+     * @param {string[]} newTexts - Array von Texten
+     */
+    function addTexts(topic, level, difficulty, newTexts) {
+        if (!newTexts || newTexts.length === 0) return;
+        if (!texts[topic]) return;
+        if (!texts[topic][level]) return;
+        if (!texts[topic][level][difficulty]) {
+            texts[topic][level][difficulty] = [];
+        }
+        texts[topic][level][difficulty] = texts[topic][level][difficulty].concat(newTexts);
+    }
+
+    /** Prueft, ob ein Topic/Level/Difficulty-Kombination existiert. */
+    function hasTexts(topic, level, difficulty) {
+        return !!(texts[topic] && texts[topic][level] && texts[topic][level][difficulty]);
+    }
+
     return {
         TOPICS,
         TOPIC_NAMES,
@@ -1381,6 +1406,7 @@ const Texts = (() => {
         getTopicName,
         getTopicIcon,
         getTotalTextCount,
-        _rawTexts: texts
+        addTexts,
+        hasTexts
     };
 })();

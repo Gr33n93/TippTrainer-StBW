@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Hintergrund: abgerundetes Rechteck mit Dark-Theme-Farbe -->
+  <rect width="512" height="512" rx="96" fill="#0d1117"/>
+  <rect x="4" y="4" width="504" height="504" rx="92" fill="none" stroke="#30363d" stroke-width="4"/>
+
+  <!-- Keyboard-Body -->
+  <rect x="96" y="160" width="320" height="200" rx="16" fill="#161b22" stroke="#444c56" stroke-width="3"/>
+
+  <!-- Tasten-Reihen (5x12 Grid) -->
+  <g fill="#21262d" stroke="#444c56" stroke-width="2">
+    <!-- Reihe 1 (Zahlen) -->
+    <rect x="112" y="176" width="32" height="32" rx="4"/>
+    <rect x="148" y="176" width="32" height="32" rx="4"/>
+    <rect x="184" y="176" width="32" height="32" rx="4"/>
+    <rect x="220" y="176" width="32" height="32" rx="4"/>
+    <rect x="256" y="176" width="32" height="32" rx="4"/>
+    <rect x="292" y="176" width="32" height="32" rx="4"/>
+    <rect x="328" y="176" width="32" height="32" rx="4"/>
+    <rect x="364" y="176" width="36" height="32" rx="4"/>
+
+    <!-- Reihe 2 (Q-Reihe) -->
+    <rect x="112" y="212" width="32" height="32" rx="4"/>
+    <rect x="148" y="212" width="32" height="32" rx="4"/>
+    <rect x="184" y="212" width="32" height="32" rx="4"/>
+    <rect x="220" y="212" width="32" height="32" rx="4"/>
+    <rect x="256" y="212" width="32" height="32" rx="4" fill="#1f6feb"/>
+    <rect x="292" y="212" width="32" height="32" rx="4"/>
+    <rect x="328" y="212" width="32" height="32" rx="4"/>
+    <rect x="364" y="212" width="36" height="32" rx="4"/>
+
+    <!-- Reihe 3 (A-Reihe) -->
+    <rect x="118" y="248" width="36" height="32" rx="4"/>
+    <rect x="158" y="248" width="32" height="32" rx="4"/>
+    <rect x="194" y="248" width="32" height="32" rx="4"/>
+    <rect x="230" y="248" width="32" height="32" rx="4"/>
+    <rect x="266" y="248" width="32" height="32" rx="4"/>
+    <rect x="302" y="248" width="32" height="32" rx="4"/>
+    <rect x="338" y="248" width="32" height="32" rx="4"/>
+    <rect x="374" y="248" width="26" height="32" rx="4"/>
+
+    <!-- Reihe 4 (Y-Reihe) -->
+    <rect x="124" y="284" width="40" height="32" rx="4"/>
+    <rect x="168" y="284" width="32" height="32" rx="4"/>
+    <rect x="204" y="284" width="32" height="32" rx="4"/>
+    <rect x="240" y="284" width="32" height="32" rx="4"/>
+    <rect x="276" y="284" width="32" height="32" rx="4"/>
+    <rect x="312" y="284" width="32" height="32" rx="4"/>
+    <rect x="348" y="284" width="32" height="32" rx="4"/>
+    <rect x="384" y="284" width="16" height="32" rx="4"/>
+
+    <!-- Leertaste -->
+    <rect x="180" y="320" width="152" height="28" rx="4"/>
+  </g>
+
+  <!-- Cursor-Balken (Tipp-Marker) -->
+  <rect x="258" y="216" width="28" height="24" fill="#58a6ff" opacity="0.9"/>
+
+  <!-- Untertitel -->
+  <text x="256" y="408" font-family="-apple-system, sans-serif" font-size="36" font-weight="700"
+        fill="#58a6ff" text-anchor="middle">TippTrainer</text>
+  <text x="256" y="442" font-family="-apple-system, sans-serif" font-size="18"
+        fill="#8b949e" text-anchor="middle">StBW</text>
+</svg>

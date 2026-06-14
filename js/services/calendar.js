@@ -2,7 +2,11 @@
 
 const Calendar = (() => {
     function _today() {
-        return new Date().toISOString().split('T')[0];
+        return _formatDate(new Date());
+    }
+
+    function _formatDate(d) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     function recordPractice(durationSeconds) {
@@ -57,7 +61,7 @@ const Calendar = (() => {
         if (dates.length === 0) return 0;
 
         let streak = 0;
-        let checkDate = new Date();
+        const checkDate = new Date();
 
         const todayData = calendarData[_today()];
         if (!todayData) {
@@ -65,7 +69,7 @@ const Calendar = (() => {
         }
 
         for (let i = 0; i < 365; i++) {
-            const dateStr = checkDate.toISOString().split('T')[0];
+            const dateStr = _formatDate(checkDate);
             if (calendarData[dateStr]) {
                 streak++;
             } else {

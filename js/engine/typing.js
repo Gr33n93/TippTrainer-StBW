@@ -115,7 +115,7 @@ const Typing = (() => {
         const elapsed = getElapsedTime();
         if (elapsed === 0) return 0;
 
-        const correctChars = typedChars.filter(c => c.correct).length;
+        const correctChars = typedChars.filter((c) => c.correct).length;
         const words = correctChars / 5;
         const minutes = elapsed / 60;
 
@@ -128,7 +128,7 @@ const Typing = (() => {
         const elapsed = getElapsedTime();
         if (elapsed === 0) return 0;
 
-        const correctChars = typedChars.filter(c => c.correct).length;
+        const correctChars = typedChars.filter((c) => c.correct).length;
         const minutes = elapsed / 60;
 
         return Math.round(correctChars / minutes);
@@ -136,33 +136,32 @@ const Typing = (() => {
 
     function getCurrentAccuracy() {
         if (typedChars.length === 0) return 100;
-        const correctCount = typedChars.filter(c => c.correct).length;
+        const correctCount = typedChars.filter((c) => c.correct).length;
         return Math.round((correctCount / typedChars.length) * 100);
     }
 
     function getFinalStats() {
         const elapsed = getElapsedTime();
         const totalChars = typedChars.length;
-        const correctChars = typedChars.filter(c => c.correct).length;
+        const correctChars = typedChars.filter((c) => c.correct).length;
         const incorrectChars = totalChars - correctChars;
         const accuracy = totalChars > 0 ? (correctChars / totalChars) * 100 : 0;
-        const wpm = elapsed > 0 ? (correctChars / 5) / (elapsed / 60) : 0;
+        const wpm = elapsed > 0 ? correctChars / 5 / (elapsed / 60) : 0;
         const cpm = elapsed > 0 ? correctChars / (elapsed / 60) : 0;
 
         const charTimings = [];
         for (let i = 1; i < typedChars.length; i++) {
             charTimings.push(typedChars[i].timestamp - typedChars[i - 1].timestamp);
         }
-        const avgTimePerChar = charTimings.length > 0
-            ? charTimings.reduce((a, b) => a + b, 0) / charTimings.length
-            : 0;
+        const avgTimePerChar =
+            charTimings.length > 0 ? charTimings.reduce((a, b) => a + b, 0) / charTimings.length : 0;
 
         return {
             text: currentText,
             totalChars,
             correctChars,
             incorrectChars,
-            accuracy: Math.round(accuracy * 100) / 100,
+            accuracy: Math.round(accuracy),
             wpm: Math.round(wpm),
             cpm: Math.round(cpm),
             elapsedSeconds: Math.round(elapsed * 10) / 10,

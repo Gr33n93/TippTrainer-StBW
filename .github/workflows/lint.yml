@@ -1,0 +1,37 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    name: JS-Syntax- und Lint-Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Dependencies installieren
+        run: npm ci
+
+      - name: Syntax-Check aller JS-Dateien
+        run: |
+          for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js; do
+            node --check "$f" || exit 1
+          done
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier Format-Check
+        run: npm run format:check

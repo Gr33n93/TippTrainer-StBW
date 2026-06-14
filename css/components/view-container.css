@@ -1,0 +1,9 @@
+/* View-Container: SPA-Views werden per .active-Klasse umgeschaltet */
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}

@@ -1,6 +1,7 @@
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Editor
 *.swp
@@ -11,3 +12,24 @@ Thumbs.db
 
 # Browser
 *.crx
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (nur dev-Tooling, App hat keine Runtime-Dependencies)
+node_modules/
+
+# Build-Artefakte
+dist/
+# build/ enthaelt versionierte Electron-Ressourcen.
+dist-electron/
+*.AppImage
+*.flatpak
+*.deb
+*.snap
+
+# Lokale Konfiguration / Secrets
+.env
+.env.local
+*.local

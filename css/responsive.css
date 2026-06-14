@@ -1,0 +1,70 @@
+/* Responsive Breakpoints */
+
+/* Tablet: Sidebar wird zur Slide-Out-Drawer */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .mobile-toggle {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 60px 16px 32px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .typing-text-display {
+        padding: 20px;
+    }
+
+    .text-container {
+        font-size: 1rem;
+    }
+
+    .result-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .result-card {
+        padding: 24px;
+    }
+}
+
+/* Phone: kompaktere Abstaende */
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .levels-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .difficulty-tabs {
+        flex-wrap: wrap;
+    }
+}

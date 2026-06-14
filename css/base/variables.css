@@ -1,0 +1,59 @@
+/* Design-Tokens: Farben, Schriften, Radien, Schatten, Timing.
+   Tote Variablen entfernt (--silver, --bronze, --xp-bar, --accent-hover).
+   Neue Tokens: --sidebar-width, --success-rgb (fuer Heatmap-Intensitaeten). */
+:root {
+    /* Hintergruende */
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-card: #1c2128;
+    --bg-hover: #30363d;
+
+    /* Borders */
+    --border: #30363d;
+    --border-light: #444c56;
+
+    /* Text */
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --text-on-accent: #ffffff;
+
+    /* Accent (Blau) */
+    --accent: #58a6ff;
+    --accent-dim: #1f6feb;
+
+    /* Status: Success */
+    --success: #3fb950;
+    --success-dim: #238636;
+    --success-bg: rgba(63, 185, 80, 0.1);
+    --success-rgb: 63, 185, 80;
+
+    /* Status: Error */
+    --error: #f85149;
+    --error-dim: #da3633;
+    --error-bg: rgba(248, 81, 73, 0.1);
+
+    /* Status: Warning */
+    --warning: #d29922;
+    --warning-dim: #9e6a03;
+
+    /* Sonstige Farben */
+    --gold: #ffd700;
+
+    /* Layout-Tokens */
+    --sidebar-width: 260px;
+    --xp-bar-bg: #21262d;
+
+    /* Schatten, Radien, Timing */
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-sm: 4px;
+    --transition: 0.2s ease;
+
+    /* Schriften */
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}

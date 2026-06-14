@@ -199,6 +199,20 @@ const Achievements = (() => {
             category: 'accuracy'
         },
         {
+            id: 'extreme_mode',
+            name: 'Extreme Challenge',
+            description: 'Schließe eine Übung auf Sehr Schwer ab.',
+            icon: '💀',
+            category: 'milestone'
+        },
+        {
+            id: 'extreme_perfect',
+            name: 'Unfehlbar',
+            description: '100 % Genauigkeit auf Sehr Schwer.',
+            icon: '👑',
+            category: 'accuracy'
+        },
+        {
             id: 'weekend_warrior',
             name: 'Wochenend-Krieger',
             description: 'Übe an einem Samstag oder Sonntag.',
@@ -215,7 +229,7 @@ const Achievements = (() => {
     ];
 
     function getAll() {
-        return DEFINITIONS.map(def => {
+        return DEFINITIONS.map((def) => {
             const unlocked = _isUnlocked(def.id);
             return {
                 ...def,
@@ -226,7 +240,7 @@ const Achievements = (() => {
     }
 
     function getById(id) {
-        const def = DEFINITIONS.find(d => d.id === id);
+        const def = DEFINITIONS.find((d) => d.id === id);
         if (!def) return null;
         const unlocked = _isUnlocked(id);
         return {
@@ -274,6 +288,12 @@ const Achievements = (() => {
         if (_checkHardPerfect(sessionStats)) {
             _unlock('hard_perfect', newlyUnlocked);
         }
+        if (_checkExtremeMode(sessionStats)) {
+            _unlock('extreme_mode', newlyUnlocked);
+        }
+        if (_checkExtremePerfect(sessionStats)) {
+            _unlock('extreme_perfect', newlyUnlocked);
+        }
 
         _checkStreakAchievements(newlyUnlocked);
         _checkTopicAchievements(newlyUnlocked);
@@ -288,7 +308,7 @@ const Achievements = (() => {
     function _unlock(id, list) {
         const unlocked = Storage.unlockAchievement(id);
         if (unlocked) {
-            const def = DEFINITIONS.find(d => d.id === id);
+            const def = DEFINITIONS.find((d) => d.id === id);
             if (def) {
                 list.push({
                     id,
@@ -324,6 +344,14 @@ const Achievements = (() => {
         return stats && stats.difficulty === 'schwer' && stats.accuracy === 100;
     }
 
+    function _checkExtremeMode(stats) {
+        return stats && stats.difficulty === 'sehrSchwer';
+    }
+
+    function _checkExtremePerfect(stats) {
+        return stats && stats.difficulty === 'sehrSchwer' && stats.accuracy === 100;
+    }
+
     function _checkStreakAchievements(list) {
         const calendar = Storage.getCalendarData();
         const streak = Calendar.calculateStreak(calendar);
@@ -341,7 +369,7 @@ const Achievements = (() => {
 
         for (const topic of topics) {
             const summary = Levels.getTopicSummary(topic);
-            if (summary.totalCompletions >= Levels.MAX_LEVEL * 3) {
+            if (summary.totalCompletions >= Levels.COMPLETIONS_PER_TOPIC) {
                 _unlock('topic_' + topic, list);
             } else {
                 allComplete = false;
@@ -380,8 +408,16 @@ const Achievements = (() => {
         for (const topic of topics) {
             const unlocked = Levels.getUnlockedLevels(topic);
             if (unlocked.includes(5)) _unlock('level_5_reached', list);
-            if (unlocked.includes(10)) _unlock('all_levels', list);
+            if (_hasCompletedEveryLevel(topic)) _unlock('all_levels', list);
         }
+    }
+
+    function _hasCompletedEveryLevel(topic) {
+        for (let level = 1; level <= Levels.MAX_LEVEL; level++) {
+            const completed = Levels.DIFFICULTIES.some((diff) => Levels.isLevelCompleted(topic, level, diff));
+            if (!completed) return false;
+        }
+        return true;
     }
 
     function _checkAccuracyStreak(list) {
@@ -389,7 +425,7 @@ const Achievements = (() => {
         if (progress.length < 10) return;
 
         const last10 = progress.slice(-10);
-        const allAbove98 = last10.every(s => s.accuracy >= 98);
+        const allAbove98 = last10.every((s) => s.accuracy >= 98);
         if (allAbove98) _unlock('accuracy_streak_10', list);
     }
 
@@ -403,7 +439,7 @@ const Achievements = (() => {
     }
 
     function getByCategory(category) {
-        return getAll().filter(a => a.category === category);
+        return getAll().filter((a) => a.category === category);
     }
 
     return {

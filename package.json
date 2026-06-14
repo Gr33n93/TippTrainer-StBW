@@ -1,0 +1,40 @@
+{
+  "name": "tipptrainer-stbw",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Browserbasierter 10-Finger-Tipptrainer fuer die Steuerberaterpruefung (StBW).",
+  "private": true,
+  "main": "electron/main.cjs",
+  "scripts": {
+    "lint": "eslint js/ data/ --report-unused-disable-directives",
+    "lint:fix": "eslint js/ data/ --fix",
+    "format": "prettier --write \"**/*.{js,css,html,md,json}\"",
+    "format:check": "prettier --check \"**/*.{js,css,html,md,json}\"",
+    "check": "npm run lint && npm run format:check",
+    "syntax-check": "for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js; do node --check \"$f\" || exit 1; done",
+    "start": "electron electron/main.cjs",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux",
+    "dist:flatpak": "electron-builder --linux flatpak",
+    "dist:appimage": "electron-builder --linux AppImage",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.10.0",
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0",
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "gr33n93",
+  "homepage": "https://github.com/Gr33n93/TippTrainer-StBW",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gr33n93/TippTrainer-StBW.git"
+  }
+}

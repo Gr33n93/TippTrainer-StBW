@@ -1,0 +1,57 @@
+/* Buttons (universell nutzbar) */
+.btn {
+    padding: 10px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--text-on-accent);
+}
+
+.btn-primary:hover {
+    background: var(--accent);
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+}
+
+.btn-success {
+    background: var(--success-dim);
+    border-color: var(--success);
+    color: var(--text-on-accent);
+}
+
+.btn-success:hover {
+    background: var(--success);
+}
+
+.btn-danger {
+    background: var(--error-dim);
+    border-color: var(--error);
+    color: var(--text-on-accent);
+}
+
+.btn-danger:hover {
+    background: var(--error);
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+}

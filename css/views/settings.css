@@ -1,0 +1,69 @@
+/* Settings-View: Pruefungsdatum, Daten-Export/Import, Reset */
+.settings-container {
+    max-width: 600px;
+}
+
+.settings-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.settings-row label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.settings-row .setting-control {
+    display: flex;
+    gap: 8px;
+}
+
+.danger-zone {
+    border-color: var(--error-dim);
+}
+
+.danger-zone h3 {
+    color: var(--error);
+}
+
+/* Date-Eingabe */
+input[type='date'] {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+input[type='date']:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+}

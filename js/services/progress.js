@@ -3,7 +3,7 @@
 const Progress = (() => {
     function _getTargetDate() {
         const settings = Storage.getSettings();
-        const dateStr = settings.targetDate || '2026-06-01';
+        const dateStr = settings.targetDate || Storage.DEFAULT_TARGET_DATE;
         return new Date(dateStr + 'T00:00:00');
     }
 
@@ -19,7 +19,7 @@ const Progress = (() => {
     }
 
     function _generateId() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
     }
 
     function getAllSessions() {
@@ -27,27 +27,27 @@ const Progress = (() => {
     }
 
     function getSessionsByTopic(topic) {
-        return getAllSessions().filter(s => s.topic === topic);
+        return getAllSessions().filter((s) => s.topic === topic);
     }
 
     function getSessionsByLevel(topic, level) {
-        return getAllSessions().filter(s => s.topic === topic && s.level === level);
+        return getAllSessions().filter((s) => s.topic === topic && s.level === level);
     }
 
     function getSessionsByDifficulty(difficulty) {
-        return getAllSessions().filter(s => s.difficulty === difficulty);
+        return getAllSessions().filter((s) => s.difficulty === difficulty);
     }
 
     function getSessionsByTopicLevelDifficulty(topic, level, difficulty) {
         return getAllSessions().filter(
-            s => s.topic === topic && s.level === level && s.difficulty === difficulty
+            (s) => s.topic === topic && s.level === level && s.difficulty === difficulty
         );
     }
 
     function getSessionsInRange(startDate, endDate) {
         const start = new Date(startDate).getTime();
         const end = new Date(endDate).getTime();
-        return getAllSessions().filter(s => {
+        return getAllSessions().filter((s) => {
             const t = new Date(s.timestamp).getTime();
             return t >= start && t <= end;
         });
@@ -77,7 +77,7 @@ const Progress = (() => {
             ? getSessionsByTopicLevelDifficulty(topic, level, difficulty)
             : getSessionsByLevel(topic, level);
         if (sessions.length === 0) return 0;
-        return Math.max(...sessions.map(s => s.wpm));
+        return sessions.reduce((max, s) => Math.max(max, s.wpm), 0);
     }
 
     function getBestAccuracy(topic, level, difficulty) {
@@ -85,7 +85,7 @@ const Progress = (() => {
             ? getSessionsByTopicLevelDifficulty(topic, level, difficulty)
             : getSessionsByLevel(topic, level);
         if (sessions.length === 0) return 0;
-        return Math.max(...sessions.map(s => s.accuracy));
+        return sessions.reduce((max, s) => Math.max(max, s.accuracy), 0);
     }
 
     function getOverallStats() {
@@ -103,10 +103,9 @@ const Progress = (() => {
 
         const totalChars = sessions.reduce((acc, s) => acc + (s.totalChars || 0), 0);
         const avgWPM = Math.round(sessions.reduce((acc, s) => acc + s.wpm, 0) / sessions.length);
-        const avgAccuracy = Math.round(
-            (sessions.reduce((acc, s) => acc + s.accuracy, 0) / sessions.length) * 100
-        ) / 100;
-        const bestWPM = Math.max(...sessions.map(s => s.wpm));
+        const avgAccuracy =
+            Math.round((sessions.reduce((acc, s) => acc + s.accuracy, 0) / sessions.length) * 100) / 100;
+        const bestWPM = sessions.reduce((max, s) => Math.max(max, s.wpm), 0);
         const totalSeconds = sessions.reduce((acc, s) => acc + (s.elapsedSeconds || 0), 0);
 
         return {
@@ -122,9 +121,11 @@ const Progress = (() => {
     function getWPMHistory(topic, level, difficulty) {
         const sessions = difficulty
             ? getSessionsByTopicLevelDifficulty(topic, level, difficulty)
-            : (topic ? getSessionsByLevel(topic, level) : getAllSessions());
+            : topic
+              ? getSessionsByLevel(topic, level)
+              : getAllSessions();
 
-        return sessions.map(s => ({
+        return sessions.map((s) => ({
             date: s.timestamp,
             wpm: s.wpm,
             accuracy: s.accuracy
@@ -198,11 +199,10 @@ const Progress = (() => {
         return {
             attempts: sessions.length,
             avgWPM: Math.round(sessions.reduce((a, s) => a + s.wpm, 0) / sessions.length),
-            avgAccuracy: Math.round(
-                (sessions.reduce((a, s) => a + s.accuracy, 0) / sessions.length) * 100
-            ) / 100,
-            bestWPM: Math.max(...sessions.map(s => s.wpm)),
-            bestAccuracy: Math.max(...sessions.map(s => s.accuracy)),
+            avgAccuracy:
+                Math.round((sessions.reduce((a, s) => a + s.accuracy, 0) / sessions.length) * 100) / 100,
+            bestWPM: sessions.reduce((max, s) => Math.max(max, s.wpm), 0),
+            bestAccuracy: sessions.reduce((max, s) => Math.max(max, s.accuracy), 0),
             latestWPM: latest.wpm,
             latestAccuracy: latest.accuracy,
             passed: Levels.isLevelCompleted(topic, level, difficulty),

@@ -19,7 +19,7 @@ const TextsExtra = (() => {
                 normal: [
                     'Die Grundlage jeder ordnungsgemäßen Buchführung ist der Beleg.',
                     'Jede Buchung muss zeitnah und vollständig erfasst werden.',
-                    'Das Inventar列出 alle Vermögensgegenstände und Schulden.',
+                    'Das Inventar enthält alle Vermögensgegenstände und Schulden.',
                     'Der Kontenrahmen ordnet die Konten nach Nummernkreisen.',
                     'Die Buchführungspflicht ergibt sich aus dem Handelsgesetzbuch.',
                     'Umsatzsteuer wird auf steuerbare Lieferungen erhoben.',
@@ -1292,22 +1292,160 @@ const TextsExtra = (() => {
                     'Das strategische Controlling unterstützt die Unternehmensführung bei der langfristigen Planung durch Analyse der Wettbewerbssituation und Beurteilung strategischer Alternativen.'
                 ]
             }
+        },
+
+        _fachwoerter: {
+            buchfuehrung: {
+                _leicht: [
+                    'Abgabenordnung',
+                    'Gewinnermittlung',
+                    'AfA',
+                    'Teilwertabschreibung',
+                    'Rückstellung',
+                    'Rechnungsabgrenzungsposten',
+                    'Bilanzstichtag',
+                    'Entnahme',
+                    'Einlage',
+                    'Betriebsausgaben',
+                    'Betriebseinnahmen',
+                    'Sonderbetriebsausgaben',
+                    'Nachlassverbindlichkeiten'
+                ]
+            },
+            steuerrecht: {
+                _leicht: [
+                    'Einkommensteuer',
+                    'Körperschaftsteuer',
+                    'Gewerbesteuer',
+                    'Umsatzsteuer',
+                    'Vorsteuerabzug',
+                    'Steuerbescheid',
+                    'Einspruchsverfahren',
+                    'Änderungsbescheid',
+                    'Schätzung',
+                    'Mitwirkungspflicht',
+                    'Außenprüfung',
+                    'Steuerpflicht',
+                    'unbeschränkte Steuerpflicht',
+                    'beschränkte Steuerpflicht'
+                ]
+            },
+            bilanzen: {
+                _leicht: [
+                    'Veräußerungsgewinn',
+                    'verdeckte Gewinnausschüttung',
+                    'Sonderausgaben',
+                    'außergewöhnliche Belastungen',
+                    'Leistungsort',
+                    'innergemeinschaftliche Lieferung',
+                    'Reverse-Charge-Verfahren',
+                    'Unternehmereigenschaft',
+                    'Schenkungsteuer',
+                    'Bewertung',
+                    'Freibetrag',
+                    'Festsetzungsfrist',
+                    'Ablaufhemmung'
+                ]
+            },
+            klr: {
+                _leicht: [
+                    'Kostenstelle',
+                    'Kostenträger',
+                    'Gemeinkosten',
+                    'Einzelkosten',
+                    'Deckungsbeitrag',
+                    'Break-Even-Point',
+                    'Maschinenstundensatz',
+                    'Prozesskostenrechnung',
+                    'Zuschlagskalkulation',
+                    'Plankostenrechnung'
+                ]
+            }
+        },
+
+        _satzrhythmus: {
+            buchfuehrung: [
+                'Der Steuerpflichtige beantragt die Berücksichtigung weiterer Betriebsausgaben.',
+                'Fehlerhafte Bilanzansätze sind grundsätzlich zu berichtigen.',
+                'Rückstellungen setzen eine wirtschaftliche Verursachung vor dem Bilanzstichtag voraus.'
+            ],
+            steuerrecht: [
+                'Das Finanzamt versagt den Abzug mangels ausreichender Nachweise.',
+                'Eine Schätzung ist nur zulässig, wenn die Besteuerungsgrundlagen nicht sicher ermittelt werden können.',
+                'Die Schätzung muss schlüssig, wirtschaftlich möglich und verhältnismäßig sein.'
+            ],
+            bilanzen: [
+                'Vorsteuer kann nur aus ordnungsgemäßen Rechnungen abgezogen werden.',
+                'Eine verdeckte Gewinnausschüttung mindert das Einkommen der Kapitalgesellschaft nicht.',
+                'Persönliche Freibeträge sind von sachlichen Steuerbefreiungen zu unterscheiden.'
+            ],
+            klr: ['Im Einspruchsverfahren sind Sachverhalt, Beweislast und Mitwirkungspflichten zu würdigen.']
+        },
+
+        _pruefungstexte: {
+            buchfuehrung: [
+                'Zum Bilanzstichtag weist das Unternehmen einen umfangreichen Warenbestand, offene Kundenforderungen, langfristige Darlehensverbindlichkeiten sowie mehrere schwebende Geschäfte aus. Im Rahmen der Jahresabschlusserstellung ist zu untersuchen, welche Vermögensgegenstände zu aktivieren sind, welche Schulden passiviert werden müssen und ob für drohende Verluste aus schwebenden Geschäften Rückstellungen zu bilden sind. Besondere Bedeutung hat die Bewertung des Vorratsvermögens. Es ist zu klären, ob Anschaffungs- oder Herstellungskosten zutreffend ermittelt wurden und ob wegen gesunkener Marktpreise eine Teilwertabschreibung erforderlich ist. Bei Forderungen ist zu prüfen, ob Einzelwertberichtigungen oder Pauschalwertberichtigungen vorzunehmen sind. Außerdem kann sich die Frage stellen, ob für ausstehende Rechnungen, Gewährleistungsverpflichtungen oder Urlaubstage von Arbeitnehmern Rückstellungen anzusetzen sind. Weiterhin ist zwischen aktiven und passiven Rechnungsabgrenzungsposten abzugrenzen. Einnahmen oder Ausgaben vor dem Abschlussstichtag, die Aufwand oder Ertrag für eine bestimmte Zeit nach diesem Tag darstellen, sind periodengerecht abzugrenzen. Ziel der Bilanzierung ist es, ein den tatsächlichen Verhältnissen entsprechendes Bild der Vermögens-, Finanz- und Ertragslage zu vermitteln und zugleich die steuerlichen Bewertungsvorschriften zutreffend umzusetzen.'
+            ],
+            steuerrecht: [
+                'Im Rahmen einer Außenprüfung stellt das Finanzamt fest, dass der Steuerpflichtige in mehreren Veranlagungszeiträumen Bareinnahmen nicht vollständig aufgezeichnet hat. Die Buchführung weist formelle Mängel auf, weil Kassenberichte fehlen und einzelne Belege nicht fortlaufend nummeriert wurden. Außerdem wurden Privatentnahmen unzutreffend als Betriebsausgaben behandelt. Der Prüfer gelangt deshalb zu der Auffassung, dass die Besteuerungsgrundlagen teilweise zu schätzen sind. Der Steuerpflichtige vertritt dagegen die Ansicht, dass die Aufzeichnungen im Wesentlichen ordnungsgemäß seien. Er weist darauf hin, dass sämtliche Zahlungseingänge auf dem Geschäftskonto erfasst worden seien und die fehlenden Belege lediglich geringfügige Einzelbeträge beträfen. Nach seiner Auffassung ist eine vollständige Verwerfung der Buchführung unverhältnismäßig. Er beantragt, nur die unmittelbar betroffenen Geschäftsvorfälle zu korrigieren. Im anschließenden Einspruchsverfahren ist zu prüfen, ob die Voraussetzungen für eine Schätzung tatsächlich vorliegen, ob der Schätzungsrahmen eingehalten wurde und ob der erlassene Änderungsbescheid hinreichend begründet ist. Ferner stellt sich die Frage, ob die Mitwirkungspflichten des Steuerpflichtigen verletzt wurden und ob die Festsetzungsfrist zum Zeitpunkt der Änderung bereits abgelaufen war.',
+                'Der Steuerpflichtige erzielt Einkünfte aus nichtselbständiger Arbeit, daneben Einkünfte aus Vermietung und Verpachtung sowie geringe gewerbliche Nebeneinkünfte. Im Streitjahr machte er Aufwendungen für ein häusliches Arbeitszimmer, Fortbildungskosten, Fahrten zwischen Wohnung und erster Tätigkeitsstätte sowie Kosten für doppelte Haushaltsführung geltend. Das Finanzamt erkannte einen Teil der Aufwendungen nicht an und kürzte insbesondere die geltend gemachten Werbungskosten. Zu prüfen ist, ob das Arbeitszimmer den Mittelpunkt der gesamten beruflichen Betätigung bildet oder ob lediglich ein beschränkter Abzug in Betracht kommt. Weiter ist zu untersuchen, ob die Fortbildungskosten beruflich veranlasst sind und ob die Unterkunft am Beschäftigungsort im Rahmen einer doppelten Haushaltsführung steuerlich anzuerkennen ist. Dabei kommt es entscheidend darauf an, ob der Steuerpflichtige außerhalb des Beschäftigungsortes einen eigenen Hausstand unterhält und sich finanziell an dessen Kosten beteiligt. Darüber hinaus sind Sonderausgaben und außergewöhnliche Belastungen abzugrenzen. Beiträge zur Altersvorsorge, Krankenversicherungsbeiträge und Spenden können unterschiedlich zu berücksichtigen sein. Im Ergebnis ist der Gesamtbetrag der Einkünfte zu ermitteln, von dem Sonderausgaben, außergewöhnliche Belastungen und sonstige abzugsfähige Beträge abzusetzen sind, um das zu versteuernde Einkommen zutreffend festzustellen.',
+                'Ein Einzelunternehmer liefert Maschinen an Kunden im Inland, in andere Mitgliedstaaten der Europäischen Union und in Drittländer. Zusätzlich erbringt er Wartungsleistungen, Schulungen und elektronische Dienstleistungen. Im Besteuerungszeitraum ist zu klären, welche Umsätze steuerbar und steuerpflichtig sind, in welchem Staat der Leistungsort liegt und unter welchen Voraussetzungen Steuerbefreiungen eingreifen. Bei innergemeinschaftlichen Lieferungen kommt es insbesondere darauf an, ob der Unternehmer die Voraussetzungen des Buch- und Belegnachweises erfüllt hat. Fehlen Gelangensbestätigungen oder andere geeignete Nachweise, kann die Steuerbefreiung versagt werden. Bei sonstigen Leistungen an Unternehmer ist zu prüfen, ob das Reverse-Charge-Verfahren zur Anwendung kommt. Bei Leistungen an Privatpersonen sind dagegen gesonderte Ortsvorschriften zu beachten. Außerdem machte der Unternehmer Vorsteuer aus Eingangsrechnungen geltend, die teilweise unvollständige Leistungsbeschreibungen enthalten. Deshalb ist zu prüfen, ob die Rechnungen die formellen Anforderungen erfüllen und ob ein Vorsteuerabzug bereits im Besteuerungszeitraum oder erst nach Berichtigung der Rechnung möglich ist. Schließlich stellt sich die Frage, ob unentgeltliche Wertabgaben vorliegen, weil der Unternehmer einzelne Gegenstände auch privat verwendet hat.'
+            ],
+            bilanzen: [
+                'Die A-GmbH betreibt einen Großhandel mit technischen Bauteilen. Im Wirtschaftsjahr verbuchte sie eine Zahlung an den alleinigen Gesellschafter-Geschäftsführer als Beratungsaufwand. Im Rahmen der Veranlagung ist fraglich, ob das vereinbarte Honorar dem Fremdvergleich standhält oder ob teilweise eine verdeckte Gewinnausschüttung vorliegt. Maßgeblich ist, ob ein ordentlicher und gewissenhafter Geschäftsleiter einem fremden Dritten unter vergleichbaren Umständen dieselbe Vergütung gewährt hätte. Wird eine verdeckte Gewinnausschüttung angenommen, ist der entsprechende Aufwand außerbilanziell dem Einkommen der Gesellschaft wieder hinzuzurechnen. Gleichzeitig stellt sich auf Ebene des Gesellschafters die Frage nach der einkommensteuerlichen Behandlung des Vorteils. Daneben ist für Zwecke der Gewerbesteuer zu prüfen, ob weitere Hinzurechnungen oder Kürzungen vorzunehmen sind und welcher Gewerbeertrag sich danach ergibt. Ferner hat die Gesellschaft im selben Jahr einen Investitionszuschuss erhalten und eine Forderung wertberichtigt. Hier ist zu untersuchen, ob der Zuschuss erfolgswirksam zu erfassen ist, ob eine Steuerbefreiung eingreift und ob die Wertberichtigung handels- und steuerrechtlich anzuerkennen ist. Abschließend sind das zu versteuernde Einkommen, die festzusetzende Körperschaftsteuer und der maßgebliche Gewerbesteuermessbetrag zu ermitteln.',
+                'Der Erblasser hinterlässt seiner Tochter ein vermietetes Mehrfamilienhaus, Bankguthaben und Anteile an einer Familiengesellschaft. Dem Sohn wurde bereits fünf Jahre vor dem Erbfall eine größere Geldschenkung zugewandt. Im Besteuerungsverfahren ist zunächst der steuerpflichtige Erwerb zu ermitteln. Dabei sind das übergegangene Vermögen, abzugsfähige Nachlassverbindlichkeiten und anrechenbare Vorerwerbe zu berücksichtigen. Für das Grundstück ist der maßgebliche Grundbesitzwert nach den Bewertungsvorschriften festzustellen. Bei den Gesellschaftsanteilen stellt sich die Frage, ob begünstigtes Betriebsvermögen vorliegt und ob Verschonungsregelungen in Anspruch genommen werden können. Weiter ist zu prüfen, ob persönliche Freibeträge, Versorgungsfreibeträge oder besondere Steuerbefreiungen anzuwenden sind. Entscheidend ist außerdem, in welchem Umfang frühere Schenkungen mit dem aktuellen Erwerb zusammenzurechnen sind. Nur auf dieser Grundlage lässt sich die zutreffende Steuerklasse, der anwendbare Steuersatz und die festzusetzende Erbschaftsteuer ermitteln. In Klausuren ist regelmäßig besonders darauf zu achten, dass Bewertungsfragen und persönliche Steuervergünstigungen getrennt geprüft und sauber begründet werden.'
+            ],
+            klr: [
+                'Die B-KG erzielte im Streitjahr gewerbliche Einkünfte und veräußerte zugleich ein betrieblich genutztes Grundstück. Im Rahmen einer Außenprüfung beanstandete das Finanzamt die Gewinnermittlung, weil Abschreibungen unzutreffend berechnet, Rückstellungen ohne hinreichende Wahrscheinlichkeit gebildet und private Aufwendungen des Kommanditisten als Betriebsausgaben verbucht worden waren. Zusätzlich wurden Ausgangsrechnungen ohne Umsatzsteuerausweis erstellt, obwohl steuerpflichtige Leistungen im Inland vorlagen. Im Einspruchsverfahren macht die Gesellschaft geltend, dass die Bilanzansätze handelsrechtlich vertretbar seien und jedenfalls kein grobes Verschulden vorliege. Hilfsweise beantragt sie, den Gewinn durch Bilanzberichtigung und Bilanzänderung neu zu ermitteln. Das Finanzamt hält dem entgegen, dass die materiellen Fehler zu einer Gewinnerhöhung führen, dass Vorsteuerbeträge teilweise mangels ordnungsgemäßer Rechnungen nicht abzugsfähig sind und dass die Festsetzungsfrist wegen Ablaufhemmung noch nicht abgelaufen sei. Darüber hinaus ist zu untersuchen, ob der Veräußerungsgewinn tarifbegünstigt ist, ob Sonderbetriebsausgaben des Kommanditisten zu berücksichtigen sind und ob sich gewerbesteuerliche Hinzurechnungen ergeben. Die Fallbearbeitung verlangt deshalb eine saubere Trennung zwischen Ertragsteuerrecht, Umsatzsteuerrecht, Bilanzsteuerrecht und Verfahrensrecht sowie eine präzise Begründung jedes einzelnen Prüfungsschrittes.'
+            ]
         }
     };
 
     function apply() {
-        const baseTexts = Texts;
-
+        // Haupttexte (leicht/normal/schwer pro Level) ueber die oeffentliche API
         for (const [topic, levels] of Object.entries(extras)) {
-            if (!baseTexts._rawTexts) return;
-            for (const [level, diffs] of Object.entries(levels)) {
+            if (topic.startsWith('_')) continue;
+            for (const [levelStr, diffs] of Object.entries(levels)) {
+                if (levelStr.startsWith('_')) continue;
+                const level = parseInt(levelStr);
                 for (const [diff, newTexts] of Object.entries(diffs)) {
-                    if (baseTexts._rawTexts[topic] &&
-                        baseTexts._rawTexts[topic][level] &&
-                        baseTexts._rawTexts[topic][level][diff]) {
-                        baseTexts._rawTexts[topic][level][diff] =
-                            baseTexts._rawTexts[topic][level][diff].concat(newTexts);
+                    if (Texts.hasTexts(topic, level, diff)) {
+                        Texts.addTexts(topic, level, diff, newTexts);
                     }
+                }
+            }
+        }
+
+        // Fachwoerter auf leicht-Stufen verteilen (Round-Robin ueber 10 Level)
+        const fachMap = extras._fachwoerter;
+        for (const [topic, data] of Object.entries(fachMap)) {
+            const words = data._leicht;
+            for (let i = 0; i < words.length; i++) {
+                const targetLevel = (i % 10) + 1;
+                if (Texts.hasTexts(topic, targetLevel, 'leicht')) {
+                    Texts.addTexts(topic, targetLevel, 'leicht', [words[i]]);
+                }
+            }
+        }
+
+        // Satzrhythmus auf normal-Stufen verteilen
+        const satzMap = extras._satzrhythmus;
+        for (const [topic, sentences] of Object.entries(satzMap)) {
+            for (let i = 0; i < sentences.length; i++) {
+                const targetLevel = (i % 10) + 1;
+                if (Texts.hasTexts(topic, targetLevel, 'normal')) {
+                    Texts.addTexts(topic, targetLevel, 'normal', [sentences[i]]);
+                }
+            }
+        }
+
+        // Pruefungstexte auf schwer-Stufen verteilen (Level 3-10, gerader Takt)
+        const pruefMap = extras._pruefungstexte;
+        for (const [topic, prTexts] of Object.entries(pruefMap)) {
+            for (let i = 0; i < prTexts.length; i++) {
+                const targetLevel = Math.min(i * 2 + 3, 10);
+                if (Texts.hasTexts(topic, targetLevel, 'schwer')) {
+                    Texts.addTexts(topic, targetLevel, 'schwer', [prTexts[i]]);
                 }
             }
         }

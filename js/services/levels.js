@@ -2,18 +2,21 @@
 
 const Levels = (() => {
     const MAX_LEVEL = 10;
-    const DIFFICULTIES = ['leicht', 'normal', 'schwer'];
+    const DIFFICULTIES = ['leicht', 'normal', 'schwer', 'sehrSchwer'];
+    const COMPLETIONS_PER_TOPIC = MAX_LEVEL * DIFFICULTIES.length;
 
     const THRESHOLDS = {
-        leicht:  { minAccuracy: 85, minWPM: 20 },
-        normal:  { minAccuracy: 90, minWPM: 35 },
-        schwer:  { minAccuracy: 95, minWPM: 50 }
+        leicht: { minAccuracy: 85, minWPM: 20 },
+        normal: { minAccuracy: 90, minWPM: 35 },
+        schwer: { minAccuracy: 95, minWPM: 50 },
+        sehrSchwer: { minAccuracy: 97, minWPM: 75 }
     };
 
     const XP_REWARD = {
-        leicht:  { base: 10, perWord: 0.5, accuracyBonus: 15 },
-        normal:  { base: 30, perWord: 0.8, accuracyBonus: 25 },
-        schwer:  { base: 60, perWord: 1.2, accuracyBonus: 40 }
+        leicht: { base: 10, perWord: 0.5, accuracyBonus: 15 },
+        normal: { base: 30, perWord: 0.8, accuracyBonus: 25 },
+        schwer: { base: 60, perWord: 1.2, accuracyBonus: 40 },
+        sehrSchwer: { base: 100, perWord: 1.8, accuracyBonus: 60 }
     };
 
     function _getState() {
@@ -89,9 +92,11 @@ const Levels = (() => {
         let xp = config.base;
         xp += Math.floor(textLength * config.perWord);
 
+        // Accuracy-Bonus: einmal fuer >=95%, zusaetzlich nochmal bei 100% (Perfect Bonus)
         if (accuracy >= 95) xp += config.accuracyBonus;
-        if (accuracy === 100) xp += config.accuracyBonus; // Perfect bonus
+        if (accuracy === 100) xp += config.accuracyBonus;
 
+        // Speed-Bonus: 5 XP pro angefangene 10 WPM
         const speedBonus = Math.floor(wpm / 10) * 5;
         xp += speedBonus;
 
@@ -118,7 +123,7 @@ const Levels = (() => {
 
     function getTopicSummary(topic) {
         const unlocked = getUnlockedLevels(topic);
-        const maxUnlocked = Math.max(...unlocked);
+        const maxUnlocked = unlocked.reduce((max, l) => Math.max(max, l), 0);
         let completedCount = 0;
 
         for (let level = 1; level <= maxUnlocked; level++) {
@@ -132,8 +137,8 @@ const Levels = (() => {
         return {
             maxUnlockedLevel: maxUnlocked,
             totalCompletions: completedCount,
-            maxPossible: maxUnlocked * 3,
-            progressPercent: Math.round((completedCount / (MAX_LEVEL * 3)) * 100)
+            maxPossible: maxUnlocked * DIFFICULTIES.length,
+            progressPercent: Math.round((completedCount / COMPLETIONS_PER_TOPIC) * 100)
         };
     }
 
@@ -156,6 +161,7 @@ const Levels = (() => {
     return {
         MAX_LEVEL,
         DIFFICULTIES,
+        COMPLETIONS_PER_TOPIC,
         THRESHOLDS,
         isLevelUnlocked,
         isLevelCompleted,

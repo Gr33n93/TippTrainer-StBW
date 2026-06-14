@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=TippTrainer StBW
+GenericName=10-Finger-Tipptrainer
+Comment=Browserbasierter 10-Finger-Tipptrainer für die Steuerberaterprüfung
+Comment[de]=Browserbasierter 10-Finger-Tipptrainer für die Steuerberaterprüfung
+Exec=tipptrainer-stbw
+Icon=de.gr33n93.TippTrainer
+Terminal=false
+Categories=Education;Office;Utility;
+Keywords=tipptrainer;schreiben;10-finger;steuerberater;prüfung;typewriter;
+StartupNotify=true
+StartupWMClass=TippTrainer StBW

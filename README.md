@@ -142,10 +142,3 @@ Internet Explorer wird nicht unterstützt.
 
 Fehler gefunden? Verbesserungs­vorschläge? Gerne als Issue oder Pull
 Request auf GitHub.
-
-## Entwicklung unterstützen
-
-Wenn dir TippTrainer StBW beim Lernen hilft, kannst du die Weiterentwicklung
-und Pflege des Projekts mit einem freiwilligen Beitrag unterstützen.
-
-[☕ Auf Ko-fi unterstützen](https://ko-fi.com/nilsarnold)

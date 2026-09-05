@@ -42,8 +42,12 @@ describe('Packaging und CI', () => {
     });
 
     it('erzwingt im AppImage keinen globalen Chromium-Sandbox-Opt-out', () => {
+        const qualityWorkflow = read('.github/workflows/lint.yml');
         assert.match(builder, /appImage:\s+[\s\S]*?executableArgs: \[\]/);
         assert.doesNotMatch(builder, /--no-sandbox/);
         assert.doesNotMatch(builder, /--filesystem=home/);
+        assert.match(qualityWorkflow, /sudo chown root:root .*\/chrome-sandbox/);
+        assert.match(qualityWorkflow, /sudo chmod 4755 .*\/chrome-sandbox/);
+        assert.match(qualityWorkflow, /xvfb-run -a timeout 10s/);
     });
 });

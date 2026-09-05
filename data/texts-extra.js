@@ -120,7 +120,7 @@ const TextsExtra = (() => {
                     'Bei steuerbefreiten Umsätzen entfällt die Steuerpflicht.',
                     'Die Gutschrift ist die umgekehrte Rechnung durch den Empfänger.',
                     'Das Zahlungsziel gibt die Frist für die Begleichung an.',
-                    'Die Kleinunternehmerregelung gilt bis zu einem Umsatz von 22.000 Euro.',
+                    'Die Kleinunternehmerregelung setzt grundsätzlich höchstens 25.000 Euro Gesamtumsatz im Vorjahr und höchstens 100.000 Euro im laufenden Jahr voraus.',
                     'Vorsteuer darf nur bei ordnungsgemäßen Rechnungen abgezogen werden.',
                     'Die Umsatzsteuer entsteht mit Ausführung der Leistung.'
                 ],
@@ -190,7 +190,7 @@ const TextsExtra = (() => {
                 ],
                 schwer: [
                     'Bei der Bankabstimmung sind alle zeitlichen Differenzen zwischen Bankauszug und Buchführung zu ermitteln und durch Anpassungsbuchungen zu korrigieren, falls die Abweichungen nicht durch Valuta-Unterschiede erklärt werden.',
-                    'Die Aufbewahrungspflicht für Buchführungsunterlagen beträgt zehn Jahre und beginnt mit dem Schluss des Kalenderjahres, in dem die Unterlagen erstellt wurden.',
+                    'Nach Paragraf 147 AO sind Bücher und Jahresabschlüsse zehn Jahre, Buchungsbelege acht Jahre und andere steuerlich relevante Unterlagen sechs Jahre aufzubewahren.',
                     'Eine elektronische Buchführung muss den GoBD entsprechen und eine Verfahrensdokumentation aufweisen, die jederzeit Einsicht in die elektronischen Aufzeichnungen ermöglicht.',
                     'Die GoBD definieren die Anforderungen an die Ordnungsmäßigkeit der elektronischen Buchführung und den Datenzugriff durch die Finanzverwaltung bei Betriebsprüfungen.'
                 ]

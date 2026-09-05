@@ -22,12 +22,16 @@ const ChromeView = (() => {
     /** Aktualisiert den Countdown in Sidebar und Dashboard-Badge. */
     function updateCountdown() {
         const days = Progress.getDaysUntilTarget();
-        Dom.byId('sidebarCountdown').textContent = days;
+        Dom.byId('sidebarCountdown').textContent = days ?? '–';
 
         const dashboardBadge = Dom.byId('dashboardCountdown');
         if (!dashboardBadge) return;
 
         const target = Storage.getSettings().targetDate || Storage.DEFAULT_TARGET_DATE;
+        if (!target) {
+            dashboardBadge.textContent = 'Prüfungstermin festlegen';
+            return;
+        }
         const formatted = new Date(target + 'T00:00:00').toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
@@ -40,12 +44,16 @@ const ChromeView = (() => {
     function updateDaysUntilLabel() {
         const days = Progress.getDaysUntilTarget();
         const target = Storage.getSettings().targetDate || Storage.DEFAULT_TARGET_DATE;
+        const label = Dom.byId('daysUntilLabel');
+        if (!target) {
+            if (label) label.textContent = 'Noch kein Prüfungstermin festgelegt.';
+            return;
+        }
         const formatted = new Date(target + 'T00:00:00').toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'
         });
-        const label = Dom.byId('daysUntilLabel');
         if (label) {
             label.textContent =
                 days > 0 ? `Noch ${days} Tage bis zum ${formatted}` : 'Prüfungstermin erreicht!';

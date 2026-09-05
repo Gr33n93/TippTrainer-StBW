@@ -20,3 +20,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
 }
+
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}

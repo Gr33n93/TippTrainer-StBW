@@ -8,6 +8,9 @@ const ProgressView = (() => {
     /** Fuellt die Filter-Dropdowns und bindet Change-Events. */
     function bindFilters() {
         const topicSelect = Dom.byId('filterTopic');
+        topicSelect.setAttribute('aria-label', 'Nach Themenbereich filtern');
+        Dom.byId('filterLevel').setAttribute('aria-label', 'Nach Level filtern');
+        Dom.byId('filterDifficulty').setAttribute('aria-label', 'Nach Schwierigkeit filtern');
         Texts.getAllTopics().forEach((t) => {
             topicSelect.innerHTML += `<option value="${t}">${Texts.getTopicName(t)}</option>`;
         });

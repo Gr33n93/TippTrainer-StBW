@@ -22,7 +22,7 @@ const LevelsView = (() => {
         const container = Dom.byId('difficultyTabs');
         container.innerHTML = Levels.DIFFICULTIES.map((diff) => {
             const active = diff === State.difficulty ? 'active' : '';
-            return `<div class="diff-tab ${active}" data-diff="${Dom.escapeHtml(diff)}">${Dom.escapeHtml(Texts.DIFFICULTY_NAMES[diff])}</div>`;
+            return `<button type="button" class="diff-tab ${active}" data-diff="${Dom.escapeHtml(diff)}" aria-pressed="${diff === State.difficulty}">${Dom.escapeHtml(Texts.DIFFICULTY_NAMES[diff])}</button>`;
         }).join('');
 
         container.querySelectorAll('.diff-tab').forEach((tab) => {
@@ -58,9 +58,12 @@ const LevelsView = (() => {
                 statusText = 'Offen';
             }
 
-            const btn = document.createElement('div');
+            const btn = document.createElement('button');
+            btn.type = 'button';
             btn.className = classes;
-            btn.innerHTML = `<span class="level-num">${level}</span><span class="level-status">${statusText}</span>`;
+            btn.disabled = !isUnlocked;
+            btn.setAttribute('aria-label', `Level ${level}: ${statusText}`);
+            btn.innerHTML = `<span class="level-num">${level}</span><span class="level-status">${Dom.escapeHtml(statusText)}</span>`;
 
             if (isUnlocked) {
                 btn.addEventListener('click', () => {

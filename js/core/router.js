@@ -21,16 +21,23 @@ const Router = (() => {
 
     /** Zeigt die View mit dem gegebenen Namen an. */
     function showView(viewName) {
+        if (State.view === 'typing' && viewName !== 'typing') {
+            Typing.stop();
+        }
         State.view = viewName;
 
         Dom.all('.view').forEach((v) => v.classList.remove('active'));
         Dom.all('.nav-item').forEach((n) => n.classList.remove('active'));
+        Dom.all('.nav-item').forEach((n) => n.removeAttribute('aria-current'));
 
         const viewEl = Dom.byId(`view-${viewName}`);
         if (viewEl) viewEl.classList.add('active');
 
         const navEl = document.querySelector(`.nav-item[data-view="${viewName}"]`);
-        if (navEl) navEl.classList.add('active');
+        if (navEl) {
+            navEl.classList.add('active');
+            navEl.setAttribute('aria-current', 'page');
+        }
 
         const renderFn = views.get(viewName);
         if (renderFn) renderFn();
@@ -58,19 +65,43 @@ const Router = (() => {
 
     /** Bindet den Mobile-Hamburger-Toggle. */
     function bindMobileToggle() {
-        Dom.byId('mobileToggle').addEventListener('click', () => {
+        const toggle = Dom.byId('mobileToggle');
+        toggle.addEventListener('click', () => {
             Dom.byId('sidebar').classList.toggle('open');
+            syncMobileSidebar();
         });
+        window.addEventListener('resize', syncMobileSidebar);
+        syncMobileSidebar();
     }
 
     function closeMobileSidebar() {
-        Dom.byId('sidebar').classList.remove('open');
+        const sidebar = Dom.byId('sidebar');
+        const wasOpen = sidebar.classList.contains('open');
+        sidebar.classList.remove('open');
+        syncMobileSidebar();
+        if (wasOpen && sidebar.inert) Dom.byId('mobileToggle').focus();
+    }
+
+    function syncMobileSidebar() {
+        const sidebar = Dom.byId('sidebar');
+        const toggle = Dom.byId('mobileToggle');
+        const mobile = window.matchMedia
+            ? window.matchMedia('(max-width: 768px)').matches
+            : window.innerWidth <= 768;
+        const open = mobile && sidebar.classList.contains('open');
+
+        sidebar.inert = mobile && !open;
+        if (mobile) sidebar.setAttribute('aria-hidden', String(!open));
+        else sidebar.removeAttribute('aria-hidden');
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
     }
 
     return {
         register,
         showView,
         bindNavigation,
-        bindMobileToggle
+        bindMobileToggle,
+        syncMobileSidebar
     };
 })();

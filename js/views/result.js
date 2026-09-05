@@ -5,8 +5,10 @@
  * Achievements, Difficulty-Empfehlung und Weiter-Buttons.
  */
 const ResultView = (() => {
+    let keyboardBound = false;
+
     function show(stats, completion) {
-        const { passed, xpEarned, newAchievements, recommendation } = completion;
+        const { passed, xpEarned, newAchievements, recommendation, persisted } = completion;
         const overlay = Dom.byId('resultOverlay');
         const card = Dom.byId('resultCard');
 
@@ -18,7 +20,7 @@ const ResultView = (() => {
         const recommendHtml = recommendation ? renderRecommendation(recommendation) : '';
 
         card.innerHTML = `
-            <h3 class="${passed ? 'passed' : 'failed'}">
+            <h3 id="resultTitle" class="${passed ? 'passed' : 'failed'}">
                 ${passed ? '✅ Level bestanden!' : '⏳ Weiter üben!'}
             </h3>
             <div class="result-stats">
@@ -51,11 +53,73 @@ const ResultView = (() => {
         `;
 
         overlay.classList.add('visible');
-        bindActions(overlay, recommendation);
+        setBackgroundInert(true);
+        bindActions(recommendation);
+        bindKeyboard(overlay);
+        card.focus();
 
         for (const ach of newAchievements) {
             Dom.showToast(ach.icon, ach.name, ach.description);
         }
+        if (!persisted) {
+            Dom.showToast(
+                '⚠️',
+                'Speichern fehlgeschlagen',
+                'Mindestens ein Teil des Fortschritts konnte nicht gespeichert werden.'
+            );
+        }
+    }
+
+    function setBackgroundInert(inert) {
+        const app = document.querySelector('.app-container');
+        const mobileToggle = Dom.byId('mobileToggle');
+        if (app) app.inert = inert;
+        if (mobileToggle) mobileToggle.inert = inert;
+    }
+
+    function close() {
+        Dom.byId('resultOverlay').classList.remove('visible');
+        setBackgroundInert(false);
+    }
+
+    function dismissToLevels() {
+        close();
+        Router.showView('levels');
+        Dom.byId('view-levels').focus();
+    }
+
+    function bindKeyboard(overlay) {
+        if (keyboardBound) return;
+        keyboardBound = true;
+        overlay.addEventListener('keydown', (event) => {
+            if (!overlay.classList.contains('visible')) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopPropagation();
+                dismissToLevels();
+                return;
+            }
+            if (event.key !== 'Tab') return;
+
+            const focusable = [...overlay.querySelectorAll('button:not([disabled])')];
+            if (focusable.length === 0) {
+                event.preventDefault();
+                Dom.byId('resultCard').focus();
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (
+                event.shiftKey &&
+                (document.activeElement === first || document.activeElement === Dom.byId('resultCard'))
+            ) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        });
     }
 
     function renderAchievements(newAchievements) {
@@ -88,10 +152,10 @@ const ResultView = (() => {
         `;
     }
 
-    function bindActions(overlay, recommendation) {
+    function bindActions(recommendation) {
         if (recommendation) {
             Dom.byId('resultHarder').addEventListener('click', () => {
-                overlay.classList.remove('visible');
+                close();
                 State.difficulty = recommendation.nextDiff;
                 State.lastText = null;
                 TypingView.start(false);
@@ -99,19 +163,19 @@ const ResultView = (() => {
         }
 
         Dom.byId('resultRetry').addEventListener('click', () => {
-            overlay.classList.remove('visible');
+            close();
             TypingView.start(true);
         });
 
         Dom.byId('resultNext').addEventListener('click', () => {
-            overlay.classList.remove('visible');
+            close();
             TypingView.start(false);
         });
 
         const nextLevelBtn = Dom.byId('resultNextLevel');
         if (nextLevelBtn) {
             nextLevelBtn.addEventListener('click', () => {
-                overlay.classList.remove('visible');
+                close();
                 State.level++;
                 State.lastText = null;
                 TypingView.start(false);
@@ -119,10 +183,9 @@ const ResultView = (() => {
         }
 
         Dom.byId('resultBack').addEventListener('click', () => {
-            overlay.classList.remove('visible');
-            Router.showView('levels');
+            dismissToLevels();
         });
     }
 
-    return { show };
+    return { show, dismissToLevels };
 })();

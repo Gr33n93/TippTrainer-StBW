@@ -1,8 +1,12 @@
 'use strict';
 
 const Calendar = (() => {
+    function getLocalDateKey(date = new Date()) {
+        return _formatDate(date);
+    }
+
     function _today() {
-        return _formatDate(new Date());
+        return getLocalDateKey();
     }
 
     function _formatDate(d) {
@@ -10,6 +14,7 @@ const Calendar = (() => {
     }
 
     function recordPractice(durationSeconds) {
+        if (!Number.isFinite(durationSeconds) || durationSeconds < 0) return null;
         const data = Storage.getCalendarData();
         const today = _today();
 
@@ -25,8 +30,7 @@ const Calendar = (() => {
         data[today].exercises += 1;
         data[today].lastAt = new Date().toISOString();
 
-        Storage.saveCalendarData(data);
-        return data[today];
+        return Storage.saveCalendarData(data) ? data[today] : null;
     }
 
     function getDayData(dateStr) {
@@ -154,6 +158,7 @@ const Calendar = (() => {
 
     return {
         recordPractice,
+        getLocalDateKey,
         getDayData,
         getMonthData,
         hasPracticedToday,

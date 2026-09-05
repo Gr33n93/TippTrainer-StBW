@@ -4,6 +4,7 @@ const Progress = (() => {
     function _getTargetDate() {
         const settings = Storage.getSettings();
         const dateStr = settings.targetDate || Storage.DEFAULT_TARGET_DATE;
+        if (!dateStr) return null;
         return new Date(dateStr + 'T00:00:00');
     }
 
@@ -14,8 +15,7 @@ const Progress = (() => {
             timestamp: new Date().toISOString()
         };
 
-        Storage.addSession(session);
-        return session;
+        return Storage.addSession(session) ? session : null;
     }
 
     function _generateId() {
@@ -134,9 +134,11 @@ const Progress = (() => {
 
     function getDaysUntilTarget() {
         const targetDate = _getTargetDate();
+        if (!targetDate) return null;
         const now = new Date();
-        const diff = targetDate - now;
-        return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+        const targetDay = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+        const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        return Math.max(0, Math.round((targetDay - today) / (1000 * 60 * 60 * 24)));
     }
 
     function getTargetDate() {
@@ -150,7 +152,7 @@ const Progress = (() => {
         for (const session of sessions) {
             const date = new Date(session.timestamp);
             const weekStart = _getWeekStart(date);
-            const key = weekStart.toISOString().split('T')[0];
+            const key = _formatLocalDate(weekStart);
 
             if (!weeks[key]) {
                 weeks[key] = { sessions: 0, totalWPM: 0, totalAccuracy: 0, totalMinutes: 0 };
@@ -172,10 +174,14 @@ const Progress = (() => {
     }
 
     function _getWeekStart(date) {
-        const d = new Date(date);
+        const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const day = d.getDay();
         const diff = d.getDate() - day + (day === 0 ? -6 : 1);
         return new Date(d.setDate(diff));
+    }
+
+    function _formatLocalDate(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
 
     function getProgressForLevelDisplay(topic, level, difficulty) {

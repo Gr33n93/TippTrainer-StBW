@@ -43,6 +43,10 @@
     .result-card {
         padding: 24px;
     }
+
+    .result-actions .btn {
+        flex: 1 1 180px;
+    }
 }
 
 /* Phone: kompaktere Abstaende */

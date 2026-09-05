@@ -22,7 +22,9 @@
     border-radius: var(--radius-lg);
     padding: 40px;
     max-width: 500px;
+    max-height: 90vh;
     width: 90%;
+    overflow-y: auto;
     text-align: center;
     animation: slideUp 0.3s ease;
 }
@@ -130,6 +132,7 @@
 
 .result-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     justify-content: center;
 }

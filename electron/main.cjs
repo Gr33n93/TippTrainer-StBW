@@ -13,6 +13,7 @@
 
 const { app, BrowserWindow, shell } = require('electron');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
 // Produktiv-Modus: Dateien liegen unterdist/, in Dev unter Projekt-Root
 const isDev = !app.isPackaged;
@@ -30,22 +31,43 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.cjs'),
             contextIsolation: true,
             nodeIntegration: false,
-            sandbox: true
+            sandbox: true,
+            webSecurity: true
         }
     });
 
-    // index.html laden - in gepackter App unter dist/, in Dev im Root
+    // index.html laden - in Dev und Paket relativ zum Electron-Hauptprozess
     const indexPath = path.join(__dirname, isDev ? '..' : '..', 'index.html');
+    const appUrl = pathToFileURL(indexPath).toString();
     win.loadFile(indexPath);
+
+    win.webContents.session.setPermissionRequestHandler((_webContents, _permission, callback) => {
+        callback(false);
+    });
+
+    // Top-Level-Navigation darf die lokale App nicht verlassen.
+    win.webContents.on('will-navigate', (event, url) => {
+        if (url === appUrl) return;
+        event.preventDefault();
+        if (isExternalHttpUrl(url)) shell.openExternal(url);
+    });
 
     // Externe Links im Standard-Browser oeffnen, nicht in der App
     win.webContents.setWindowOpenHandler(({ url }) => {
-        if (url.startsWith('http://') || url.startsWith('https://')) {
+        if (isExternalHttpUrl(url)) {
             shell.openExternal(url);
-            return { action: 'deny' };
         }
         return { action: 'deny' };
     });
+}
+
+function isExternalHttpUrl(value) {
+    try {
+        const { protocol } = new URL(value);
+        return protocol === 'http:' || protocol === 'https:';
+    } catch {
+        return false;
+    }
 }
 
 // App-Lifecycle

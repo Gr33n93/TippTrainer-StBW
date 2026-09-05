@@ -35,11 +35,13 @@ const TypingView = (() => {
             const val = input.value;
             if (val.length === 0) return;
 
-            const char = val[val.length - 1];
             input.value = '';
 
-            const result = Typing.handleInput(char);
-            if (result) updateDisplay();
+            for (const char of Typing.splitGraphemes(val)) {
+                const result = Typing.handleInput(char);
+                if (!result || result.isComplete) break;
+            }
+            updateDisplay();
         });
 
         input.addEventListener('paste', (e) => e.preventDefault());
@@ -56,8 +58,7 @@ const TypingView = (() => {
             if (e.key === 'Escape') {
                 const overlay = Dom.byId('resultOverlay');
                 if (overlay && overlay.classList.contains('visible')) {
-                    overlay.classList.remove('visible');
-                    Router.showView('levels');
+                    ResultView.dismissToLevels();
                 }
             }
         });

@@ -1,0 +1,37 @@
+name: Fehler melden
+description: Reproduzierbares Fehlverhalten im TippTrainer melden
+title: '[Bug]: '
+labels: [bug]
+body:
+    - type: markdown
+      attributes:
+          value: Danke für die Meldung. Bitte keine Sicherheitslücken öffentlich einreichen; dafür SECURITY.md nutzen.
+    - type: textarea
+      id: description
+      attributes:
+          label: Beschreibung
+          description: Was ist passiert, und was wurde erwartet?
+      validations:
+          required: true
+    - type: textarea
+      id: steps
+      attributes:
+          label: Reproduktionsschritte
+          placeholder: |
+              1. …
+              2. …
+              3. …
+      validations:
+          required: true
+    - type: input
+      id: environment
+      attributes:
+          label: Umgebung
+          description: Browser oder Desktop-Version, Betriebssystem und App-Version
+      validations:
+          required: true
+    - type: textarea
+      id: logs
+      attributes:
+          label: Zusätzliche Informationen
+          description: Screenshots oder Konsolenausgaben ohne persönliche Daten

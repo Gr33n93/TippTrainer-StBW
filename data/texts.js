@@ -185,7 +185,7 @@ const Texts = (() => {
                     'Die Schlussbilanz ist Grundlage der Eröffnungsbilanz des Folgejahres.'
                 ],
                 schwer: [
-                    'Bei der Bewertung des Anlagevermögens ist zwischen Anschaffungs- und Herstellungskosten zu unterscheiden, wobei anschaffungsnahe Herstellungskosten von drei Prozent der Anschaffungskosten überschritten werden müssen.',
+                    'Anschaffungsnahe Herstellungskosten liegen nach Paragraf 6 Absatz 1 Nummer 1a EStG vor, wenn die Nettoaufwendungen für Instandsetzung und Modernisierung innerhalb von drei Jahren nach der Anschaffung 15 Prozent der Gebäude-Anschaffungskosten übersteigen.',
                     'Niedrige Bewertungsvorbehalte nach dem Handelsrecht erlauben eine Bewertung von Vermögensgegenständen unterhalb der Anschaffungskosten, wenn ein dauerhafter Wertverlust feststellbar ist.',
                     'Die Bildung von Drohverlustrückstellungen ist zwingend erforderlich, wenn am Bilanzstichtag erkennbar wird, dass ein Vertrag zu Verlusten führen wird und der Verkaufswert unter dem Buchwert liegt.',
                     'Stille Reserven entstehen durch die vorsichtige Bewertung von Vermögensgegenständen und können bei Veräußerung zu außerplanmäßigen Erträgen im Jahresabschluss führen.'
@@ -218,7 +218,7 @@ const Texts = (() => {
                 ],
                 schwer: [
                     'Bei der Bankabstimmung sind alle zeitlichen Differenzen zwischen Bankauszug und Buchführung zu ermitteln, zu dokumentieren und gegebenenfalls durch Anpassungsbuchungen zu korrigieren.',
-                    'Die Aufbewahrungspflicht für Buchführungsunterlagen beträgt zehn Jahre und beginnt mit dem Schluss des Kalenderjahres, in dem die Unterlagen erstellt wurden.',
+                    'Nach Paragraf 147 AO gelten unterschiedliche Aufbewahrungsfristen: Bücher und Jahresabschlüsse sind zehn Jahre, Buchungsbelege acht Jahre und sonstige relevante Unterlagen sechs Jahre aufzubewahren.',
                     'Eine elektronische Buchführung muss den Grundsätzen zum Datenzugriff und zur Prüfbarkeit digitaler Unterlagen entsprechen und eine Verfahrensdokumentation aufweisen.',
                     'Die GoBD definieren die Anforderungen an die Ordnungsmäßigkeit der Buchführung in elektronischer Form sowie den Datenzugriff durch die Finanzverwaltung.'
                 ]
@@ -1379,13 +1379,14 @@ const Texts = (() => {
      * @param {string[]} newTexts - Array von Texten
      */
     function addTexts(topic, level, difficulty, newTexts) {
-        if (!newTexts || newTexts.length === 0) return;
+        if (!Array.isArray(newTexts) || newTexts.length === 0) return;
         if (!texts[topic]) return;
         if (!texts[topic][level]) return;
         if (!texts[topic][level][difficulty]) {
             texts[topic][level][difficulty] = [];
         }
-        texts[topic][level][difficulty] = texts[topic][level][difficulty].concat(newTexts);
+        const validTexts = newTexts.filter((text) => typeof text === 'string' && text.trim().length > 0);
+        texts[topic][level][difficulty] = [...new Set(texts[topic][level][difficulty].concat(validTexts))];
     }
 
     /** Prueft, ob ein Topic/Level/Difficulty-Kombination existiert. */

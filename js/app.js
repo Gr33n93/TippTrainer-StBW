@@ -16,7 +16,12 @@
  *   6. app.js     - Bootstrap (diese Datei)
  */
 const App = (() => {
+    let initialized = false;
+
     function init() {
+        if (initialized) return;
+        initialized = true;
+
         // Text-Daten in das Texts-Modul mergen
         TextsExtra.apply();
         if (typeof TextsSehrSchwer !== 'undefined') TextsSehrSchwer.apply();

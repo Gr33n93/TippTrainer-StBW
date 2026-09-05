@@ -4,6 +4,7 @@
  * Settings-View: Pruefungsdatum, Daten-Export/Import und Reset-Optionen.
  */
 const SettingsView = (() => {
+    const MAX_IMPORT_BYTES = 10 * 1024 * 1024;
     /** Bindet alle Settings-Controls (einmalig beim App-Start). */
     function bind() {
         bindDatePicker();
@@ -15,21 +16,29 @@ const SettingsView = (() => {
 
     function bindDatePicker() {
         const dateInput = Dom.byId('targetDateInput');
-        const settings = Storage.getSettings();
-        dateInput.value = settings.targetDate || Storage.DEFAULT_TARGET_DATE;
-        ChromeView.updateDaysUntilLabel();
+        refresh();
 
         dateInput.addEventListener('change', () => {
-            const newDate = dateInput.value;
-            if (!newDate) return;
-
             const current = Storage.getSettings();
-            current.targetDate = newDate;
-            Storage.saveSettings(current);
-            ChromeView.updateCountdown();
-            ChromeView.updateDaysUntilLabel();
+            current.targetDate = dateInput.value;
+            if (!Storage.saveSettings(current)) {
+                refresh();
+                Dom.showToast('❌', 'Speichern fehlgeschlagen', 'Das Prüfungsdatum wurde nicht geändert.');
+                return;
+            }
             DashboardView.render();
+            refresh();
         });
+    }
+
+    function refresh() {
+        const dateInput = Dom.byId('targetDateInput');
+        if (dateInput) {
+            const settings = Storage.getSettings();
+            dateInput.value = settings.targetDate || Storage.DEFAULT_TARGET_DATE;
+        }
+        ChromeView.updateCountdown();
+        ChromeView.updateDaysUntilLabel();
     }
 
     function bindExport() {
@@ -55,6 +64,11 @@ const SettingsView = (() => {
         Dom.byId('importFile').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            if (file.size > MAX_IMPORT_BYTES) {
+                Dom.showToast('❌', 'Import fehlgeschlagen', 'Die Backup-Datei ist größer als 10 MB.');
+                e.target.value = '';
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = (evt) => {
@@ -64,6 +78,7 @@ const SettingsView = (() => {
                         Dom.showToast('✅', 'Import erfolgreich', 'Alle Daten wurden wiederhergestellt.');
                         ChromeView.updateXPDisplay();
                         DashboardView.render();
+                        refresh();
                     } else {
                         Dom.showToast('❌', 'Import fehlgeschlagen', 'Ungültiges Dateiformat.');
                     }
@@ -79,7 +94,10 @@ const SettingsView = (() => {
     function bindResetLevels() {
         Dom.byId('btnResetLevels').addEventListener('click', () => {
             if (!Dom.confirm('Level-Fortschritt wirklich zurücksetzen?')) return;
-            Levels.resetAllProgress();
+            if (!Levels.resetAllProgress()) {
+                Dom.showToast('❌', 'Zurücksetzen fehlgeschlagen', 'Der Level-Fortschritt blieb erhalten.');
+                return;
+            }
             Dom.showToast('🔄', 'Zurückgesetzt', 'Level-Fortschritt wurde gelöscht.');
             DashboardView.render();
         });
@@ -89,12 +107,17 @@ const SettingsView = (() => {
         Dom.byId('btnResetAll').addEventListener('click', () => {
             if (!Dom.confirm('ALLE Daten wirklich löschen? Dies kann nicht rückgängig gemacht werden!'))
                 return;
-            Storage.clearAll();
+            if (!Storage.clearAll()) {
+                Dom.showToast('❌', 'Löschen fehlgeschlagen', 'Nicht alle Daten konnten entfernt werden.');
+                refresh();
+                return;
+            }
             Dom.showToast('🗑️', 'Gelöscht', 'Alle Daten wurden entfernt.');
             ChromeView.updateXPDisplay();
             DashboardView.render();
+            refresh();
         });
     }
 
-    return { bind };
+    return { bind, refresh };
 })();

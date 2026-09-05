@@ -42,16 +42,29 @@ Vollständig implementiert und einsatzbereit. Alle 4 Schwierigkeitsstufen mit Te
 - Code-Qualität: Texts-API statt \_rawTexts-Mutation, Duplikate entfernt, Magic Numbers konfigurierbar
 - Tooling: ESLint, Prettier, GitHub Actions Lint-Workflow
 
+### 2026-09-06 (Session 5) – Härtung und automatisierte Qualitätssicherung
+
+- 125 Unit-, Integrations-, Sicherheits-, Packaging- und DOM-Regressionstests ergänzt
+- Verbindliche Coverage-Grenzen: 90 % Zeilen, 80 % Branches, 85 % Funktionen
+- Backup-Import vollständig und rekursiv validiert; atomarer Import mit Rollback
+- Stored-XSS, beschädigte Zustände, Wochen-/Kalender-Zeitzonenfehler und Timer-Leak behoben
+- Unicode-Codepoints und Mehrzeicheneingaben in der Tipp-Engine unterstützt
+- XP-Berechnung korrigiert, Fehlschlags-XP begrenzt und Bestwerte getrennt erhalten
+- Veraltete Steuergrenzen punktuell korrigiert und Korpus pro Auswahlpool dedupliziert
+- Electron und electron-builder aktualisiert; npm-Audit von 18 auf 0 Befunde reduziert
+- Electron mit CSP, Navigationssperre und minimalen Flatpak-Rechten gehärtet
+- GitHub Actions als Node-22/24-Quality-Matrix mit vollständigem Release-Gate ausgebaut
+
 ## Offene Aufgaben
 
-- Im Browser testen (insbesondere Umsatzsteuer-spezifische Zeichen unter Linux)
-- Breite Cross-Browser-Tests (Chrome, Firefox, Edge, Safari)
+- Echte Browser-E2E-Matrix für Chromium, Firefox und WebKit ergänzen
+- Vollständiges fachliches Inhaltsaudit mit amtlichen Quellen und Gültigkeitsdatum durchführen
 - Optional: Sound-Effekte für Feedback
 - Optional: Tastatur-Visualisierung (welcher Finger wo)
 
 ## Bekannte Probleme / Einschränkungen
 
-- Keine automatisierten UI-Tests (reine Browser-Anwendung)
+- Keine echte Multi-Browser-E2E-Automation; DOM-Integration ist automatisiert
 - Keine externen Fonts eingebunden (verwendet System-Fonts)
 - App geht von deutschem QWERTZ-Layout aus
 

@@ -1,37 +1,81 @@
-name: Lint
+name: Quality
 
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: quality-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  lint:
-    name: JS-Syntax- und Lint-Check
-    runs-on: ubuntu-latest
+    quality:
+        name: Node ${{ matrix.node-version }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: ['22.22.2', '24.15.0']
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Node einrichten
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+            - name: Node einrichten
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
 
-      - name: Dependencies installieren
-        run: npm ci
+            - name: Dependencies installieren
+              run: npm ci
 
-      - name: Syntax-Check aller JS-Dateien
-        run: |
-          for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js; do
-            node --check "$f" || exit 1
-          done
+            - name: Syntax, Lint, Format, Tests, Coverage und Audit
+              run: npm run verify
 
-      - name: ESLint
-        run: npm run lint
+    package-smoke:
+        name: Electron-Paket und Metadaten
+        needs: quality
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
 
-      - name: Prettier Format-Check
-        run: npm run format:check
+        steps:
+            - name: Checkout
+              uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+            - name: Node einrichten
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version: '22.22.2'
+                  cache: 'npm'
+
+            - name: Dependencies und Metadaten-Validatoren installieren
+              run: |
+                  npm ci
+                  sudo apt-get update
+                  sudo apt-get install --yes appstream desktop-file-utils xvfb
+
+            - name: AppStream und Desktop-Datei validieren
+              run: |
+                  appstreamcli validate --no-net build/de.gr33n93.TippTrainer.metainfo.xml
+                  desktop-file-validate build/de.gr33n93.TippTrainer.desktop
+
+            - name: Electron-Paket bauen und Inhalt prüfen
+              run: |
+                  npm run pack -- --publish never
+                  ./node_modules/.bin/asar list dist-electron/linux-unpacked/resources/app.asar > /tmp/tipptrainer-asar-files.txt
+                  if grep -Eq '^/(tests|node_modules|\.github)/' /tmp/tipptrainer-asar-files.txt; then exit 1; fi
+
+            - name: Paketierten Electron-Start testen
+              run: |
+                  sudo chown root:root dist-electron/linux-unpacked/chrome-sandbox
+                  sudo chmod 4755 dist-electron/linux-unpacked/chrome-sandbox
+                  status=0
+                  xvfb-run -a timeout 10s dist-electron/linux-unpacked/tipptrainer-stbw --disable-gpu || status=$?
+                  test "$status" -eq 0 -o "$status" -eq 124

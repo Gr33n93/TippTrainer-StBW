@@ -54,7 +54,7 @@ const CalendarView = (() => {
         const daysInMonth = Calendar.getDaysInMonth(State.calYear, State.calMonth);
         const firstDay = Calendar.getFirstDayOfMonth(State.calYear, State.calMonth);
         const monthData = Calendar.getMonthData(State.calYear, State.calMonth);
-        const today = new Date().toISOString().split('T')[0];
+        const today = Calendar.getLocalDateKey();
 
         let html = '';
 
@@ -74,9 +74,10 @@ const CalendarView = (() => {
             const minutes = monthData[dateStr]?.totalSeconds
                 ? Math.round(monthData[dateStr].totalSeconds / 60)
                 : 0;
-            const titleAttr = intensity > 0 ? ` title="${dateStr} – ${minutes} Min."` : ` title="${dateStr}"`;
+            const description =
+                intensity > 0 ? `${dateStr}, ${minutes} Minuten geübt` : `${dateStr}, nicht geübt`;
 
-            html += `<div class="${classes}"${titleAttr}>${day}</div>`;
+            html += `<div class="${classes}" title="${description}" aria-label="${description}">${day}</div>`;
         }
 
         Dom.byId('calendarDays').innerHTML = html;

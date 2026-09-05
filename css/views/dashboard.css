@@ -69,12 +69,16 @@
 }
 
 .topic-card {
+    width: 100%;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 24px;
     cursor: pointer;
     transition: all var(--transition);
+    color: inherit;
+    font: inherit;
+    text-align: left;
 }
 
 .topic-card:hover {

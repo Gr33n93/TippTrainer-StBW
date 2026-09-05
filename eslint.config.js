@@ -70,6 +70,34 @@ export default [
         }
     },
     {
-        ignores: ['node_modules/', 'dist/', 'build/', '**/*.min.js']
+        files: ['electron/**/*.cjs'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'commonjs',
+            globals: { ...globals.node, ...globals.browser }
+        },
+        rules: {
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'prefer-const': 'error',
+            'no-var': 'error',
+            eqeqeq: ['error', 'always', { null: 'ignore' }]
+        }
+    },
+    {
+        files: ['tests/**/*.js'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: globals.node
+        },
+        rules: {
+            'no-console': 'off',
+            'prefer-const': 'error',
+            'no-var': 'error',
+            eqeqeq: ['error', 'always', { null: 'ignore' }]
+        }
+    },
+    {
+        ignores: ['node_modules/', 'dist/', 'dist-electron/', 'build/', '**/*.min.js']
     }
 ];

@@ -6,14 +6,15 @@ Tippgeschwindigkeit und -genauigkeit mit prüfungs­relevanten Fachtexten
 aus Buchführung, Steuerrecht, Bilanzen/EÜR sowie Kosten- und
 Leistungs­rechnung.
 
-> **Hinweis:** Dieses Projekt ist eine Lern- und Übungs­applikation und
-> nicht mit der Steuerberater­kammer Baden-Württemberg affiliiert.
+> **Hinweis:** Dieses Projekt ist eine Lern- und Tippübungs­applikation, nicht mit der
+> Steuerberater­kammer Baden-Württemberg affiliiert und keine Steuer- oder Rechtsberatung. Rechtliche
+> Inhalte können sich ändern und sollten mit aktuellen amtlichen Quellen abgeglichen werden.
 
 ## Features
 
 - **4 Themenbereiche** (Buchführung, Steuerrecht, Bilanzen/EÜR, KLR) mit je 10 Leveln
 - **4 Schwierigkeitsstufen** (leicht / normal / schwer / sehr schwer)
-- **2.240+ Prüfungstexte** mit fachlich korrektem Inhalt
+- **1.870+ unterschiedliche fachbezogene Übungstexte** ohne Wiederholungen im selben Auswahlpool
 - **Echtzeit-Feedback** während des Tippens (WPM, CPM, Genauigkeit)
 - **Gamification**: XP-System, 32 Achievements, Level-Freischaltungen
 - **Übungskalender** mit Streak-Tracking (GitHub-Style-Heatmap)
@@ -25,7 +26,7 @@ Leistungs­rechnung.
 
 ## Schnellstart
 
-Die App läuft auf drei Arten:
+Die App läuft auf zwei Arten:
 
 ### Variante 1: Im Browser (schnellster Weg)
 
@@ -42,9 +43,9 @@ python3 -m http.server 8000
 
 Alle Fortschritte werden lokal im `localStorage` des Browsers gespeichert.
 
-### Variante 2: Als Linux-Desktop-App (AppImage / Flatpak)
+### Variante 2: Als Linux-Desktop-App (AppImage)
 
-Pre-kompilierte Pakete gibt es unter [Releases](https://github.com/Gr33n93/TippTrainer-StBW/releases).
+Pre-kompilierte AppImages gibt es unter [Releases](https://github.com/Gr33n93/TippTrainer-StBW/releases).
 
 **AppImage** (portable, keine Installation):
 
@@ -53,12 +54,8 @@ chmod +x TippTrainer-StBW-*.AppImage
 ./TippTrainer-StBW-*.AppImage
 ```
 
-**Flatpak**:
-
-```bash
-flatpak install --user TippTrainer-StBW-*.flatpak
-flatpak run de.gr33n93.TippTrainer
-```
+Ein Flatpak kann aus dem Quellcode gebaut werden; die Voraussetzungen stehen in
+[`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 Die Desktop-App nutzt Electron als Chromium-Wrapper – die Web-App selbst bleibt unverändert. Fortschritte werden isoliert vom Browser gespeichert (Export/Import via Einstellungen zum Übertragen).
 
@@ -94,8 +91,9 @@ Die App ist auf **deutsches QWERTZ-Layout** optimiert. Andere Layouts
 │   ├── preload.cjs         # Security-Layer
 │   └── icon.png            # App-Icon
 ├── build/                  # Build-Ressourcen (Icon, Desktop-Datei, Metainfo)
+├── tests/                  # 125 Unit-, Integrations- und Sicherheitsregressionstests
 ├── electron-builder.yml    # Build-Konfiguration (Linux/Flatpak/AppImage)
-├── .github/workflows/      # CI: Lint + Desktop-App-Build
+├── .github/workflows/      # CI: Quality-Matrix + Desktop-App-Release
 ├── ARCHITECTURE.md         # Architektur-Dokumentation
 ├── PROGRESS.md             # Projektfortschritt / Changelog
 └── LICENSE                 # MIT-Lizenz
@@ -105,12 +103,13 @@ Detaillierte Modul-Beschreibungen siehe [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
 ## Entwicklung
 
-Es gibt keinen Build-Step. Für Linting und Formatierung (optional):
+Die Web-App benötigt keinen Build-Step. Für die Entwicklung ist Node.js 22.22.2 oder neuer nötig:
 
 ```bash
-npm install        # installiert dev-only Tools (ESLint, Prettier)
-npm run lint       # JS-Linting
-npm run format     # Auto-Formatierung
+npm ci                  # installiert ausschließlich die gelockten Dev-Werkzeuge
+npm test                # 125 Unit- und Integrationstests
+npm run test:coverage   # Tests plus Coverage-Grenzen
+npm run verify          # Syntax, Lint, Format, Tests, Coverage und Security-Audit
 ```
 
 Die App selbst hat **keine** Runtime-Abhängigkeiten – `npm install` ist
@@ -118,14 +117,9 @@ nur für Entwicklungs­werkzeuge nötig.
 
 ## Browser-Kompatibilität
 
-Getestet auf aktuellen Versionen von:
-
-- Chrome / Chromium
-- Firefox
-- Edge
-- Safari
-
-Internet Explorer wird nicht unterstützt.
+Die App ist für aktuelle Browser mit modernen Web-APIs ausgelegt. Die automatisierte Suite prüft die
+Geschäftslogik und den vollständigen DOM-Bootstrap; vor Releases bleibt ein manueller Smoke-Test in
+Chromium und Firefox vorgesehen. Internet Explorer wird nicht unterstützt.
 
 ## Daten & Privatsphäre
 

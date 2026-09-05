@@ -83,7 +83,7 @@ Prüfungstermin korrektes und schnelles Schreiben trainieren.
 ├── build/                      # Build-Ressourcen
 │   ├── icon.svg                # Vector-Quelle des Icons
 │   ├── icon.png                # PNG-Variante (256x256)
-│   ├── tipptrainer-stbw.desktop # Linux Desktop-Eintrag
+│   ├── de.gr33n93.TippTrainer.desktop # Linux Desktop-Eintrag
 │   └── de.gr33n93.TippTrainer.metainfo.xml # AppStream-Metadaten
 ├── electron-builder.yml        # Build-Konfiguration (Linux/Flatpak/AppImage)
 ├── ARCHITECTURE.md             # Dieses Dokument
@@ -313,14 +313,14 @@ Die Web-App bleibt unverändert – Electron ist nur ein Chrome-Wrapper.
 ### `build/` – Build-Ressourcen
 
 - `icon.svg`/`icon.png`: App-Icon für Linux-Desktop-Integration
-- `tipptrainer-stbw.desktop`: Linux Desktop-Eintrag (für App-Menüs)
+- `de.gr33n93.TippTrainer.desktop`: Linux Desktop-Eintrag (für App-Menüs)
 - `de.gr33n93.TippTrainer.metainfo.xml`: AppStream-Metadaten (für Software-Center, Flatpak)
 
 ### `electron-builder.yml` – Build-Konfiguration
 
 - Definiert Linux-Targets: AppImage, deb, tar.gz, flatpak
 - App-ID: `de.gr33n93.TippTrainer` (Reverse-DNS)
-- Flatpak-Runtime: `org.freedesktop.Platform//23.08` mit Electron-BaseApp
+- Flatpak-Runtime: `org.freedesktop.Platform//25.08` mit Electron-BaseApp
 - Schließt Dev-Dateien (`node_modules`, `dist`, `*.md`, etc.) aus dem Paket aus
 
 ## Lade-Reihenfolge (`<script>`-Tags in `index.html`)
@@ -430,7 +430,10 @@ Benutzer tippt
 
 - **Kein Build-Prozess** – Direktes Öffnen der `index.html` im Browser
   (per `file://` oder lokalem HTTP-Server)
-- **Test:** Manuell im Browser; optional `npm run lint` für Syntax-Check
+- **Test:** 125 automatisierte Unit-, Integrations-, Sicherheits-, Packaging- und DOM-Regressionstests über
+  `npm test`; `npm run test:coverage` erzwingt 90 % Zeilen-, 80 % Branch- und 85 %
+  Funktionsabdeckung
+- **Quality Gate:** `npm run verify` prüft Syntax, ESLint, Prettier, Tests, Coverage und npm-Audit
 - **Deploy:** Datei auf lokalen Rechner, öffnen per `file://`-Protokoll
   oder einfachem HTTP-Server (`python3 -m http.server`)
 

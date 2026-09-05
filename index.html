@@ -3,6 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; form-action 'none'"
+        />
         <title>TippTrainer StBW – 10-Finger-Training für die Steuerberaterprüfung</title>
         <!-- Stylesheets (mehrere Links statt @import - funktioniert auch per file://) -->
         <!-- 1. Base: Tokens, Reset -->
@@ -32,7 +36,15 @@
     </head>
     <body>
         <!-- Mobile Menu Toggle -->
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Menü öffnen">☰</button>
+        <button
+            class="mobile-toggle"
+            id="mobileToggle"
+            aria-label="Menü öffnen"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
 
         <div class="app-container">
             <!-- Sidebar -->
@@ -54,23 +66,35 @@
 
                 <nav>
                     <ul class="nav-list">
-                        <li class="nav-item active" data-view="dashboard">
-                            <span class="nav-icon">🏠</span> Dashboard
+                        <li>
+                            <button class="nav-item active" data-view="dashboard" aria-current="page">
+                                <span class="nav-icon">🏠</span> Dashboard
+                            </button>
                         </li>
-                        <li class="nav-item" data-view="levels">
-                            <span class="nav-icon">📚</span> Levelauswahl
+                        <li>
+                            <button class="nav-item" data-view="levels">
+                                <span class="nav-icon">📚</span> Levelauswahl
+                            </button>
                         </li>
-                        <li class="nav-item" data-view="calendar">
-                            <span class="nav-icon">📅</span> Kalender
+                        <li>
+                            <button class="nav-item" data-view="calendar">
+                                <span class="nav-icon">📅</span> Kalender
+                            </button>
                         </li>
-                        <li class="nav-item" data-view="achievements">
-                            <span class="nav-icon">🏆</span> Achievements
+                        <li>
+                            <button class="nav-item" data-view="achievements">
+                                <span class="nav-icon">🏆</span> Achievements
+                            </button>
                         </li>
-                        <li class="nav-item" data-view="progress">
-                            <span class="nav-icon">📈</span> Fortschritt
+                        <li>
+                            <button class="nav-item" data-view="progress">
+                                <span class="nav-icon">📈</span> Fortschritt
+                            </button>
                         </li>
-                        <li class="nav-item" data-view="settings">
-                            <span class="nav-icon">⚙️</span> Einstellungen
+                        <li>
+                            <button class="nav-item" data-view="settings">
+                                <span class="nav-icon">⚙️</span> Einstellungen
+                            </button>
                         </li>
                     </ul>
                 </nav>
@@ -99,7 +123,7 @@
                 </div>
 
                 <!-- ===== LEVEL SELECT ===== -->
-                <div class="view" id="view-levels">
+                <div class="view" id="view-levels" tabindex="-1">
                     <div class="level-header">
                         <button class="back-btn" id="backToDashboard">← Zurück</button>
                         <h2 id="levelTitle">Levelauswahl</h2>
@@ -150,6 +174,7 @@
                                 type="text"
                                 class="typing-input"
                                 id="typingInput"
+                                aria-label="Übungstext eingeben"
                                 placeholder="Klicke hier und beginne zu tippen..."
                                 autocomplete="off"
                                 autocorrect="off"
@@ -170,9 +195,17 @@
 
                     <div class="calendar-container">
                         <div class="calendar-nav">
-                            <button class="btn btn-sm btn-secondary" id="calPrev">←</button>
+                            <button
+                                class="btn btn-sm btn-secondary"
+                                id="calPrev"
+                                aria-label="Vorheriger Monat"
+                            >
+                                ←
+                            </button>
                             <h3 id="calTitle"></h3>
-                            <button class="btn btn-sm btn-secondary" id="calNext">→</button>
+                            <button class="btn btn-sm btn-secondary" id="calNext" aria-label="Nächster Monat">
+                                →
+                            </button>
                         </div>
 
                         <div class="calendar-grid">
@@ -275,7 +308,7 @@
                         <div class="settings-section">
                             <h3>Prüfung</h3>
                             <div class="settings-row">
-                                <label>Prüfungsdatum</label>
+                                <label for="targetDateInput">Prüfungsdatum</label>
                                 <div class="setting-control">
                                     <input type="date" id="targetDateInput" />
                                 </div>
@@ -332,12 +365,24 @@
         </div>
 
         <!-- Result Overlay -->
-        <div class="result-overlay" id="resultOverlay">
-            <div class="result-card" id="resultCard"></div>
+        <div
+            class="result-overlay"
+            id="resultOverlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="resultTitle"
+        >
+            <div class="result-card" id="resultCard" tabindex="-1"></div>
         </div>
 
         <!-- Toast Container -->
-        <div class="toast-container" id="toastContainer"></div>
+        <div
+            class="toast-container"
+            id="toastContainer"
+            role="status"
+            aria-live="polite"
+            aria-atomic="false"
+        ></div>
 
         <!-- Scripts (Dependency Order) -->
         <!-- 1. Core: Infrastruktur (State, Dom-Utils, Router) -->

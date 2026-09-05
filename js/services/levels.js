@@ -24,7 +24,7 @@ const Levels = (() => {
     }
 
     function _saveState(state) {
-        Storage.saveLevels(state);
+        return Storage.saveLevels(state);
     }
 
     function _initTopic(topic) {
@@ -67,11 +67,17 @@ const Levels = (() => {
             const key = `${level}_${difficulty}`;
             const existing = state[topic].completedLevels[key];
 
-            if (!existing || accuracy > existing.accuracy || wpm > existing.wpm) {
+            if (!existing) {
                 state[topic].completedLevels[key] = {
                     accuracy,
                     wpm,
                     completedAt: new Date().toISOString()
+                };
+            } else if (accuracy > existing.accuracy || wpm > existing.wpm) {
+                state[topic].completedLevels[key] = {
+                    accuracy: Math.max(accuracy, existing.accuracy),
+                    wpm: Math.max(wpm, existing.wpm),
+                    completedAt: existing.completedAt
                 };
             }
 
@@ -87,10 +93,12 @@ const Levels = (() => {
         return passed;
     }
 
-    function calculateXP(difficulty, accuracy, wpm, textLength) {
+    function calculateXP(difficulty, accuracy, wpm, textLength, passed = true) {
         const config = XP_REWARD[difficulty];
+        if (!config || !passed) return 5;
         let xp = config.base;
-        xp += Math.floor(textLength * config.perWord);
+        const wordCount = Math.max(0, textLength) / 5;
+        xp += Math.floor(wordCount * config.perWord);
 
         // Accuracy-Bonus: einmal fuer >=95%, zusaetzlich nochmal bei 100% (Perfect Bonus)
         if (accuracy >= 95) xp += config.accuracyBonus;
@@ -155,7 +163,7 @@ const Levels = (() => {
     }
 
     function resetAllProgress() {
-        Storage.saveLevels({});
+        return Storage.saveLevels({});
     }
 
     return {

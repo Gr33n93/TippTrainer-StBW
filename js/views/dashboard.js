@@ -37,7 +37,7 @@ const DashboardView = (() => {
                 const icon = Texts.getTopicIcon(topic);
 
                 return `
-                <div class="topic-card" data-topic="${Dom.escapeHtml(topic)}">
+                <button type="button" class="topic-card" data-topic="${Dom.escapeHtml(topic)}">
                     <div class="topic-icon">${Dom.escapeHtml(String(icon))}</div>
                     <div class="topic-name">${Dom.escapeHtml(name)}</div>
                     <div class="topic-desc">Level ${summary.maxUnlockedLevel} von ${Levels.MAX_LEVEL} freigeschaltet</div>
@@ -45,7 +45,7 @@ const DashboardView = (() => {
                         <div class="topic-progress-fill" style="width: ${summary.progressPercent}%"></div>
                     </div>
                     <div class="topic-progress-text">${summary.totalCompletions} / ${Levels.COMPLETIONS_PER_TOPIC} bestanden (${summary.progressPercent}%)</div>
-                </div>
+                </button>
             `;
             })
             .join('');

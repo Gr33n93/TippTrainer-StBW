@@ -11,7 +11,7 @@ git clone https://github.com/Gr33n93/TippTrainer-StBW.git
 cd TippTrainer-StBW
 
 # Dev-Abhaengigkeiten installieren (Lint, Format, Electron, Build-Tools)
-npm install
+npm ci
 
 # App im Browser testen
 open index.html        # macOS
@@ -34,9 +34,9 @@ Voraussetzung für Flatpak-Builds:
 sudo apt-get install flatpak flatpak-builder
 flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 flatpak install --user -y flathub \
-    org.freedesktop.Platform//23.08 \
-    org.freedesktop.Sdk//23.08 \
-    org.electronjs.Electron2.BaseApp//23.08
+    org.freedesktop.Platform//25.08 \
+    org.freedesktop.Sdk//25.08 \
+    org.electronjs.Electron2.BaseApp//25.08
 ```
 
 Dann:
@@ -59,10 +59,14 @@ npm start               # App direkt in Electron starten (ohne Build)
 
 ### Variante B: Via GitHub Actions (empfohlen)
 
-1. **Tag erstellen:** `git tag v1.0.0 && git push origin v1.0.0`
-2. **CI baut automatisch:** Workflow `Build Desktop App` startet
-3. **Artefakte herunterladen:** Im Tab "Actions" → Run → "Artifacts"
-4. **Oder Release:** Bei Tags wird automatisch ein GitHub-Release mit Downloads erstellt
+1. **Vorprüfung:** `npm run verify`
+2. **Version setzen:** dieselbe neue Version in `package.json`, `package-lock.json` und den
+   AppStream-Metadaten eintragen
+3. **Annotierten Tag erstellen:** `git tag -a vX.Y.Z -m "Release vX.Y.Z"` und mit
+   `git push origin vX.Y.Z` veröffentlichen; vorhandene Tags nie wiederverwenden
+4. **CI baut automatisch:** Workflow `Release AppImage` startet
+5. **Artefakte herunterladen:** Im Tab "Actions" → Run → "Artifacts"
+6. **Oder Release:** Bei Tags wird automatisch ein GitHub-Release samt SHA-256-Prüfsumme erstellt
 
 ## Code-Qualität
 
@@ -70,6 +74,9 @@ Vor jedem Commit bitte ausführen:
 
 ```bash
 npm run check          # ESLint + Prettier-Check kombiniert
+npm test               # Unit- und Integrationstests
+npm run test:coverage  # Testlauf mit verbindlichen Coverage-Grenzen
+npm run verify         # vollständiges lokales CI-Gate inklusive Security-Audit
 npm run lint:fix       # ESLint-Auto-Fixes
 npm run format         # Dateien mit Prettier formatieren
 ```
@@ -107,7 +114,7 @@ Modul-Übersicht und Datenfluss-Beschreibung.
     - `refactor:` Code-Umstrukturierung ohne Verhaltensänderung
     - `docs:` Dokumentation
     - `chore:` Build, Tooling, CI
-3. `npm run check` muss ohne Fehler durchlaufen
+3. `npm run verify` muss ohne Fehler durchlaufen
 4. PR mit klarer Beschreibung des Changes erstellen
 
 ## Issues

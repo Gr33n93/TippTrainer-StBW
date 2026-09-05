@@ -5,13 +5,17 @@
   "description": "Browserbasierter 10-Finger-Tipptrainer fuer die Steuerberaterpruefung (StBW).",
   "private": true,
   "main": "electron/main.cjs",
+  "desktopName": "de.gr33n93.TippTrainer.desktop",
   "scripts": {
-    "lint": "eslint js/ data/ --report-unused-disable-directives",
-    "lint:fix": "eslint js/ data/ --fix",
-    "format": "prettier --write \"**/*.{js,css,html,md,json}\"",
-    "format:check": "prettier --check \"**/*.{js,css,html,md,json}\"",
+    "lint": "eslint js/ data/ electron/ tests/ --report-unused-disable-directives --max-warnings=0",
+    "lint:fix": "eslint js/ data/ electron/ tests/ --fix",
+    "format": "prettier --write \"**/*.{js,cjs,css,html,md,json,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,cjs,css,html,md,json,yml,yaml}\"",
     "check": "npm run lint && npm run format:check",
-    "syntax-check": "for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js; do node --check \"$f\" || exit 1; done",
+    "syntax-check": "for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js electron/*.cjs tests/*.js tests/helpers/*.js; do node --check \"$f\" || exit 1; done",
+    "test": "TZ=Europe/Berlin node --test --experimental-test-isolation=none --test-concurrency=1 tests/*.test.js",
+    "test:coverage": "TZ=Europe/Berlin node --test --experimental-test-isolation=none --test-concurrency=1 --experimental-test-coverage --test-coverage-include='js/**/*.js' --test-coverage-include='data/*.js' --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=85 tests/*.test.js",
+    "verify": "npm run syntax-check && npm run check && npm run test:coverage && npm audit --audit-level=high",
     "start": "electron electron/main.cjs",
     "dist": "electron-builder",
     "dist:linux": "electron-builder --linux",
@@ -21,14 +25,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
-    "electron": "^32.0.0",
-    "electron-builder": "^25.0.0",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
     "eslint": "^9.10.0",
     "globals": "^15.9.0",
+    "jsdom": "^30.0.1",
     "prettier": "^3.3.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.22.2"
   },
   "license": "MIT",
   "author": "gr33n93",

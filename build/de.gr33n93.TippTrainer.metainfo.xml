@@ -16,7 +16,7 @@
     <ul>
       <li>4 Themenbereiche mit je 10 Leveln</li>
       <li>4 Schwierigkeitsstufen (leicht, normal, schwer, sehr schwer)</li>
-      <li>2.240+ Prüfungstexte mit fachlich korrektem Inhalt</li>
+      <li>Mehr als 1.870 unterschiedliche fachbezogene Übungstexte</li>
       <li>Echtzeit-Feedback (WPM, CPM, Genauigkeit)</li>
       <li>Gamification: XP-System, 32 Achievements</li>
       <li>Übungskalender mit Streak-Tracking</li>
@@ -24,22 +24,18 @@
       <li>Komplett clientseitig – kein Backend, läuft offline</li>
     </ul>
   </description>
-  <launchable type="desktop-id">tipptrainer-stbw.desktop</launchable>
-  <screenshots>
-    <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Gr33n93/TippTrainer-StBW/main/build/screenshot.png</image>
-      <caption>Dashboard mit Themenübersicht</caption>
-    </screenshot>
-  </screenshots>
+  <launchable type="desktop-id">de.gr33n93.TippTrainer.desktop</launchable>
   <url type="homepage">https://github.com/Gr33n93/TippTrainer-StBW</url>
   <url type="bugtracker">https://github.com/Gr33n93/TippTrainer-StBW/issues</url>
-  <url type="repository">https://github.com/Gr33n93/TippTrainer-StBW.git</url>
-  <developer_name>gr33n93</developer_name>
+  <url type="vcs-browser">https://github.com/Gr33n93/TippTrainer-StBW</url>
+  <developer id="de.gr33n93">
+    <name>gr33n93</name>
+  </developer>
   <provides>
     <id>de.gr33n93.TippTrainer.desktop</id>
   </provides>
   <releases>
-    <release version="1.0.0" date="2026-04-12">
+    <release version="1.0.0" date="2026-06-14">
       <description>
         <p>Erstveröffentlichung.</p>
       </description>

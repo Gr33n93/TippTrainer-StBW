@@ -1,65 +1,88 @@
 name: Release AppImage
 
 on:
-  push:
-    tags:
-      - 'v*' # Baut und released nur bei Version-Tags (z. B. v1.0.0)
-  workflow_dispatch: # Manueller Build ohne Release
+    push:
+        tags:
+            - 'v*' # Baut und released nur bei Version-Tags (z. B. v1.0.0)
+    workflow_dispatch: # Manueller Build ohne Release
+
+concurrency:
+    group: release-${{ github.ref }}
+    cancel-in-progress: false
 
 jobs:
-  build-appimage:
-    name: Linux AppImage
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
+    build-appimage:
+        name: Linux AppImage
+        runs-on: ubuntu-22.04
+        timeout-minutes: 30
+        permissions:
+            contents: read
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+              with:
+                  fetch-depth: 0
 
-      - name: Node einrichten
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+            - name: Node einrichten
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version: '22.22.2'
+                  cache: 'npm'
 
-      - name: Dependencies installieren
-        run: npm ci
+            - name: Dependencies installieren
+              run: npm ci
 
-      - name: Syntax-Check der Web-App
-        run: npm run syntax-check
+            - name: Vollständige Qualitätsprüfung
+              run: npm run verify
 
-      - name: Electron-AppImage bauen
-        run: npm run dist:appimage -- --publish never
+            - name: Tag und Paketversion abgleichen
+              if: startsWith(github.ref, 'refs/tags/')
+              run: |
+                  test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+                  git branch --remotes --contains "$GITHUB_SHA" | grep --quiet 'origin/main'
 
-      - name: Artefakte hochladen
-        uses: actions/upload-artifact@v4
-        with:
-          name: tipptrainer-appimage
-          path: dist-electron/*.AppImage
-          retention-days: 30
+            - name: Electron-AppImage bauen
+              run: npm run dist:appimage -- --publish never
 
-  release:
-    name: GitHub Release erstellen
-    needs: build-appimage
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    permissions:
-      contents: write
+            - name: SHA-256-Prüfsumme erzeugen
+              working-directory: dist-electron
+              run: sha256sum ./*.AppImage > SHA256SUMS.txt
 
-    steps:
-      - name: Artefakte herunterladen
-        uses: actions/download-artifact@v4
-        with:
-          name: tipptrainer-appimage
-          path: artifacts
+            - name: Artefakte hochladen
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+              with:
+                  name: tipptrainer-appimage
+                  path: |
+                      dist-electron/*.AppImage
+                      dist-electron/SHA256SUMS.txt
+                  if-no-files-found: error
+                  retention-days: 30
 
-      - name: Release erstellen
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/*.AppImage
-          generate_release_notes: true
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    release:
+        name: GitHub Release erstellen
+        needs: build-appimage
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        if: startsWith(github.ref, 'refs/tags/')
+        permissions:
+            contents: write
+
+        steps:
+            - name: Artefakte herunterladen
+              uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+              with:
+                  name: tipptrainer-appimage
+                  path: artifacts
+
+            - name: Release erstellen
+              uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+              with:
+                  files: |
+                      artifacts/*.AppImage
+                      artifacts/SHA256SUMS.txt
+                  generate_release_notes: true
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

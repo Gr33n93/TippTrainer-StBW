@@ -45,7 +45,7 @@ const LevelsView = (() => {
             const isCompleted = Levels.isLevelCompleted(State.topic, level, State.difficulty);
             const info = Levels.getCompletedInfo(State.topic, level, State.difficulty);
 
-            let statusText = '';
+            let statusText;
             let classes = 'level-btn';
 
             if (!isUnlocked) {

@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
-    "electron": "^32.0.0",
+    "electron": "^39.8.10",
     "electron-builder": "^25.0.0",
     "eslint": "^9.10.0",
     "globals": "^15.9.0",

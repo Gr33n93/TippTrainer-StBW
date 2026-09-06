@@ -2,7 +2,7 @@
   "name": "tipptrainer-stbw",
   "version": "1.1.1",
   "type": "module",
-  "description": "Browserbasierter 10-Finger-Tipptrainer fuer die Steuerberaterpruefung (StBW).",
+  "description": "Offlinefähiger 10-Finger-Tipptrainer für die Steuerberaterprüfung in Baden-Württemberg.",
   "private": true,
   "main": "electron/main.cjs",
   "desktopName": "de.gr33n93.TippTrainer.desktop",
@@ -39,6 +39,10 @@
   "license": "MIT",
   "author": "gr33n93",
   "homepage": "https://github.com/Gr33n93/TippTrainer-StBW",
+  "bugs": {
+    "url": "https://github.com/Gr33n93/TippTrainer-StBW/issues"
+  },
+  "funding": "https://ko-fi.com/nilsarnold",
   "repository": {
     "type": "git",
     "url": "https://github.com/Gr33n93/TippTrainer-StBW.git"

@@ -103,34 +103,34 @@ const Achievements = (() => {
         {
             id: 'topic_buchfuehrung',
             name: 'Buchführungs-Kenner',
-            description: 'Schließe alle Level-Bereich in Buchführung ab.',
+            description: 'Schließe alle Level im Bereich Buchführung ab.',
             icon: '📒',
             category: 'topic'
         },
         {
             id: 'topic_steuerrecht',
-            name: 'Steuer-Guru',
-            description: 'Schließe alle Level-Bereich in Steuerrecht ab.',
+            name: 'Steuerrechtskenner',
+            description: 'Schließe alle Level im Bereich Steuerrecht ab.',
             icon: '⚖️',
             category: 'topic'
         },
         {
             id: 'topic_bilanzen',
             name: 'Bilanz-Experte',
-            description: 'Schließe alle Level-Bereich in Bilanzen / EÜR ab.',
+            description: 'Schließe alle Level im Bereich Bilanzen / EÜR ab.',
             icon: '📊',
             category: 'topic'
         },
         {
             id: 'topic_klr',
             name: 'KLR-Profi',
-            description: 'Schließe alle Level-Bereich in Kosten- und Leistungsrechnung ab.',
+            description: 'Schließe alle Level im Bereich Kosten- und Leistungsrechnung ab.',
             icon: '📈',
             category: 'topic'
         },
         {
             id: 'all_topics',
-            name: 'Steuerberater-Assistent',
+            name: 'Themenprofi',
             description: 'Schließe alle Themenbereiche ab.',
             icon: '🎓',
             category: 'topic'

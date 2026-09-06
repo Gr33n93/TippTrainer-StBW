@@ -8,17 +8,17 @@
   <description>
     <p>
       Browserbasierter 10-Finger-Tipptrainer mit Fokus auf Inhalte der
-      Steuerberaterprüfung (Steuerberaterkammer Baden-Württemberg). Trainiert
-      Tippgeschwindigkeit und -genauigkeit mit prüfungsrelevanten Fachtexten
+      Steuerberaterprüfung in Baden-Württemberg. Trainiert
+      Tippgeschwindigkeit und -genauigkeit mit fachbezogenen Übungstexten zur Prüfungsvorbereitung
       aus Buchführung, Steuerrecht, Bilanzen/EÜR sowie Kosten- und
       Leistungsrechnung.
     </p>
     <ul>
       <li>4 Themenbereiche mit je 10 Leveln</li>
       <li>4 Schwierigkeitsstufen (leicht, normal, schwer, sehr schwer)</li>
-      <li>Mehr als 1.870 unterschiedliche fachbezogene Übungstexte</li>
+      <li>1.940 fachbezogene Übungstexte in 160 Auswahlpools</li>
       <li>Echtzeit-Feedback (WPM, CPM, Genauigkeit)</li>
-      <li>Gamification: XP-System, 32 Achievements</li>
+      <li>XP-System und 32 freischaltbare Leistungen</li>
       <li>Übungskalender mit Streak-Tracking</li>
       <li>Fortschrittsstatistiken mit Verlaufsdiagrammen</li>
       <li>Komplett clientseitig – kein Backend, läuft offline</li>
@@ -28,6 +28,16 @@
   <url type="homepage">https://github.com/Gr33n93/TippTrainer-StBW</url>
   <url type="bugtracker">https://github.com/Gr33n93/TippTrainer-StBW/issues</url>
   <developer_name>gr33n93</developer_name>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Gr33n93/TippTrainer-StBW/main/docs/screenshots/dashboard.png</image>
+      <caption>Themenbereiche und persönlicher Trainingsstand</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Gr33n93/TippTrainer-StBW/main/docs/screenshots/typing.png</image>
+      <caption>Tippübung mit Live-Auswertung</caption>
+    </screenshot>
+  </screenshots>
   <provides>
     <id>de.gr33n93.TippTrainer.desktop</id>
   </provides>

@@ -1,138 +1,94 @@
 # Beitragen
 
-Danke, dass du zu **TippTrainer StBW** beitragen möchtest! Dieses Dokument
-beschreibt den Entwicklungs-Workflow.
+Fehlerberichte, konkrete Verbesserungsvorschläge und nachvollziehbare Pull Requests sind willkommen.
+Bitte prüfe vor größeren Änderungen kurz die vorhandenen Issues, damit Arbeit nicht doppelt entsteht.
 
-## Schnellstart für Entwickler
+## Lokale Einrichtung
+
+Voraussetzungen:
+
+- Node.js 22.22.2 oder neuer
+- npm mit Unterstützung für Lockfile-Version 3
+- Linux für die veröffentlichten Paketziele
 
 ```bash
-# Repository klonen
 git clone https://github.com/Gr33n93/TippTrainer-StBW.git
 cd TippTrainer-StBW
-
-# Dev-Abhaengigkeiten installieren (Lint, Format, Electron, Build-Tools)
 npm ci
-
-# App im Browser testen
-open index.html        # macOS
-xdg-open index.html    # Linux
-start index.html       # Windows
-# oder: python3 -m http.server 8000
+python3 -m http.server 8000
 ```
 
-Die App hat **keine Runtime-Abhängigkeiten** – `npm install` ist nur für
-die Entwicklungs-Werkzeuge (ESLint, Prettier, Electron, electron-builder) nötig.
+Die Web-App ist anschließend unter `http://localhost:8000` erreichbar. Sie besitzt keine
+Laufzeitabhängigkeiten; `npm ci` installiert ausschließlich Entwicklungs- und Paketwerkzeuge.
 
-## Desktop-App bauen (Linux)
-
-### Variante A: Lokal bauen
-
-Voraussetzung für Flatpak-Builds:
+## Qualitätsprüfungen
 
 ```bash
-# Debian/Ubuntu
-sudo apt-get install flatpak flatpak-builder
-flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install --user -y flathub \
-    org.freedesktop.Platform//25.08 \
-    org.freedesktop.Sdk//25.08 \
-    org.electronjs.Electron2.BaseApp//25.08
+npm run syntax-check     # JavaScript-Syntax
+npm run lint             # ESLint
+npm run format:check     # Prettier ohne Änderungen
+npm test                 # Node- und DOM-Tests
+npm run test:coverage    # Tests mit verbindlichen Coverage-Grenzen
+npm run verify           # vollständiges lokales Quality-Gate
 ```
 
-Dann:
+`npm run test:layout` startet Electron und prüft Ansichten, Viewports, Zoom und echte Klicks. Der Test
+benötigt lokal eine grafische Sitzung; unter Linux läuft er in GitHub Actions auf einem virtuellen
+Display.
 
-```bash
-# Alle Linux-Targets (AppImage, deb, tar.gz, flatpak)
-npm run dist:linux
+Änderungen an Logik, Persistenz, Metadaten oder Workflows benötigen passende Regressionstests. Bei
+reinen Textänderungen müssen mindestens Formatkontrolle und Dokumentationsverträge erfolgreich sein.
 
-# Nur ein Target
-npm run dist:appimage
-npm run dist:flatpak
-```
+## Codekonventionen
 
-Ergebnisse liegen in `dist-electron/`. Für Tests ohne finales Paket:
+- Vier Leerzeichen Einrückung, Semikolons und einfache Anführungszeichen in JavaScript
+- IIFE-Module für die Browser-App, damit `file://` weiterhin unterstützt wird
+- Fachlogik in `js/services`, DOM-Code in `js/views`
+- Persistenz ausschließlich über `js/engine/storage.js`
+- Nutzerinhalte nie ungeprüft als HTML rendern
+- Bestehende Design-Tokens und responsive Breakpoints verwenden
 
-```bash
-npm run pack            # nur entpackt (schneller)
-npm start               # App direkt in Electron starten (ohne Build)
-```
-
-### Variante B: Via GitHub Actions (empfohlen)
-
-1. **Release-Branch vorbereiten:** `npm run verify` ausführen und dieselbe neue Version in
-   `package.json`, `package-lock.json` und den AppStream-Metadaten eintragen
-2. **Release-PR prüfen:** Pull Request öffnen und alle erforderlichen Quality-Checks abwarten
-3. **Nach `main` mergen:** anschließend auch die Checks des Merge-Commits abwarten
-4. **Release-Build testen:** Workflow `Release AppImage` über "Run workflow" manuell auf
-   `main` starten, das AppImage-Artefakt herunterladen und die Datei `SHA256SUMS.txt` prüfen
-5. **Commit abgleichen:** sicherstellen, dass lokales `main`, `origin/main` und der geprüfte
-   Workflow-Commit dieselbe SHA besitzen
-6. **Neuen annotierten Tag erstellen:** `git tag -a vX.Y.Z -m "Release vX.Y.Z"` und mit
-   `git push origin vX.Y.Z` veröffentlichen; vorhandene oder bereits veröffentlichte Tags nie
-   verschieben oder wiederverwenden
-7. **Tag-Workflow abwarten:** Der Tag startet `Release AppImage` und erstellt den GitHub-Release
-8. **Release prüfen:** AppImage und `SHA256SUMS.txt` aus dem Release herunterladen und die
-   SHA-256-Prüfsumme nochmals lokal verifizieren
-
-## Code-Qualität
-
-Vor jedem Commit bitte ausführen:
-
-```bash
-npm run check          # ESLint + Prettier-Check kombiniert
-npm test               # Unit- und Integrationstests
-npm run test:coverage  # Testlauf mit verbindlichen Coverage-Grenzen
-npm run verify         # vollständiges lokales CI-Gate inklusive Security-Audit
-npm run lint:fix       # ESLint-Auto-Fixes
-npm run format         # Dateien mit Prettier formatieren
-```
-
-## Code-Konventionen
-
-- **JavaScript**: IIFE-Modul-Pattern (keine ES6-Module, um `file://`-Kompatibilität zu bewahren)
-- **Einrückung**: 4 Spaces (siehe `.editorconfig`)
-- **Namen**:
-    - Module: `PascalCase` (`Storage`, `LevelsView`)
-    - Funktionen/Variablen: `camelCase`
-    - Private Helper: `_`-Präfix (`_key`, `_getState`)
-- **Style**:
-    - Single Quotes für Strings
-    - Kein trailing Comma
-    - Semikolons immer
-- **Datei-Organisation**:
-    - `js/core/` – Infrastruktur (State, Dom, Router)
-    - `js/engine/` – Persistenz und Tipp-Engine
-    - `js/services/` – Geschäftslogik (keine DOM-Kopplung)
-    - `js/views/` – DOM-Rendering und UI-Events
-    - `data/` – Reine Text-Daten
-
-## Architektur
-
-Siehe [`ARCHITECTURE.md`](./ARCHITECTURE.md) für die detaillierte
-Modul-Übersicht und Datenfluss-Beschreibung.
+ESLint und Prettier sind maßgeblich. Automatische Korrekturen können mit `npm run lint:fix` und
+`npm run format` angewendet werden.
 
 ## Pull Requests
 
-1. Feature-Branch erstellen (`git checkout -b feature/mein-feature`)
-2. Logische Commits mit klaren Messages (Konventional Commits bevorzugt):
-    - `feat:` neues Feature
-    - `fix:` Bugfix
-    - `refactor:` Code-Umstrukturierung ohne Verhaltensänderung
-    - `docs:` Dokumentation
-    - `chore:` Build, Tooling, CI
-3. `npm run verify` muss ohne Fehler durchlaufen
-4. PR mit klarer Beschreibung des Changes erstellen
+1. Einen kleinen, thematisch geschlossenen Branch anlegen.
+2. Commits eindeutig benennen; Conventional Commits wie `fix:`, `feat:`, `docs:` und `chore:` sind
+   bevorzugt.
+3. `npm run verify` ausführen und UI-Änderungen zusätzlich mit Tastatur und schmalem Viewport prüfen.
+4. Im Pull Request Zweck, Prüfung und mögliche Daten- oder Kompatibilitätsrisiken beschreiben.
+5. Erst mergen, wenn die verpflichtenden GitHub-Checks grün sind.
 
-## Issues
+## Linux-Pakete bauen
 
-Bitte nur Issues mit folgenden Angaben erstellen:
+```bash
+npm run pack              # entpackte Electron-App
+npm run dist:appimage     # AppImage
+npm run dist:linux        # AppImage, deb, tar.gz und Flatpak
+```
 
-- Klare Beschreibung des Problems/Wunschs
-- Schritte zur Reproduktion (bei Bugs)
-- Erwartetes vs. tatsächliches Verhalten
-- Browser + Version
+Für Flatpak werden `flatpak` und `flatpak-builder` sowie die in `electron-builder.yml` angegebenen
+Freedesktop- und Electron-Runtimes benötigt. Build-Ergebnisse liegen unter `dist-electron/` und
+gehören nicht ins Repository.
 
-## Lizenz
+## Veröffentlichung
 
-Durch das Einreichen von Beiträgen stimmst du zu, dass diese unter der
-[MIT-Lizenz](./LICENSE) veröffentlicht werden.
+1. Version in `package.json`, `package-lock.json` und AppStream-Metadaten synchron aktualisieren.
+2. Release-Änderungen per Pull Request prüfen und mergen.
+3. Die Checks des neuen `main`-Commits vollständig abwarten.
+4. `Release AppImage` manuell auf `main` ausführen; AppImage herunterladen und
+   `sha256sum --check SHA256SUMS.txt` ausführen.
+5. Lokales `main`, `origin/main` und Workflow-SHA abgleichen.
+6. Einen neuen annotierten Tag `vX.Y.Z` erstellen und pushen. Veröffentlichte Tags werden nie
+   verschoben oder wiederverwendet.
+7. Tag-Workflow, GitHub-Release, Assets und Prüfsumme kontrollieren.
+
+## Meldungen
+
+Für Fehler und Funktionswünsche stehen strukturierte Issue-Vorlagen bereit. Sicherheitslücken gehören
+nicht in öffentliche Issues; verwende dafür die in [SECURITY.md](SECURITY.md) beschriebene private
+Meldung.
+
+Mit einem Beitrag erklärst du dich damit einverstanden, dass er unter der
+[MIT-Lizenz](LICENSE) veröffentlicht wird.

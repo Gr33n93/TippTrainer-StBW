@@ -45,6 +45,11 @@ describe('Achievements', () => {
         assert.equal(all.length, 32);
         assert.equal(new Set(all.map(({ id }) => id)).size, 32);
         assert.equal(context.Achievements.getTotalCount(), 32);
+        assert.equal(all.find(({ id }) => id === 'topic_steuerrecht').name, 'Steuerrechtskenner');
+        assert.equal(all.find(({ id }) => id === 'all_topics').name, 'Themenprofi');
+        for (const achievement of all) {
+            assert.doesNotMatch(achievement.description, /Level-Bereich/);
+        }
     });
 
     it('schaltet Basis-, Accuracy- und Speed-Erfolge an Grenzwerten frei', () => {

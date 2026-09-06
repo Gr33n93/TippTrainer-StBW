@@ -3,17 +3,18 @@
 /**
  * App-Bootstrap: Initialisiert alle Module und startet die App.
  *
- * Diese Datei enthaelt absichtlich KEINE Geschaeftslogik und KEIN
- * DOM-Rendering. Sie ausschliesslich fuer die Initialisierungs-Reihenfolge
- * und das Wiring zwischen Modulen verantwortlich.
+ * Diese Datei enthält bewusst keine Geschäftslogik und kein DOM-Rendering.
+ * Sie ist ausschließlich für die Initialisierungsreihenfolge und die
+ * Verbindung der Module verantwortlich.
  *
  * Modul-Hierarchie (Lade-Reihenfolge in index.html):
- *   1. core/      - State, Dom, Router (Infrastruktur)
- *   2. engine/    - Storage, Typing, Texts (Persistenz + Engine)
- *   3. data/      - Texte (Daten)
+ *   1. core/      - State, Dom (Infrastruktur)
+ *   2. engine/    - Storage, Typing (Persistenz + Engine)
+ *   3. data/      - Text-API und Übungstexte
  *   4. services/  - Levels, Calendar, Progress, Achievements, ...
- *   5. views/     - Dashboard, Levels, Typing, Result, Calendar, ...
- *   6. app.js     - Bootstrap (diese Datei)
+ *   5. core/      - Router
+ *   6. views/     - Dashboard, Levels, Typing, Result, Calendar, ...
+ *   7. app.js     - Bootstrap (diese Datei)
  */
 const App = (() => {
     let initialized = false;
@@ -22,7 +23,7 @@ const App = (() => {
         if (initialized) return;
         initialized = true;
 
-        // Text-Daten in das Texts-Modul mergen
+        // Textdaten in das Texts-Modul übernehmen
         TextsExtra.apply();
         if (typeof TextsSehrSchwer !== 'undefined') TextsSehrSchwer.apply();
 

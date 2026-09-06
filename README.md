@@ -1,138 +1,123 @@
-# ⌨️ TippTrainer StBW
+<p align="center">
+  <img src="build/icon.svg" width="112" height="112" alt="Logo von TippTrainer StBW">
+</p>
 
-Browserbasierter 10-Finger-Tipptrainer mit Fokus auf Inhalte der
-Steuerberaterprüfung (Steuerberater­kammer Baden-Württemberg). Trainiert
-Tippgeschwindigkeit und -genauigkeit mit prüfungs­relevanten Fachtexten
-aus Buchführung, Steuerrecht, Bilanzen/EÜR sowie Kosten- und
-Leistungs­rechnung.
+<h1 align="center">TippTrainer StBW</h1>
 
-> **Hinweis:** Dieses Projekt ist eine Lern- und Tippübungs­applikation, nicht mit der
-> Steuerberater­kammer Baden-Württemberg affiliiert und keine Steuer- oder Rechtsberatung. Rechtliche
-> Inhalte können sich ändern und sollten mit aktuellen amtlichen Quellen abgeglichen werden.
+<p align="center">
+  Offlinefähiges 10-Finger-Training mit Fachtexten zur Steuerberaterprüfung in Baden-Württemberg.
+</p>
 
-## Features
+<p align="center">
+  <a href="https://github.com/Gr33n93/TippTrainer-StBW/actions/workflows/lint.yml"><img src="https://github.com/Gr33n93/TippTrainer-StBW/actions/workflows/lint.yml/badge.svg?branch=main" alt="Quality"></a>
+  <a href="https://github.com/Gr33n93/TippTrainer-StBW/releases/latest"><img src="https://img.shields.io/github/v/release/Gr33n93/TippTrainer-StBW?label=Release" alt="Aktuelle Version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Gr33n93/TippTrainer-StBW" alt="MIT-Lizenz"></a>
+</p>
 
-- **4 Themenbereiche** (Buchführung, Steuerrecht, Bilanzen/EÜR, KLR) mit je 10 Leveln
-- **4 Schwierigkeitsstufen** (leicht / normal / schwer / sehr schwer)
-- **1.870+ unterschiedliche fachbezogene Übungstexte** ohne Wiederholungen im selben Auswahlpool
-- **Echtzeit-Feedback** während des Tippens (WPM, CPM, Genauigkeit)
-- **Gamification**: XP-System, 32 Achievements, Level-Freischaltungen
-- **Übungskalender** mit Streak-Tracking (GitHub-Style-Heatmap)
-- **Fortschritts­statistiken** mit Verlaufs­diagrammen
-- **Konfigurierbares Prüfungs­datum** mit Countdown
-- **Daten-Export/Import** (JSON) als Backup
-- **Komplett clientseitig** – kein Backend, keine Tracking, läuft offline
-- **Prüfungsatelier-Design** mit redaktioneller Typografie und responsiver Oberfläche
+![Dashboard des TippTrainers mit Themenbereichen und Trainingsstand](docs/screenshots/dashboard.png)
 
-## Schnellstart
+TippTrainer StBW verbindet klassisches Tipptraining mit Begriffen und Texten aus Buchführung,
+Steuerrecht, Bilanzen/EÜR sowie Kosten- und Leistungsrechnung. Die Anwendung läuft vollständig
+lokal: im Browser ohne Installation oder unter Linux als AppImage.
 
-Die App läuft auf zwei Arten:
+> [!IMPORTANT]
+> Dieses Projekt ist eine unabhängige Lernanwendung. Es ist weder mit einer Steuerberaterkammer
+> noch mit der Steuerberaterprüfungsstelle Baden-Württemberg verbunden und ersetzt keine Steuer-
+> oder Rechtsberatung. Fachliche Inhalte können veralten und sollten mit aktuellen amtlichen
+> Quellen abgeglichen werden.
 
-### Variante 1: Im Browser (schnellster Weg)
+## Funktionen
 
-```bash
-# Option A: Direkt öffnen
-open index.html        # macOS
-xdg-open index.html    # Linux
-start index.html       # Windows
+- 4 Themenbereiche mit jeweils 10 aufeinander aufbauenden Leveln
+- 4 Schwierigkeitsstufen mit eigenen Zielwerten für Tempo und Genauigkeit
+- 1.940 Übungstexte in 160 Auswahlpools, jeweils ohne interne Dubletten
+- Live-Auswertung mit WPM, CPM, Genauigkeit und Zeit
+- XP, 32 Leistungen und Freischaltung weiterer Level
+- Übungskalender, Serien und ausführliche Fortschrittsstatistik
+- Prüfungstermin mit lokal berechnetem Countdown
+- Export und Import des vollständigen Lernstands als JSON-Datei
+- Responsive Bedienung per Maus, Tastatur oder Touch
+- Kein Konto, kein Backend und kein Tracking
 
-# Option B: Lokaler HTTP-Server (für konsistentere CORS-Bedingungen)
-python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
-```
+## Download und Start
 
-Alle Fortschritte werden lokal im `localStorage` des Browsers gespeichert.
+### Linux-AppImage
 
-### Variante 2: Als Linux-Desktop-App (AppImage)
-
-Pre-kompilierte AppImages gibt es unter [Releases](https://github.com/Gr33n93/TippTrainer-StBW/releases).
-
-**AppImage** (portable, keine Installation):
+Die aktuelle Ausgabe steht unter [Releases](https://github.com/Gr33n93/TippTrainer-StBW/releases/latest)
+bereit. AppImage und `SHA256SUMS.txt` in dasselbe Verzeichnis herunterladen und anschließend prüfen:
 
 ```bash
+sha256sum --check SHA256SUMS.txt
 chmod +x TippTrainer-StBW-*.AppImage
 ./TippTrainer-StBW-*.AppImage
 ```
 
-Ein Flatpak kann aus dem Quellcode gebaut werden; die Voraussetzungen stehen in
-[`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Das AppImage ist für Linux auf x86-64 gebaut und benötigt keine systemweite Installation.
 
-Die Desktop-App nutzt Electron als Chromium-Wrapper – die Web-App selbst bleibt unverändert. Fortschritte werden isoliert vom Browser gespeichert (Export/Import via Einstellungen zum Übertragen).
-
-## Tastatur-Hinweis
-
-Die App ist auf **deutsches QWERTZ-Layout** optimiert. Andere Layouts
-(QWERTY, AZERTY, Dvorak) funktionieren prinzipiell, die Sonderzeichen
-(§, %, €, &, etc.) liegen jedoch an anderen Positionen.
-
-## Tech-Stack
-
-- **HTML5** – Single-Page-Application
-- **CSS3** – Prüfungsatelier-Design mit CSS Custom Properties und responsivem Layout
-- **Vanilla JavaScript (ES6+)** – IIFE-Modul-Pattern, keine Frameworks
-- **LocalStorage** – Persistenz für Fortschritt, Achievements, Kalender
-- **Keine externen Abhängigkeiten** – keine CDNs, keine Bibliotheken
-
-## Projektstruktur
-
-```
-.
-├── index.html              # SPA-Einstiegspunkt
-├── css/                    # Stylesheets (Prüfungsatelier, Layout, Views)
-├── js/                     # JavaScript-Module
-│   ├── core/               # State, Router, Utilities
-│   ├── services/           # Levels, Calendar, Progress, Achievements
-│   ├── views/              # View-Module (Dashboard, Typing, etc.)
-│   ├── engine/             # Typing-Engine, Storage, Texts
-│   └── app.js              # Bootstrap
-├── data/                   # Text-Inhalte (gegliedert nach Schwierigkeit)
-├── electron/               # Electron-Wrapper (Desktop-App)
-│   ├── main.cjs            # Hauptprozess
-│   ├── preload.cjs         # Security-Layer
-│   └── icon.png            # App-Icon
-├── build/                  # Build-Ressourcen (Icon, Desktop-Datei, Metainfo)
-├── tests/                  # 160 Unit-, Integrations-, Layout- und Sicherheitsregressionstests
-├── electron-builder.yml    # Build-Konfiguration (Linux/Flatpak/AppImage)
-├── .github/workflows/      # CI: Quality-Matrix + Desktop-App-Release
-├── ARCHITECTURE.md         # Architektur-Dokumentation
-├── PROGRESS.md             # Projektfortschritt / Changelog
-└── LICENSE                 # MIT-Lizenz
-```
-
-Detaillierte Modul-Beschreibungen siehe [`ARCHITECTURE.md`](./ARCHITECTURE.md).
-
-## Entwicklung
-
-Die Web-App benötigt keinen Build-Step. Für die Entwicklung ist Node.js 22.22.2 oder neuer nötig:
+### Im Browser
 
 ```bash
-npm ci                  # installiert ausschließlich die gelockten Dev-Werkzeuge
-npm test                # 160 Unit- und Integrationstests
-npm run test:coverage   # Tests plus Coverage-Grenzen
-npm run verify          # Syntax, Lint, Format, Tests, Coverage und Security-Audit
+git clone https://github.com/Gr33n93/TippTrainer-StBW.git
+cd TippTrainer-StBW
+python3 -m http.server 8000
 ```
 
-Die App selbst hat **keine** Runtime-Abhängigkeiten – `npm install` ist
-nur für Entwicklungs­werkzeuge nötig.
+Danach `http://localhost:8000` aufrufen. Alternativ lässt sich `index.html` direkt öffnen. Der
+Lernstand des Browsers und der Desktop-App wird getrennt gespeichert; über Export und Import kann
+er übertragen werden.
 
-## Browser-Kompatibilität
+## Oberfläche
 
-Die App ist für aktuelle Browser mit modernen Web-APIs ausgelegt. Die automatisierte Suite prüft die
-Geschäftslogik und den vollständigen DOM-Bootstrap; vor Releases bleibt ein manueller Smoke-Test in
-Chromium und Firefox vorgesehen. Internet Explorer wird nicht unterstützt.
+![Tippansicht mit Live-Werten und markiertem Schreibfortschritt](docs/screenshots/typing.png)
 
-## Daten & Privatsphäre
+Das Prüfungsatelier setzt auf ruhige Papierflächen, eine klare redaktionelle Typografie und einen
+konzentrierten Schreibbereich. Tabellen, Diagramme und Kalender bleiben auch bei schmalen
+Bildschirmen bedienbar.
 
-- Alle Daten (Fortschritt, Statistiken, Einstellungen) liegen **ausschließlich lokal** im Browser.
-- Es wird **keine Daten** an externe Server übertragen.
-- Beim Löschen der Browser-Daten sind alle Fortschritte verloren – nutze
-  den integrierten Export (Einstellungen → Daten → Exportieren) als Backup.
+## Technik und Entwicklung
+
+Die Web-Anwendung besteht aus HTML, CSS und Vanilla JavaScript. Sie hat keine Laufzeitabhängigkeiten
+und kommuniziert nicht mit externen Diensten. Electron dient ausschließlich als Linux-Desktop-Hülle.
+
+Für Entwicklung und Tests wird Node.js 22.22.2 oder neuer benötigt:
+
+```bash
+npm ci
+npm test
+npm run test:coverage
+npm run verify
+```
+
+Die Testsuite umfasst mehr als 160 automatisierte Node-Prüfungen. In der CI kommen separate
+Electron-Tests für responsive Ansichten, echte Klicks, Zoom und den Start des gebauten Pakets hinzu.
+
+Weiterführende Dokumentation:
+
+- [Architektur](ARCHITECTURE.md)
+- [Änderungsverlauf](CHANGELOG.md)
+- [Beitragen](CONTRIBUTING.md)
+- [Sicherheitsrichtlinie](SECURITY.md)
+
+## Daten und Browser
+
+Fortschritt, Einstellungen und Leistungen liegen ausschließlich im lokalen Speicher der jeweiligen
+Anwendung. Beim Löschen der Browser- oder App-Daten geht der Lernstand verloren, sofern zuvor kein
+Export erstellt wurde.
+
+Die Anwendung ist für aktuelle Browser mit modernen Web-APIs ausgelegt. Automatisiert geprüft werden
+die Geschäftslogik, die DOM-Integration und die Electron-Oberfläche; eine vollständige
+Mehrbrowser-Matrix besteht derzeit nicht. Das Training ist auf ein deutsches QWERTZ-Layout
+zugeschnitten.
+
+## Mitmachen und unterstützen
+
+Fehler und konkrete Verbesserungsvorschläge sind als
+[Issue](https://github.com/Gr33n93/TippTrainer-StBW/issues) oder Pull Request willkommen. Hinweise zur
+lokalen Einrichtung und zum Review-Ablauf stehen in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Wenn dir TippTrainer StBW beim Lernen hilft, kannst du Pflege und Weiterentwicklung freiwillig auf
+[Ko-fi](https://ko-fi.com/nilsarnold) unterstützen.
 
 ## Lizenz
 
-[MIT](./LICENSE) – Copyright (c) 2026 gr33n93
-
-## Beitragen
-
-Fehler gefunden? Verbesserungs­vorschläge? Gerne als Issue oder Pull
-Request auf GitHub.
+Veröffentlicht unter der [MIT-Lizenz](LICENSE). Copyright © 2026 gr33n93.

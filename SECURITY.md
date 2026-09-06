@@ -2,16 +2,26 @@
 
 ## Unterstützte Versionen
 
-Sicherheitskorrekturen werden für den aktuellen Stand des `main`-Branches und die neueste
-veröffentlichte Version bereitgestellt.
+| Version | Sicherheitskorrekturen |
+| ------- | ---------------------- |
+| 1.1.x   | Ja                     |
+| ≤ 1.0.x | Nein                   |
+
+Der aktuelle Stand von `main` erhält Korrekturen bis zur nächsten Veröffentlichung. Ältere Versionen
+werden nicht rückwirkend gepflegt.
 
 ## Sicherheitslücken melden
 
-Bitte veröffentliche mögliche Sicherheitslücken nicht zuerst als öffentliches Issue. Nutze stattdessen
+Bitte veröffentliche mögliche Sicherheitslücken nicht zuerst als öffentliches Issue. Nutze
 [GitHubs private Sicherheitsmeldungen](https://github.com/Gr33n93/TippTrainer-StBW/security/advisories/new).
 
-Beschreibe nach Möglichkeit die betroffene Version, Reproduktionsschritte, mögliche Auswirkungen und
-einen Korrekturvorschlag. Eine erste Rückmeldung erfolgt üblicherweise innerhalb von sieben Tagen.
+Eine hilfreiche Meldung enthält:
 
-Fortschritts-Backups sind nicht vertrauenswürdig zu behandeln. Die Anwendung validiert Importdateien
-vollständig; sicherheitsrelevante Umgehungen dieser Prüfung sind ausdrücklich meldewürdig.
+- betroffene Version und Umgebung
+- nachvollziehbare Reproduktionsschritte
+- mögliche Auswirkungen
+- einen Korrekturvorschlag, sofern vorhanden
+
+Meldungen werden zunächst auf Reproduzierbarkeit und Auswirkung geprüft. Fortschritts-Backups gelten
+als nicht vertrauenswürdige Eingabe; Umgehungen der Importvalidierung sind ausdrücklich
+sicherheitsrelevant.

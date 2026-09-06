@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Sicherheitslücke vertraulich melden
+      url: https://github.com/Gr33n93/TippTrainer-StBW/security/advisories/new
+      about: Sicherheitsrelevante Hinweise bitte nicht öffentlich einreichen.

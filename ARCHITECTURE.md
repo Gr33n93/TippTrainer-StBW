@@ -1,451 +1,161 @@
-# Architektur: TippTrainer StBW
+# Architektur
 
-## Zweck
+Dieses Dokument beschreibt die technischen Grenzen und den Datenfluss von TippTrainer StBW. Details,
+die sich direkt aus einzelnen Funktionen ergeben, bleiben im Quellcode und in den Tests dokumentiert.
 
-Browserbasierter 10-Finger-Tipptrainer mit Fokus auf deutsche
-Steuerberater-Prüfungsinhalte (Baden-Württemberg). Ziel: Bis zum
-Prüfungstermin korrektes und schnelles Schreiben trainieren.
+## Leitlinien
 
-## Tech-Stack
-
-- **HTML5** – Seitenstruktur, Single-Page-Application
-- **CSS3** – Prüfungsatelier-Design, Responsive Design, CSS-Variablen für Theming
-- **Vanilla JavaScript (ES6+)** – IIFE-Modul-Pattern, keine Frameworks
-- **LocalStorage** – Persistenz für Fortschritt, Achievements, Kalenderdaten
-- **Kein Backend** – Läuft komplett clientseitig, öffnen per `file://` oder HTTP
-- **Keine Build-Tools für die Web-App** – Direktes Öffnen der `index.html` im Browser
-- **Electron (optional)** – Wrapper für Linux-Desktop-Apps (AppImage/Flatpak), baut auf der unveränderten Web-App auf
+- Die Web-App muss ohne Build-Schritt per `file://` oder über einen einfachen HTTP-Server laufen.
+- Fachlogik und Persistenz bleiben unabhängig vom DOM testbar.
+- Es gibt kein Backend, keine Telemetrie und keine extern geladenen Laufzeitbibliotheken.
+- Electron verpackt dieselbe Web-App und erweitert sie nicht um privilegierte Renderer-APIs.
+- Nutzerdaten bleiben lokal und können nur bewusst als JSON-Datei exportiert werden.
 
 ## Verzeichnisstruktur
 
-```
+```text
 .
-├── index.html                  # SPA-Einstiegspunkt
+├── index.html              Einstiegspunkt und statische Struktur der SPA
 ├── css/
-│   ├── base/                   # Design-Tokens, Reset
-│   │   ├── variables.css       # :root-Tokens (Farben, Radien, Schriften)
-│   │   └── reset.css           # Universal-Reset, body
-│   ├── layout/                 # App-Container, Sidebar
-│   │   ├── app.css
-│   │   └── sidebar.css         # Sidebar, XP-Bar, Navigation, Footer
-│   ├── components/             # Wiederverwendbare UI-Komponenten
-│   │   ├── view-container.css  # .view/.active-Schaltung
-│   │   ├── buttons.css         # .btn-Modifikatoren
-│   │   ├── toast.css           # Toast-Notifications
-│   │   ├── empty-state.css     # Leer-Zustände
-│   │   └── mobile-toggle.css   # Hamburger-Button
-│   ├── views/                  # View-spezifische Styles
-│   │   ├── dashboard.css
-│   │   ├── levels.css
-│   │   ├── typing.css
-│   │   ├── result.css          # Result-Modal
-│   │   ├── calendar.css
-│   │   ├── achievements.css
-│   │   ├── progress.css
-│   │   └── settings.css
-│   ├── animations.css          # Zentrale @keyframes
-│   └── responsive.css          # Media-Queries
+│   ├── base/               Design-Tokens und Reset
+│   ├── components/         Wiederverwendbare Bedienelemente
+│   ├── layout/             Grundlayout und Navigation
+│   ├── views/              Ansichtsbezogene Styles
+│   ├── animations.css      Gemeinsame Animationen
+│   └── responsive.css      Responsive Anpassungen
+├── data/                   Text-API und Übungskorpus
 ├── js/
-│   ├── core/                   # Infrastruktur
-│   │   ├── state.js            # Zentraler App-State (View, Topic, Level, ...)
-│   │   ├── dom.js              # DOM-Helper, Stat-Card, Toast, Escaping
-│   │   └── router.js           # SPA-View-Routing, Navigation
-│   ├── engine/                 # Engine + Persistenz
-│   │   ├── storage.js          # LocalStorage-Wrapper (CRUD, XP, Migration)
-│   │   ├── typing.js           # Tipp-Engine (Zeichen-Vergleich, WPM, CPM)
-│   │   └── (texts.js -> data/) # Text-API
-│   ├── services/               # Geschäftslogik
-│   │   ├── levels.js           # Level-System, Schwierigkeiten, XP-Berechnung
-│   │   ├── calendar.js         # Übungskalender, Streaks
-│   │   ├── progress.js         # Session-Historie, Statistiken
-│   │   ├── achievements.js     # Achievement-System
-│   │   ├── recommendation.js   # Difficulty-Empfehlung nach Übung
-│   │   └── session-completion.js # Workflow nach Übungsabschluss
-│   ├── views/                  # View-Module (DOM-Rendering)
-│   │   ├── chrome.js           # Globale UI (XP, Countdown)
-│   │   ├── dashboard.js
-│   │   ├── levels.js
-│   │   ├── typing.js           # Tipp-View + Engine-Anbindung
-│   │   ├── result.js           # Result-Overlay
-│   │   ├── calendar.js
-│   │   ├── achievements.js
-│   │   ├── progress.js
-│   │   └── settings.js
-│   └── app.js                  # Bootstrap (~60 Zeilen)
-├── data/                       # Reine Daten-Module
-│   ├── texts.js                # Text-API + 960 Basis-Texte
-│   ├── texts-extra.js          # 960+ zusätzliche Texte
-│   └── texts-sehrSchwer.js     # 320 Sehr-Schwer-Texte
-├── electron/                   # Electron-Wrapper (Desktop-App)
-│   ├── main.cjs                # Hauptprozess (BrowserWindow)
-│   ├── preload.cjs             # Security-Layer
-│   └── icon.png                # App-Icon (512x512)
-├── build/                      # Build-Ressourcen
-│   ├── icon.svg                # Vector-Quelle des Icons
-│   ├── icon.png                # PNG-Variante (256x256)
-│   ├── de.gr33n93.TippTrainer.desktop # Linux Desktop-Eintrag
-│   └── de.gr33n93.TippTrainer.metainfo.xml # AppStream-Metadaten
-├── electron-builder.yml        # Build-Konfiguration (Linux/Flatpak/AppImage)
-├── ARCHITECTURE.md             # Dieses Dokument
-├── PROGRESS.md                 # Projektfortschritt / Changelog
-├── README.md                   # Öffentliche Projekt-Doku
-├── CONTRIBUTING.md             # Beitrag-Leitfaden
-├── LICENSE                     # MIT
-└── .gitignore
+│   ├── core/               State, DOM-Helfer und Router
+│   ├── engine/             Persistenz und Tipp-Engine
+│   ├── services/           Fachlogik ohne View-Verantwortung
+│   ├── views/              Rendering und Ereignisbindung
+│   └── app.js              Initialisierung
+├── electron/               Gehärtete Desktop-Hülle
+├── build/                  Icons und Linux-Metadaten
+├── tests/                  Node-, DOM-, Sicherheits- und Paketverträge
+└── .github/workflows/      Quality- und Release-Pipeline
 ```
 
-## Modul-Verantwortlichkeiten
-
-### `index.html`
-
-- Single-Page-Application mit View-Containern
-- Lädt alle CSS-Dateien via `<link>` (statt `@import`, für `file://`-Kompatibilität)
-- Lädt alle JS-Module in strenger Abhängigkeits-Reihenfolge via `<script>`-Tags
-- Enthält die statische HTML-Struktur für alle Views
-
-### `css/`
-
-- **Base**: Design-Tokens als CSS Custom Properties (`:root`), Universal-Reset
-- **Layout**: App-Container, Sidebar (fixiert, 260px breit über `--sidebar-width`)
-- **Components**: Wiederverwendbare Komponenten (Buttons, Toasts, Leer-Zustände)
-- **Views**: Pro View eine eigene Datei (Dashboard, Levels, Typing, etc.)
-- **Animations**: Zentrale `@keyframes` (vorher über Datei verstreut)
-- **Responsive**: Media-Queries (768px Tablet, 480px Phone)
-- **Wichtig**: Statt `@import` (welches bei `file://` CORS-Probleme macht)
-  werden mehrere `<link>`-Tags verwendet.
-
-### `js/core/` – Infrastruktur
-
-#### `state.js`
-
-- **Zentraler App-State** als Singleton
-- Enthält: `view`, `topic`, `level`, `difficulty`, `calYear`, `calMonth`, `lastText`
-- Zugriff über Getter/Setter (z. B. `State.topic = 'buchfuehrung'`)
-- Vorher als Closure-Variablen in app.js gekapselt; jetzt explizit für
-  modulübergreifenden Zugriff freigegeben.
-
-#### `dom.js`
-
-- DOM-Helper: `byId`, `all`, `escapeHtml`, `confirm`, `showToast`
-- Rendering-Helper: `statCard` (Template), `classifyAccuracy`, `classifyWpm`
-- Format-Helper: `formatDate` (de-DE), `formatTime` (m:ss)
-- Löst die vorher in `app.js` mehrfach duplizierte Stat-Card-Templates auf.
-
-#### `router.js`
-
-- SPA-View-Routing
-- Views registrieren sich via `Router.register(name, renderFn)`
-- `Router.showView(name)` schaltet die `.active`-Klassen um und ruft Render-Fn auf
-- Bindet die Sidebar-Navigation und Mobile-Toggle
-
-### `js/engine/` – Persistenz und Tipp-Engine
-
-#### `storage.js`
-
-- LocalStorage-Wrapper mit JSON-Serialisierung
-- Namespaced Keys (`tippTrainer_*`)
-- Datenmodell:
-    - `tippTrainer_progress`: Array aller Sessions
-    - `tippTrainer_achievements`: Freigeschaltete Achievements mit Datum
-    - `tippTrainer_levels`: Freigeschaltete Level pro Thema
-    - `tippTrainer_settings`: Benutzereinstellungen (inkl. Prüfungsdatum)
-    - `tippTrainer_calendar`: Kalenderdaten
-    - `tippTrainer_xp`: XP-Punkte
-- Fehlerbehandlung bei vollem Storage oder deaktiviertem LocalStorage
-- Import-Validierung (Schema-Check) für Daten-Import
-
-#### `typing.js`
-
-- Tipp-Engine: Zeichen-weiser Vergleich Eingabe vs. Vorgabe
-- Reiner Zustandsautomat mit Callbacks (`onChar`, `onFinish`, `onTimer`)
-- Keine DOM-Kopplung – UI-Updates erfolgen über `getDisplayState()` beim Aufrufer
-- Berechnet WPM (Wörter/Minute, 1 Wort = 5 Zeichen), CPM, Genauigkeit
-- Timer-Verwaltung (Start bei erstem Tastendruck)
-
-### `data/` – Text-Daten
-
-#### `texts.js` (auch `js/engine/` zugehörig)
-
-- Text-API: `getRandomText`, `getTexts`, `getAvailableLevels`, `getAllTopics`,
-  `getTopicName`, `getTopicIcon`, `getTotalTextCount`
-- Datenstruktur: `texts[topic][level][difficulty] = [text1, text2, ...]`
-- 960 Basis-Texte (leicht/normal/schwer)
-- Stellt `addTexts()` für Erweiterungs-Module bereit
-
-#### `texts-extra.js` und `texts-sehrSchwer.js`
-
-- Erweiterungs-Module, die ihre Texte via `apply()` in `Texts` einfügen
-- `texts-extra.js`: 960+ zusätzliche Texte, 50 Fachwörter, 10 Satzrhythmus-Übungen, 7 Prüfungstexte
-- `texts-sehrSchwer.js`: 320 Sehr-Schwer-Texte (4 Themen × 10 Level × 8 Texte, je 600–700 Zeichen)
-
-### `js/services/` – Geschäftslogik
-
-#### `levels.js`
-
-- 4 Themenbereiche: Buchführung, Steuerrecht, Bilanzen/EÜR, Kosten- und Leistungsrechnung
-- 10 Level pro Themenbereich
-- 4 Schwierigkeitsstufen: leicht, normal, schwer, sehrSchwer
-- Level-Freischaltlogik basierend auf Genauigkeit + Geschwindigkeit
-- XP-Berechnung (`calculateXP`) und Level-Completion-Check (`checkLevelCompletion`)
-
-#### `calendar.js`
-
-- Monatsansicht mit Übungstagen
-- Heatmap-Intensitäten (5 Stufen) über `--success-rgb` CSS-Variable
-- Streak-Berechnung (aktuell, längste)
-- `recordPractice(seconds)` registriert Übungstag
-
-#### `progress.js`
-
-- Historie aller Übungssessions
-- Statistiken: `getOverallStats`, `getRecentSessions`, `getProgressForLevelDisplay`
-- Countdown zum Prüfungsdatum (`getDaysUntilTarget`)
-
-#### `achievements.js`
-
-- 32 Achievements in 7 Kategorien (Meilensteine, Speed, Accuracy, Streaks, Themen, Zeit, Session)
-- `checkAndUnlock(sessionData)` prüft nach jeder Session
-- Liest State aus Storage, Calendar, Texts und Levels
-
-#### `recommendation.js`
-
-- Berechnet, ob nach einer Übung eine höhere Schwierigkeit empfohlen werden kann
-- Prüft von der höchsten Stufe abwärts, welche Schwelle noch erreicht wird
-
-#### `session-completion.js`
-
-- Kapselt den gesamten Workflow nach Übungsabschluss:
-    1. Session in Historie speichern (`Progress.addSession`)
-    2. Kalender-Tag registrieren (`Calendar.recordPractice`)
-    3. Level-Fortschritt prüfen (`Levels.checkLevelCompletion`)
-    4. XP berechnen und gutschreiben (`Levels.calculateXP` + `Storage.addXP`)
-    5. Achievements prüfen (`Achievements.checkAndUnlock`)
-    6. Empfehlung berechnen (`Recommendation.recommend`)
-- Gibt ein Ergebnis-Objekt zurück, das von der Result-View angezeigt wird
-
-### `js/views/` – View-Module
-
-Jedes View-Modul folgt dem gleichen Muster:
-
-- IIFE-Pattern, exportiert `{ render }` und ggf. `{ bind }` oder weitere Funktionen
-- Verwendet `Dom.*`-Helper für DOM-Zugriffe und Rendering
-- Lesen/schreiben App-State über `State.*`
-- Aufruf von Service-Modulen für Geschäftslogik
-
-#### `chrome.js`
-
-- Globale UI-Elemente außerhalb der Views: XP-Bar, Countdown-Badge, Settings-Label
-
-#### `dashboard.js`
-
-- Startseite mit Stat-Cards (Sessions, Ø WPM, Ø Accuracy, Beste WPM, Streak, Minuten)
-- Themenkarten als Grid mit Klick-Handler
-- Tabelle der letzten 5 Sessions
-
-#### `levels.js`
-
-- Schwierigkeits-Tabs (leicht/normal/schwer/sehrSchwer)
-- 10 Level-Buttons pro Thema (locked/completed/open)
-- Stat-Cards der letzten 3 freigeschalteten Level
-
-#### `typing.js`
-
-- Eingabe-Handling (Backspace über `keydown`, Zeichen über `input` für Linux-Kompatibilität)
-- Live-Update von WPM/Accuracy/Time
-- Rendert den Text mit Status-Klassen (pending/current/correct/incorrect)
-- Globaler Escape-Handler für Result-Overlay
-
-#### `result.js`
-
-- Baut das Result-Modal auf (Stats, XP, Achievements, Empfehlung)
-- Bindet Weiter-Buttons (Nochmal, Nächster Text, Nächstes Level, Zurück)
-
-#### `calendar.js`
-
-- Monatskalender mit Heatmap-Farbcodierung
-- Monatsnavigation (vor/zurück)
-- Streak-Statistiken
-
-#### `achievements.js`
-
-- Achievement-Grid nach Kategorien gruppiert
-- Zusammenfassung (X von Y freigeschaltet)
-
-#### `progress.js`
-
-- Filter-Dropdowns (Thema, Level, Schwierigkeit)
-- Stat-Cards, WPM-/Accuracy-Diagramme (Balken, letzte 30 Sessions)
-- Sessions-Tabelle (letzte 20)
-
-#### `settings.js`
-
-- Datepicker für Prüfungsdatum
-- Export/Import (JSON-Backup)
-- Reset (Level-Fortschritt, Alle Daten)
-
-### `app.js` – Bootstrap
-
-- Nur ~60 Zeilen, enthält ausschließlich `App.init()`
-- Initialisierungs-Reihenfolge:
-    1. Text-Daten mergen (`TextsExtra.apply`, `TextsSehrSchwer.apply`)
-    2. Views beim Router registrieren
-    3. Initiale UI-Setups (Kalender-Datum, Bindings, Filter)
-    4. XP- und Countdown-Anzeige aktualisieren
-    5. Dashboard anzeigen
-
-### `electron/` – Desktop-App-Wrapper (optional)
-
-Die Web-App bleibt unverändert – Electron ist nur ein Chrome-Wrapper.
-
-#### `main.cjs`
-
-- Hauptprozess (CommonJS, da `package.json` `"type": "module"` nutzt)
-- Öffnet ein `BrowserWindow` (1280×800, min 800×600)
-- Lädt `index.html` per `loadFile()` (kein HTTP-Server nötig)
-- Externe Links werden im Standard-Browser geöffnet (`shell.openExternal`)
-- Sicherheits-Settings: `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true`
-
-#### `preload.cjs`
-
-- Security-Layer zwischen Renderer und Main
-- Aktuell keine Exports – die Web-App läuft pur im Browser-Kontext
-
-### `build/` – Build-Ressourcen
-
-- `icon.svg`/`icon.png`: App-Icon für Linux-Desktop-Integration
-- `de.gr33n93.TippTrainer.desktop`: Linux Desktop-Eintrag (für App-Menüs)
-- `de.gr33n93.TippTrainer.metainfo.xml`: AppStream-Metadaten (für Software-Center, Flatpak)
-
-### `electron-builder.yml` – Build-Konfiguration
-
-- Definiert Linux-Targets: AppImage, deb, tar.gz, flatpak
-- App-ID: `de.gr33n93.TippTrainer` (Reverse-DNS)
-- Flatpak-Runtime: `org.freedesktop.Platform//25.08` mit Electron-BaseApp
-- Schließt Dev-Dateien (`node_modules`, `dist`, `*.md`, etc.) aus dem Paket aus
-
-## Lade-Reihenfolge (`<script>`-Tags in `index.html`)
-
-```
-1. core/         (state, dom)           - Infrastruktur, keine Abhängigkeiten
-2. engine/       (storage, typing)      - Persistenz, Engine
-3. data/         (texts, texts-extra,   - Text-Daten
-                  texts-sehrSchwer)
-4. services/     (levels, calendar,     - Geschäftslogik (abhängig von Engine)
-                  progress, achievements,
-                  recommendation,
-                  session-completion)
-5. core/         (router)               - Router (kennt View-Module)
-6. views/        (chrome, dashboard,    - Rendering
-                  levels, typing,
-                  result, calendar,
-                  achievements, progress,
-                  settings)
-7. app.js                               - Bootstrap
+## Module und Abhängigkeiten
+
+Die Browsermodule verwenden bewusst keine ES-Modulimporte. Dadurch funktioniert die Anwendung auch
+beim direkten Öffnen der `index.html`. Die Reihenfolge der Skripte ist deshalb Teil des technischen
+Vertrags:
+
+```text
+core/state, core/dom
+        ↓
+engine/storage, engine/typing
+        ↓
+data/texts, data/texts-extra, data/texts-sehrSchwer
+        ↓
+services/*
+        ↓
+core/router, views/*
+        ↓
+app.js
 ```
 
-Da ES6-`import`/`export` nicht genutzt wird (für `file://`-Kompatibilität),
-ist die Reihenfolge **essenziell**. Der Browser kann die Abhängigkeiten
-nicht selbst auflösen.
+| Bereich       | Verantwortung                                                                  |
+| ------------- | ------------------------------------------------------------------------------ |
+| `js/core`     | Flüchtiger App-Zustand, sichere DOM-Helfer und Navigation                      |
+| `js/engine`   | Validierte LocalStorage-Zugriffe und zustandsbasierte Zeichenauswertung        |
+| `data`        | 960 Basistexte, 660 Ergänzungen und 320 Texte für „Sehr schwer“                |
+| `js/services` | Level, XP, Kalender, Statistik, Leistungen, Empfehlungen und Session-Abschluss |
+| `js/views`    | Rendering, Fokusführung und Eingabeereignisse                                  |
+| `electron`    | Fenster, Navigationsschutz und Startprüfung                                    |
 
-## Datenfluss
+Der zusammengeführte Korpus umfasst 1.940 Texte in 4 Themen, 10 Leveln und 4 Schwierigkeitsstufen.
+Jeder Auswahlpool wird beim Zusammenführen dedupliziert.
 
-```
-Benutzer öffnet index.html
-  → app.js initialisiert alle Module
-  → storage.js lädt gespeicherten Zustand aus LocalStorage
-  → TextsExtra/TextsSehrSchwer mergen ihre Texte in Texts
+## Zustands- und Datenfluss
 
-Benutzer wählt Thema (Dashboard-Klick)
-  → State.topic wird gesetzt
-  → Router.showView('levels')
-  → LevelsView.render() zeigt Levelauswahl
+`State` enthält nur flüchtige Angaben zur Navigation, Übungsauswahl und angezeigten Kalendermonat.
+Dauerhafte Daten verwaltet `Storage` unter dem Namensraum `tippTrainer_*`:
 
-Benutzer wählt Level + Schwierigkeit
-  → Levels.checkLevelCompletion prüft Freischaltung
-  → TypingView.start() holt Text aus Texts
+- Übungssitzungen und Kennzahlen
+- freigeschaltete und bestandene Level
+- Leistungen
+- Kalenderdaten
+- Einstellungen und Prüfungstermin
+- XP und Nutzerlevel
 
-Benutzer tippt
-  → Typing.handleInput(char) verarbeitet jede Eingabe
-  → TypingView.updateDisplay() rendert Status-Klassen
-  → Live-WPM/Accuracy/Time werden aktualisiert
+Beim Abschluss einer Übung führt `SessionCompletion` die dauerhaften Änderungen in einer
+Speichertransaktion aus:
 
-Übung abgeschlossen
-  → Typing ruft TypingView.onFinish(stats) auf
-  → SessionCompletion.complete(stats) orchestriert:
-      - Progress.addSession
-      - Calendar.recordPractice
-      - Levels.checkLevelCompletion
-      - Storage.addXP
-      - Achievements.checkAndUnlock
-      - Recommendation.recommend
-  → ChromeView.updateXPDisplay() aktualisiert Sidebar
-  → ResultView.show() zeigt Ergebnis-Overlay
-  → Storage persistiert alles in LocalStorage
+```text
+Typing
+  → Session speichern
+  → Kalendertag aktualisieren
+  → Levelstatus prüfen
+  → XP gutschreiben
+  → Leistungen prüfen
 ```
 
-## Schwierigkeits- und Level-System
+Nach dem Transaktionsversuch berechnet der Service eine Schwierigkeitsempfehlung. `TypingView`
+aktualisiert anschließend die globale XP-Anzeige und öffnet die Ergebnisansicht; ein Speicherfehler
+wird dort sichtbar ausgewiesen.
 
-### Schwierigkeitsstufen
+Importdateien werden vollständig validiert. Schlägt eine Teiloperation fehl, wird der vorherige
+Zustand wiederhergestellt. Ein Export enthält eine Formatversion, sämtliche Datenbereiche und einen
+Zeitstempel.
 
-| Parameter                | Leicht              | Normal                | Schwer               | Sehr Schwer                 |
-| ------------------------ | ------------------- | --------------------- | -------------------- | --------------------------- |
-| Textlänge                | Kurz (20-40 Wörter) | Mittel (40-80 Wörter) | Lang (80-150 Wörter) | Sehr lang (600-700 Zeichen) |
-| Min. Genauigkeit         | 85%                 | 90%                   | 95%                  | 97%                         |
-| Min. WPM                 | 20                  | 35                    | 50                   | 75                          |
-| XP-Belohnung             | 10-30               | 30-60                 | 60-100               | 100+                        |
-| Sonderzeichen-Häufigkeit | Niedrig             | Mittel                | Hoch                 | Sehr hoch                   |
+## Level und Auswertung
 
-### Level-Fortschritt (pro Themenbereich)
+Ein Level gilt in einer Schwierigkeitsstufe als bestanden, wenn beide Grenzwerte erreicht sind:
 
-- Level 1: Start immer freigeschaltet
-- Level N+1 wird freigeschaltet wenn: Mindestens 1 Schwierigkeitsstufe im aktuellen Level bestanden
-- Level 10: "Meister-Level" mit komplexen Prüfungslösungen
+| Schwierigkeit | Genauigkeit | WPM | Basis-XP |
+| ------------- | ----------: | --: | -------: |
+| Leicht        |        85 % |  20 |       10 |
+| Normal        |        90 % |  35 |       30 |
+| Schwer        |        95 % |  50 |       60 |
+| Sehr schwer   |        97 % |  75 |      100 |
 
-## Gamification
+Zur Basis kommen textlängenabhängige, Genauigkeits- und Geschwindigkeitsboni. Ein nicht bestandener
+Versuch erhält 5 XP. Bestwerte für Tempo und Genauigkeit werden unabhängig voneinander erhalten.
 
-### XP-System
+## Oberfläche
 
-- XP pro Übung abhängig von Schwierigkeit, Genauigkeit und Geschwindigkeit
-- Berechnung: `Levels.calculateXP(difficulty, accuracy, wpm, totalChars)`
-- Level-Up bei XP-Schwellenwerten (`Storage.getXPThresholdForLevel`)
-- Visueller XP-Balken in der Sidebar (`ChromeView.updateXPDisplay`)
+Die Desktop-Navigation ist 284 Pixel breit. Das Layout passt Raster und Inhalte bei 1.050, 860, 768
+und 540 Pixeln an; unter 768 Pixeln wird die Sidebar zu einem tastaturbedienbaren Drawer. Eine
+zusätzliche Höhenregel verdichtet die Navigation auf kleinen Displays.
 
-### Achievements (32 in 7 Kategorien)
+Sichtbare Zustände besitzen Fokuskennzeichnungen. Diagramme sind als beschriftete Listen erreichbar,
+Dialoge halten den Fokus innerhalb ihres Inhalts, und reduzierte Bewegung wird über
+`prefers-reduced-motion` berücksichtigt.
 
-- **Meilensteine**: Erste Übung, 10/50/100/500 Übungen
-- **Geschwindigkeit**: 40/60/80/100 WPM
-- **Genauigkeit**: 95%/98%/100%
-- **Streaks**: 3/7/14/30/50 Tage
-- **Themen**: Bereichs-Abschlüsse
-- **Zeit**: Morgens/Abends üben
-- **Session**: Dauer, Anzahl Übungen, Extreme Challenge, Unfehlbar
+## Sicherheitsgrenzen
 
-## Externe Abhängigkeiten
+Der Electron-Renderer läuft mit `contextIsolation: true`, deaktivierter Node-Integration und aktiver
+Sandbox. Das Preload-Skript stellt keine API bereit. Berechtigungsanfragen werden abgewiesen;
+Top-Level-Navigation bleibt auf die lokale Anwendung beschränkt. Externe HTTP- und HTTPS-Links öffnen
+im Standardbrowser.
 
-- **Keine externen Bibliotheken oder CDNs**
-- Alles wird mit Standard-Web-APIs implementiert
-- Lokale Schriften (System-Fonts)
+Eine restriktive Content Security Policy verbietet externe Skripte, Netzwerkzugriffe, Frames und
+Objekte. Dynamische Inhalte werden escaped oder über `textContent` gesetzt. Sicherheitsrelevante
+Importdaten durchlaufen dieselben Schemaregeln wie intern gespeicherte Daten. Beim Import werden sie
+strikt als vollständiger Datensatz geprüft; beim Lesen lokaler Bestandsdaten greifen sichere
+Standardwerte und Filter.
 
-## Build / Test / Deploy
+## Qualität und Veröffentlichung
 
-- **Kein Build-Prozess** – Direktes Öffnen der `index.html` im Browser
-  (per `file://` oder lokalem HTTP-Server)
-- **Test:** 160 automatisierte Unit-, Integrations-, Sicherheits-, Packaging-, Layout- und DOM-Regressionstests über
-  `npm test`; `npm run test:coverage` erzwingt 90 % Zeilen-, 80 % Branch- und 85 %
-  Funktionsabdeckung
-- **Quality Gate:** `npm run verify` prüft Syntax, ESLint, Prettier, Tests, Coverage und npm-Audit
-- **Deploy:** Datei auf lokalen Rechner, öffnen per `file://`-Protokoll
-  oder einfachem HTTP-Server (`python3 -m http.server`)
+`npm run verify` bündelt Syntaxprüfung, ESLint, Formatkontrolle, Node-Tests, Coverage-Grenzen und
+`npm audit`. Verbindliche Mindestwerte sind 90 % Zeilen-, 80 % Branch- und 85 %
+Funktionsabdeckung.
 
-## Bekannte Risiken
+Der Quality-Workflow prüft Node 22 und 24. Zusätzlich validiert Ubuntu 22.04 die AppStream- und
+Desktop-Metadaten; ein nachgelagerter Job baut die Electron-App, untersucht das ASAR, testet mehrere
+Viewports und startet die gepackte Binärdatei.
 
-- **LocalStorage-Limit:** ~5-10 MB pro Origin. Bei intensiver Nutzung über
-  Monate kann Historie groß werden → Cleanup-Strategie oder Kompression
-  implementieren.
-- **Browser-Kompatibilität:** Keine IE-Unterstützung. Moderne Browser
-  (Chrome, Firefox, Edge, Safari) werden unterstützt.
-- **Tastatur-Layout:** Tool geht von deutschem QWERTZ-Layout aus. Andere
-  Layouts werden nicht explizit unterstützt.
-- **Datensicherheit:** Alle Daten liegen lokal. Kein Cloud-Backup. Bei
-  Browser-Datenverlust sind Fortschritte weg → Export/Import-Funktion
-  als Mitigation (in den Einstellungen).
+Der Release-Workflow baut das x86-64-AppImage erst nach einer Wiederholung der zentralen Prüfungen.
+Bei einem Tag werden Paketversion, Tag und Zugehörigkeit zu `main` abgeglichen. GitHub veröffentlicht
+anschließend das AppImage zusammen mit `SHA256SUMS.txt`.
+
+## Bekannte Grenzen
+
+- Browserdaten und Desktop-Daten liegen in getrennten Speichern; der Transfer erfolgt per Export und
+  Import.
+- Eine vollständige automatisierte Engine-Matrix aus Chromium, Firefox und WebKit besteht nicht.
+- Das Zeichenmaterial ist für deutsches QWERTZ ausgelegt.
+- Fachtexte ersetzen keine aktuellen amtlichen Quellen; ein vollständiges juristisches Inhaltsaudit
+  bleibt eine fortlaufende Aufgabe.

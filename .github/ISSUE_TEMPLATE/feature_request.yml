@@ -1,0 +1,27 @@
+name: Funktion vorschlagen
+description: Eine konkrete Verbesserung für TippTrainer StBW beschreiben
+title: '[Wunsch]: '
+labels: [enhancement]
+body:
+    - type: markdown
+      attributes:
+          value: Bitte beschreibe das Lern- oder Bedienproblem, das der Vorschlag lösen soll.
+    - type: textarea
+      id: problem
+      attributes:
+          label: Ausgangslage
+          description: Was ist derzeit umständlich, unklar oder nicht möglich?
+      validations:
+          required: true
+    - type: textarea
+      id: proposal
+      attributes:
+          label: Gewünschte Lösung
+          description: Wie sollte sich die Anwendung stattdessen verhalten?
+      validations:
+          required: true
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Alternativen und Ergänzungen
+          description: Gibt es andere Lösungswege oder hilfreiche Beispiele?

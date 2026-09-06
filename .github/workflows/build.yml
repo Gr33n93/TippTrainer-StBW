@@ -48,6 +48,7 @@ jobs:
             - name: Paketiertes responsives Layout prüfen
               run: |
                   npm run pack -- --publish never
+                  node node_modules/electron/install.js
                   sudo chown root:root node_modules/electron/dist/chrome-sandbox
                   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
                   xvfb-run -a npm run test:layout -- dist-electron/linux-unpacked/resources/app.asar

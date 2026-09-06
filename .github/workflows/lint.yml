@@ -74,6 +74,7 @@ jobs:
 
             - name: Responsives Layout im paketierten Electron-Browser prüfen
               run: |
+                  node node_modules/electron/install.js
                   sudo chown root:root node_modules/electron/dist/chrome-sandbox
                   sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
                   xvfb-run -a npm run test:layout -- dist-electron/linux-unpacked/resources/app.asar

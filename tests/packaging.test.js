@@ -60,11 +60,19 @@ describe('Packaging und CI', () => {
         assert.match(qualityWorkflow, /sudo apt-get install --yes appstream desktop-file-utils xvfb/);
         assert.match(
             qualityWorkflow,
+            /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/
+        );
+        assert.match(
+            qualityWorkflow,
             /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/
         );
         assert.match(qualityWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
         assert.match(qualityWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
         assert.match(releaseWorkflow, /sudo apt-get install --yes xvfb/);
+        assert.match(
+            releaseWorkflow,
+            /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/
+        );
         assert.match(
             releaseWorkflow,
             /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/

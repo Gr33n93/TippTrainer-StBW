@@ -62,10 +62,14 @@ describe('Packaging und CI', () => {
             qualityWorkflow,
             /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/
         );
+        assert.match(qualityWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(qualityWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
         assert.match(releaseWorkflow, /sudo apt-get install --yes xvfb/);
         assert.match(
             releaseWorkflow,
             /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/
         );
+        assert.match(releaseWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(releaseWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
     });
 });

@@ -73,7 +73,10 @@ jobs:
                   if grep -Eq '^/(tests|node_modules|\.github)/' /tmp/tipptrainer-asar-files.txt; then exit 1; fi
 
             - name: Responsives Layout im paketierten Electron-Browser prüfen
-              run: xvfb-run -a npm run test:layout -- dist-electron/linux-unpacked/resources/app.asar
+              run: |
+                  sudo chown root:root node_modules/electron/dist/chrome-sandbox
+                  sudo chmod 4755 node_modules/electron/dist/chrome-sandbox
+                  xvfb-run -a npm run test:layout -- dist-electron/linux-unpacked/resources/app.asar
 
             - name: Paketierten Electron-Start testen
               run: |

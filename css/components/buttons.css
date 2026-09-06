@@ -1,39 +1,50 @@
-/* Buttons (universell nutzbar) */
 .btn {
-    padding: 10px 24px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-family: var(--font-sans);
-    transition: all var(--transition);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 20px;
+    gap: 7px;
+    border: 1px solid var(--text-primary);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        color var(--transition);
 }
 
 .btn-primary {
+    border-color: var(--accent-dim);
     background: var(--accent-dim);
-    border-color: var(--accent);
     color: var(--text-on-accent);
 }
 
 .btn-primary:hover {
+    border-color: var(--accent);
     background: var(--accent);
 }
 
 .btn-secondary {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    border-color: var(--border);
+    background: var(--bg-secondary);
 }
 
 .btn-secondary:hover {
+    border-color: var(--text-primary);
     background: var(--bg-hover);
 }
 
 .btn-success {
+    border-color: var(--success-dim);
     background: var(--success-dim);
-    border-color: var(--success);
     color: var(--text-on-accent);
 }
 
@@ -42,16 +53,18 @@
 }
 
 .btn-danger {
-    background: var(--error-dim);
-    border-color: var(--error);
-    color: var(--text-on-accent);
+    border-color: var(--error-dim);
+    background: transparent;
+    color: var(--error-dim);
 }
 
 .btn-danger:hover {
-    background: var(--error);
+    background: var(--error-dim);
+    color: var(--text-on-accent);
 }
 
 .btn-sm {
-    padding: 6px 14px;
-    font-size: 0.8rem;
+    min-height: 38px;
+    padding: 7px 13px;
+    font-size: 0.68rem;
 }

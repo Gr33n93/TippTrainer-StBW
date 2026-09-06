@@ -1,59 +1,42 @@
-/* Design-Tokens: Farben, Schriften, Radien, Schatten, Timing.
-   Tote Variablen entfernt (--silver, --bronze, --xp-bar, --accent-hover).
-   Neue Tokens: --sidebar-width, --success-rgb (fuer Heatmap-Intensitaeten). */
+/* Prüfungsatelier: ruhige Papierflächen, dunkle Navigation, ein präziser Rotton. */
 :root {
-    /* Hintergruende */
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-tertiary: #21262d;
-    --bg-card: #1c2128;
-    --bg-hover: #30363d;
-
-    /* Borders */
-    --border: #30363d;
-    --border-light: #444c56;
-
-    /* Text */
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --text-muted: #8b949e;
-    --text-on-accent: #ffffff;
-
-    /* Accent (Blau) */
-    --accent: #58a6ff;
-    --accent-dim: #1f6feb;
-
-    /* Status: Success */
-    --success: #3fb950;
-    --success-dim: #238636;
-    --success-bg: rgba(63, 185, 80, 0.1);
-    --success-rgb: 63, 185, 80;
-
-    /* Status: Error */
-    --error: #f85149;
-    --error-dim: #da3633;
-    --error-bg: rgba(248, 81, 73, 0.1);
-
-    /* Status: Warning */
-    --warning: #d29922;
-    --warning-dim: #9e6a03;
-
-    /* Sonstige Farben */
-    --gold: #ffd700;
-
-    /* Layout-Tokens */
-    --sidebar-width: 260px;
-    --xp-bar-bg: #21262d;
-
-    /* Schatten, Radien, Timing */
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
-    --radius: 8px;
-    --radius-lg: 12px;
-    --radius-sm: 4px;
-    --transition: 0.2s ease;
-
-    /* Schriften */
-    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --bg-primary: #f0ede4;
+    --bg-secondary: #faf8f2;
+    --bg-tertiary: #e6e0d4;
+    --bg-card: #f8f5ed;
+    --bg-hover: #eae4d8;
+    --border: #bdb6aa;
+    --border-light: #d5cec2;
+    --text-primary: #201f1b;
+    --text-secondary: #5e5a52;
+    --text-muted: #6f6a62;
+    --text-on-accent: #fffaf0;
+    --accent: #a33731;
+    --accent-dim: #7d2824;
+    --success: #45674b;
+    --success-dim: #33533a;
+    --success-bg: rgba(69, 103, 75, 0.09);
+    --success-rgb: 69, 103, 75;
+    --error: #a33731;
+    --error-dim: #7d2824;
+    --error-bg: rgba(163, 55, 49, 0.09);
+    --warning: #87601f;
+    --warning-dim: #664717;
+    --gold: #8b6725;
+    --sidebar-bg: #181816;
+    --sidebar-panel: #23231f;
+    --sidebar-border: #3d3a34;
+    --sidebar-text: #eee9dd;
+    --sidebar-muted: #aaa397;
+    --sidebar-width: 284px;
+    --xp-bar-bg: #3a3832;
+    --shadow: 0 8px 22px rgba(42, 37, 29, 0.08);
+    --shadow-lg: 0 24px 70px rgba(22, 20, 16, 0.26);
+    --radius: 2px;
+    --radius-lg: 3px;
+    --radius-sm: 1px;
+    --transition: 160ms ease;
+    --font-mono: 'IBM Plex Mono', 'Cascadia Mono', 'Consolas', monospace;
+    --font-sans: 'Aptos', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
 }

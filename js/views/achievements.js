@@ -25,19 +25,21 @@ const AchievementsView = (() => {
         `;
 
         let html = '';
+        let markIndex = 0;
         for (const [catKey, catName] of Object.entries(CATEGORIES)) {
             const catAchs = all.filter((a) => a.category === catKey);
             if (catAchs.length === 0) continue;
 
-            html += `<h3 class="section-title" style="grid-column: 1/-1; margin-top: 16px;">${catName}</h3>`;
+            html += `<h3 class="achievement-category">${Dom.escapeHtml(catName)}</h3>`;
             for (const ach of catAchs) {
+                markIndex++;
                 const date = ach.unlockedAt ? new Date(ach.unlockedAt).toLocaleDateString('de-DE') : '';
                 html += `
                     <div class="achievement-card ${ach.unlocked ? 'unlocked' : 'locked'}">
-                        <div class="ach-icon">${ach.unlocked ? ach.icon : '🔒'}</div>
+                        <div class="ach-icon" aria-hidden="true">${ach.unlocked ? String(markIndex).padStart(2, '0') : '—'}</div>
                         <div class="ach-info">
-                            <div class="ach-name">${ach.name}</div>
-                            <div class="ach-desc">${ach.description}</div>
+                            <div class="ach-name">${Dom.escapeHtml(String(ach.name))}</div>
+                            <div class="ach-desc">${Dom.escapeHtml(String(ach.description))}</div>
                             ${date ? `<div class="ach-date">Freigeschaltet am ${date}</div>` : ''}
                         </div>
                     </div>

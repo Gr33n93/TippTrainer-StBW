@@ -67,8 +67,21 @@ const Router = (() => {
     function bindMobileToggle() {
         const toggle = Dom.byId('mobileToggle');
         toggle.addEventListener('click', () => {
-            Dom.byId('sidebar').classList.toggle('open');
+            const sidebar = Dom.byId('sidebar');
+            const willOpen = !sidebar.classList.contains('open');
+            sidebar.classList.toggle('open');
             syncMobileSidebar();
+            if (willOpen) {
+                const activeItem = sidebar.querySelector('.nav-item.active');
+                if (activeItem) activeItem.focus();
+            }
+        });
+        Dom.byId('sidebarBackdrop').addEventListener('click', closeMobileSidebar);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && Dom.byId('sidebar').classList.contains('open')) {
+                event.preventDefault();
+                closeMobileSidebar();
+            }
         });
         window.addEventListener('resize', syncMobileSidebar);
         syncMobileSidebar();
@@ -85,6 +98,8 @@ const Router = (() => {
     function syncMobileSidebar() {
         const sidebar = Dom.byId('sidebar');
         const toggle = Dom.byId('mobileToggle');
+        const backdrop = Dom.byId('sidebarBackdrop');
+        const main = document.querySelector('.main-content');
         const mobile = window.matchMedia
             ? window.matchMedia('(max-width: 768px)').matches
             : window.innerWidth <= 768;
@@ -93,8 +108,12 @@ const Router = (() => {
         sidebar.inert = mobile && !open;
         if (mobile) sidebar.setAttribute('aria-hidden', String(!open));
         else sidebar.removeAttribute('aria-hidden');
+        if (main) main.inert = open;
+        backdrop.classList.toggle('visible', open);
+        backdrop.setAttribute('aria-hidden', String(!open));
         toggle.setAttribute('aria-expanded', String(open));
         toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+        toggle.textContent = open ? 'Schließen' : 'Menü';
     }
 
     return {

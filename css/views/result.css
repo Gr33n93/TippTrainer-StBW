@@ -1,15 +1,12 @@
-/* Result-Overlay: Modal nach Uebungsende */
 .result-overlay {
-    display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    inset: 0;
     z-index: 1000;
-    justify-content: center;
+    display: none;
     align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(24, 24, 22, 0.78);
 }
 
 .result-overlay.visible {
@@ -17,91 +14,117 @@
 }
 
 .result-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    max-width: 500px;
-    max-height: 90vh;
-    width: 90%;
+    width: min(100%, 580px);
+    max-height: calc(100vh - 40px);
     overflow-y: auto;
-    text-align: center;
-    animation: slideUp 0.3s ease;
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid var(--border);
+    border-top: 6px solid var(--accent);
+    border-radius: 0;
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-lg);
+    text-align: left;
+    animation: slideUp 0.24s ease;
 }
 
-.result-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 24px;
+.result-card h2 {
+    margin-bottom: 27px;
+    color: var(--text-primary);
+    font-family: var(--font-editorial);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
 }
 
-.result-card h3.passed {
-    color: var(--success);
+.result-card h2.passed {
+    color: var(--success-dim);
 }
-.result-card h3.failed {
-    color: var(--warning);
+
+.result-card h2.failed {
+    color: var(--warning-dim);
 }
 
 .result-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+    border: 1px solid var(--border);
 }
 
 .result-stat {
-    padding: 12px;
-    background: var(--bg-tertiary);
-    border-radius: var(--radius);
+    padding: 16px;
+    border-right: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.result-stat:nth-child(2n) {
+    border-right: 0;
+}
+
+.result-stat:nth-last-child(-n + 2) {
+    border-bottom: 0;
 }
 
 .result-stat .val {
-    font-size: 1.8rem;
-    font-weight: 700;
     font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
 }
 
 .result-stat .lbl {
-    font-size: 0.75rem;
+    margin-top: 3px;
     color: var(--text-secondary);
+    font-size: 0.68rem;
 }
 
 .result-stat.good .val {
-    color: var(--success);
+    color: var(--success-dim);
 }
+
 .result-stat.warn .val {
-    color: var(--warning);
+    color: var(--warning-dim);
 }
+
 .result-stat.bad .val {
-    color: var(--error);
+    color: var(--error-dim);
 }
 
 .result-xp {
-    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-    color: var(--text-on-accent);
-    padding: 12px;
-    border-radius: var(--radius);
     margin-bottom: 20px;
-    font-weight: 600;
+    padding: 12px 15px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.result-warning {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid rgba(163, 55, 49, 0.5);
+    background: var(--error-bg);
+    color: var(--error-dim);
+    font-size: 0.76rem;
 }
 
 .result-recommendation {
-    background: rgba(var(--success-rgb), 0.1);
-    border: 1px solid var(--success-dim);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 16px;
-    text-align: center;
+    margin-bottom: 18px;
+    padding: 16px;
+    border: 1px solid rgba(var(--success-rgb), 0.45);
+    background: var(--success-bg);
 }
 
 .recommendation-text {
-    font-size: 0.85rem;
+    margin-bottom: 12px;
     color: var(--text-secondary);
-    margin-bottom: 10px;
-    line-height: 1.5;
-}
-
-.result-recommendation .btn {
-    margin-top: 4px;
+    font-size: 0.8rem;
+    line-height: 1.55;
 }
 
 .new-achievements {
@@ -109,30 +132,32 @@
 }
 
 .new-achievements h4 {
-    font-size: 0.9rem;
+    margin-bottom: 9px;
     color: var(--gold);
-    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
 }
 
 .achievement-popup {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius);
+    gap: 10px;
     margin-bottom: 6px;
-    font-size: 0.85rem;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    font-size: 0.8rem;
 }
 
 .achievement-popup .ach-icon {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
 }
 
 .result-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 9px;
 }

@@ -1,69 +1,77 @@
-/* Settings-View: Pruefungsdatum, Daten-Export/Import, Reset */
 .settings-container {
-    max-width: 600px;
+    width: min(100%, 720px);
 }
 
 .settings-section {
-    background: var(--bg-card);
+    margin-bottom: 18px;
+    padding: 0 24px;
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    margin-bottom: 20px;
+    border-radius: 0;
+    background: var(--bg-card);
 }
 
 .settings-section h3 {
-    font-size: 1rem;
-    margin-bottom: 16px;
+    margin-inline: -24px;
+    padding: 15px 24px 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .settings-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 69px;
     padding: 12px 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .settings-row:last-child {
-    border-bottom: none;
+    border-bottom: 0;
 }
 
-.settings-row label {
-    font-size: 0.9rem;
+.settings-row label,
+.settings-row .settings-label {
     color: var(--text-secondary);
+    font-size: 0.82rem;
 }
 
 .settings-row .setting-control {
     display: flex;
+    flex: 0 0 auto;
     gap: 8px;
 }
 
+.hidden-input {
+    display: none;
+}
+
 .danger-zone {
-    border-color: var(--error-dim);
+    border-color: rgba(163, 55, 49, 0.55);
 }
 
 .danger-zone h3 {
-    color: var(--error);
+    border-color: rgba(163, 55, 49, 0.35);
+    color: var(--error-dim);
 }
 
-/* Date-Eingabe */
 input[type='date'] {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    padding: 7px 11px;
     border: 1px solid var(--border);
-    padding: 6px 12px;
     border-radius: var(--radius-sm);
-    font-family: var(--font-sans);
-    font-size: 0.9rem;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
     cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.77rem;
 }
 
 input[type='date']:focus {
     border-color: var(--accent);
-    outline: none;
-}
-
-input[type='date']::-webkit-calendar-picker-indicator {
-    filter: invert(0.8);
-    cursor: pointer;
 }

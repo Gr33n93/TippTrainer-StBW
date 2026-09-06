@@ -48,6 +48,36 @@ describe('Packaging und CI', () => {
         assert.doesNotMatch(builder, /--filesystem=home/);
         assert.match(qualityWorkflow, /sudo chown root:root .*\/chrome-sandbox/);
         assert.match(qualityWorkflow, /sudo chmod 4755 .*\/chrome-sandbox/);
-        assert.match(qualityWorkflow, /xvfb-run -a timeout 10s/);
+        assert.match(qualityWorkflow, /--disable-gpu --smoke-test/);
+        assert.match(qualityWorkflow, /test "\$status" -eq 0/);
+        assert.doesNotMatch(qualityWorkflow, /"\$status" -eq 124/);
+    });
+
+    it('prüft das responsive Layout im echten Electron-Browser', () => {
+        const qualityWorkflow = read('.github/workflows/lint.yml');
+        const releaseWorkflow = read('.github/workflows/build.yml');
+        assert.equal(packageJson.scripts['test:layout'], 'electron tests/electron-layout.cjs');
+        assert.match(qualityWorkflow, /sudo apt-get install --yes appstream desktop-file-utils xvfb/);
+        assert.match(
+            qualityWorkflow,
+            /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/
+        );
+        assert.match(
+            qualityWorkflow,
+            /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/
+        );
+        assert.match(qualityWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(qualityWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(releaseWorkflow, /sudo apt-get install --yes xvfb/);
+        assert.match(
+            releaseWorkflow,
+            /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/
+        );
+        assert.match(
+            releaseWorkflow,
+            /xvfb-run -a npm run test:layout -- dist-electron\/linux-unpacked\/resources\/app\.asar/
+        );
+        assert.match(releaseWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(releaseWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
     });
 });

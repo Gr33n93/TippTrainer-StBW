@@ -16,10 +16,10 @@ const Texts = (() => {
     };
 
     const TOPIC_ICONS = {
-        buchfuehrung: '📒',
-        steuerrecht: '⚖️',
-        bilanzen: '📊',
-        klr: '📈'
+        buchfuehrung: 'BF',
+        steuerrecht: 'StR',
+        bilanzen: 'BIL',
+        klr: 'KLR'
     };
 
     const DIFFICULTY_NAMES = {
@@ -1356,7 +1356,7 @@ const Texts = (() => {
     }
 
     function getTopicIcon(topicKey) {
-        return TOPIC_ICONS[topicKey] || '📝';
+        return TOPIC_ICONS[topicKey] || 'TH';
     }
 
     function getTotalTextCount() {

@@ -50,10 +50,10 @@ const LevelsView = (() => {
 
             if (!isUnlocked) {
                 classes += ' locked';
-                statusText = '🔒';
+                statusText = 'Gesperrt';
             } else if (isCompleted) {
                 classes += ' completed';
-                statusText = `✓ ${info.wpm} WPM`;
+                statusText = `Bestanden · ${info.wpm} WPM`;
             } else {
                 statusText = 'Offen';
             }
@@ -87,7 +87,7 @@ const LevelsView = (() => {
             const data = Progress.getProgressForLevelDisplay(State.topic, level, State.difficulty);
             html += `
                 <div class="stat-card ${data.passed ? 'success' : ''}">
-                    <div class="stat-value" style="font-size: 1.2rem">Level ${level}</div>
+                    <div class="stat-value level-progress-value">Level ${level}</div>
                     <div class="stat-label">${data.attempts} Versuche | Ø ${data.avgWPM} WPM | ${data.avgAccuracy}%</div>
                 </div>
             `;

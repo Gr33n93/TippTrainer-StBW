@@ -85,7 +85,7 @@ const TypingView = (() => {
         }
         const topicName = Texts.getTopicName(State.topic);
 
-        Dom.byId('typingTopic').textContent = `${Texts.getTopicIcon(State.topic)} ${topicName}`;
+        Dom.byId('typingTopic').textContent = topicName;
         Dom.byId('typingLevel').textContent = `Level ${State.level}`;
         Dom.byId('typingDifficulty').textContent = Texts.DIFFICULTY_NAMES[State.difficulty];
 

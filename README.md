@@ -22,7 +22,7 @@ Leistungs­rechnung.
 - **Konfigurierbares Prüfungs­datum** mit Countdown
 - **Daten-Export/Import** (JSON) als Backup
 - **Komplett clientseitig** – kein Backend, keine Tracking, läuft offline
-- **Dark Theme** standardmäßig
+- **Prüfungsatelier-Design** mit redaktioneller Typografie und responsiver Oberfläche
 
 ## Schnellstart
 
@@ -68,7 +68,7 @@ Die App ist auf **deutsches QWERTZ-Layout** optimiert. Andere Layouts
 ## Tech-Stack
 
 - **HTML5** – Single-Page-Application
-- **CSS3** – Dark Theme mit CSS Custom Properties, Responsive Design
+- **CSS3** – Prüfungsatelier-Design mit CSS Custom Properties und responsivem Layout
 - **Vanilla JavaScript (ES6+)** – IIFE-Modul-Pattern, keine Frameworks
 - **LocalStorage** – Persistenz für Fortschritt, Achievements, Kalender
 - **Keine externen Abhängigkeiten** – keine CDNs, keine Bibliotheken
@@ -78,7 +78,7 @@ Die App ist auf **deutsches QWERTZ-Layout** optimiert. Andere Layouts
 ```
 .
 ├── index.html              # SPA-Einstiegspunkt
-├── css/                    # Stylesheets (Dark Theme, Layout, Views)
+├── css/                    # Stylesheets (Prüfungsatelier, Layout, Views)
 ├── js/                     # JavaScript-Module
 │   ├── core/               # State, Router, Utilities
 │   ├── services/           # Levels, Calendar, Progress, Achievements
@@ -91,7 +91,7 @@ Die App ist auf **deutsches QWERTZ-Layout** optimiert. Andere Layouts
 │   ├── preload.cjs         # Security-Layer
 │   └── icon.png            # App-Icon
 ├── build/                  # Build-Ressourcen (Icon, Desktop-Datei, Metainfo)
-├── tests/                  # 125 Unit-, Integrations- und Sicherheitsregressionstests
+├── tests/                  # 160 Unit-, Integrations-, Layout- und Sicherheitsregressionstests
 ├── electron-builder.yml    # Build-Konfiguration (Linux/Flatpak/AppImage)
 ├── .github/workflows/      # CI: Quality-Matrix + Desktop-App-Release
 ├── ARCHITECTURE.md         # Architektur-Dokumentation
@@ -107,7 +107,7 @@ Die Web-App benötigt keinen Build-Step. Für die Entwicklung ist Node.js 22.22.
 
 ```bash
 npm ci                  # installiert ausschließlich die gelockten Dev-Werkzeuge
-npm test                # 125 Unit- und Integrationstests
+npm test                # 160 Unit- und Integrationstests
 npm run test:coverage   # Tests plus Coverage-Grenzen
 npm run verify          # Syntax, Lint, Format, Tests, Coverage und Security-Audit
 ```

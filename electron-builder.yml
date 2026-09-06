@@ -59,7 +59,7 @@ flatpak:
 
 # AppImage
 appImage:
-    artifactName: ${productName}-${version}-${arch}.AppImage
+    artifactName: TippTrainer-StBW-${version}-${arch}.AppImage
     executableArgs: []
 
 # Deb (Debian/Ubuntu)

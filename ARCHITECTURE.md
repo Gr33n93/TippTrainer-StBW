@@ -9,7 +9,7 @@ Prüfungstermin korrektes und schnelles Schreiben trainieren.
 ## Tech-Stack
 
 - **HTML5** – Seitenstruktur, Single-Page-Application
-- **CSS3** – Dark Theme, Responsive Design, CSS-Variablen für Theming
+- **CSS3** – Prüfungsatelier-Design, Responsive Design, CSS-Variablen für Theming
 - **Vanilla JavaScript (ES6+)** – IIFE-Modul-Pattern, keine Frameworks
 - **LocalStorage** – Persistenz für Fortschritt, Achievements, Kalenderdaten
 - **Kein Backend** – Läuft komplett clientseitig, öffnen per `file://` oder HTTP
@@ -430,7 +430,7 @@ Benutzer tippt
 
 - **Kein Build-Prozess** – Direktes Öffnen der `index.html` im Browser
   (per `file://` oder lokalem HTTP-Server)
-- **Test:** 125 automatisierte Unit-, Integrations-, Sicherheits-, Packaging- und DOM-Regressionstests über
+- **Test:** 160 automatisierte Unit-, Integrations-, Sicherheits-, Packaging-, Layout- und DOM-Regressionstests über
   `npm test`; `npm run test:coverage` erzwingt 90 % Zeilen-, 80 % Branch- und 85 %
   Funktionsabdeckung
 - **Quality Gate:** `npm run verify` prüft Syntax, ESLint, Prettier, Tests, Coverage und npm-Audit

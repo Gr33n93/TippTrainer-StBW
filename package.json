@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{js,cjs,css,html,md,json,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,cjs,css,html,md,json,yml,yaml}\"",
     "check": "npm run lint && npm run format:check",
-    "syntax-check": "for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js electron/*.cjs tests/*.js tests/*.cjs tests/helpers/*.js; do node --check \"$f\" || exit 1; done",
+    "syntax-check": "for f in js/core/*.js js/engine/*.js js/services/*.js js/views/*.js js/app.js data/*.js electron/*.cjs tests/*.js tests/*.cjs tests/helpers/*.js tests/helpers/*.cjs; do node --check \"$f\" || exit 1; done",
     "test": "TZ=Europe/Berlin node --test --experimental-test-isolation=none --test-concurrency=1 tests/*.test.js",
     "test:layout": "electron tests/electron-layout.cjs",
     "test:coverage": "TZ=Europe/Berlin node --test --experimental-test-isolation=none --test-concurrency=1 --experimental-test-coverage --test-coverage-include='js/**/*.js' --test-coverage-include='data/*.js' --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=85 tests/*.test.js",

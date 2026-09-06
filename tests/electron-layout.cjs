@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { app } = require('electron');
 const { createWindow } = require('../electron/main.cjs');
+const { scaleCssCoordinate } = require('./helpers/electron-input.cjs');
 
 const projectRoot = path.resolve(__dirname, '..');
 const testedAppRoot = process.argv[2] ? path.resolve(process.argv[2]) : projectRoot;
@@ -12,6 +13,15 @@ app.commandLine.appendSwitch('disable-gpu');
 
 async function settle() {
     await new Promise((resolve) => setTimeout(resolve, 50));
+}
+
+async function waitForRenderer(window, expression, description) {
+    const deadline = Date.now() + 3000;
+    do {
+        if (await window.webContents.executeJavaScript(`Boolean(${expression})`)) return;
+        await settle();
+    } while (Date.now() < deadline);
+    assert.fail(`${description}: Zustand nach 3 Sekunden nicht erreicht`);
 }
 
 async function setViewport(window, width, height) {
@@ -26,12 +36,19 @@ async function setViewport(window, width, height) {
 }
 
 async function clickElement(window, selector) {
+    const clickMarker = `native-click-${Date.now()}-${Math.random()}`;
     const target = await window.webContents.executeJavaScript(`(() => {
         const element = document.querySelector(${JSON.stringify(selector)});
         if (!element) return { found: false };
+        element.addEventListener('click', event => {
+            window.__layoutNativeClick = {
+                marker: ${JSON.stringify(clickMarker)},
+                trusted: event.isTrusted
+            };
+        }, { once: true });
         const rect = element.getBoundingClientRect();
-        const x = Math.round(rect.left + rect.width / 2);
-        const y = Math.round(rect.top + rect.height / 2);
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
         const hit = document.elementFromPoint(x, y);
         return {
             found: true,
@@ -44,30 +61,49 @@ async function clickElement(window, selector) {
     assert.equal(target.found, true, selector);
     assert.equal(target.hit, true, `${selector}: Mittelpunkt nicht klickbar`);
     assert.notEqual(target.pointerEvents, 'none', `${selector}: pointer-events`);
-    window.webContents.sendInputEvent({ type: 'mouseMove', x: target.x, y: target.y });
+    const zoomFactor = window.webContents.getZoomFactor();
+    const x = scaleCssCoordinate(target.x, zoomFactor);
+    const y = scaleCssCoordinate(target.y, zoomFactor);
+    window.webContents.sendInputEvent({ type: 'mouseMove', x, y });
     window.webContents.sendInputEvent({
         type: 'mouseDown',
-        x: target.x,
-        y: target.y,
+        x,
+        y,
         button: 'left',
         clickCount: 1
     });
     window.webContents.sendInputEvent({
         type: 'mouseUp',
-        x: target.x,
-        y: target.y,
+        x,
+        y,
         button: 'left',
         clickCount: 1
     });
-    await settle(window);
+    await waitForRenderer(
+        window,
+        `window.__layoutNativeClick?.marker === ${JSON.stringify(clickMarker)} && window.__layoutNativeClick.trusted`,
+        `${selector}: nativen Klick verarbeiten`
+    );
 }
 
 async function activateNavigationView(window, viewName) {
     const mobileDrawerClosed = await window.webContents.executeJavaScript(`
         innerWidth <= 768 && !document.getElementById('sidebar').classList.contains('open')
     `);
-    if (mobileDrawerClosed) await clickElement(window, '#mobileToggle');
+    if (mobileDrawerClosed) {
+        await clickElement(window, '#mobileToggle');
+        await waitForRenderer(
+            window,
+            "document.getElementById('sidebar').classList.contains('open') && !document.getElementById('sidebar').inert && document.querySelector('.main-content').inert",
+            'Mobile Navigation öffnen'
+        );
+    }
     await clickElement(window, `.nav-item[data-view="${viewName}"]`);
+    await waitForRenderer(
+        window,
+        `State.view === ${JSON.stringify(viewName)} && document.querySelectorAll('.view.active').length === 1 && document.querySelector('.view.active')?.id === ${JSON.stringify(`view-${viewName}`)} && document.querySelector('.nav-item[aria-current="page"]')?.dataset.view === ${JSON.stringify(viewName)} && !document.getElementById('sidebar').classList.contains('open') && !document.querySelector('.main-content').inert && (innerWidth > 768 || document.getElementById('sidebar').inert)`,
+        `Navigation zu ${viewName}`
+    );
 }
 
 async function inspectView(window, viewName) {
@@ -342,12 +378,20 @@ async function run() {
     assert.equal(resultLayout.titleTag, 'H2');
     assert.equal(resultLayout.toasts, 0);
 
+    await setViewport(window, 800, 800);
+    const baselineDevicePixelRatio = await window.webContents.executeJavaScript('devicePixelRatio');
     window.webContents.setZoomFactor(2);
-    window.setContentSize(800, 800);
-    await settle(window);
-    const zoomedWidth = await window.webContents.executeJavaScript('innerWidth');
-    assert.ok(zoomedWidth > 0 && zoomedWidth <= 800);
+    await waitForRenderer(
+        window,
+        `innerWidth === 400 && innerHeight === 400 && Math.abs(devicePixelRatio - ${JSON.stringify(baselineDevicePixelRatio * 2)}) < 0.01`,
+        '200-Prozent-Zoom anwenden'
+    );
     await window.webContents.executeJavaScript('ResultView.dismissToLevels()');
+    await waitForRenderer(
+        window,
+        "State.view === 'levels' && document.querySelectorAll('.view.active').length === 1 && document.getElementById('view-levels').classList.contains('active')",
+        'Ergebnisdialog zu Levels schließen'
+    );
     await assertViewsFit(window, ['dashboard', 'levels', 'settings']);
 
     window.destroy();

@@ -27,20 +27,18 @@
   <launchable type="desktop-id">de.gr33n93.TippTrainer.desktop</launchable>
   <url type="homepage">https://github.com/Gr33n93/TippTrainer-StBW</url>
   <url type="bugtracker">https://github.com/Gr33n93/TippTrainer-StBW/issues</url>
-  <url type="vcs-browser">https://github.com/Gr33n93/TippTrainer-StBW</url>
-  <developer id="de.gr33n93">
-    <name>gr33n93</name>
-  </developer>
+  <developer_name>gr33n93</developer_name>
   <provides>
     <id>de.gr33n93.TippTrainer.desktop</id>
   </provides>
   <releases>
-    <release version="1.1.0" date="2026-09-06">
+    <release version="1.1.1" date="2026-09-06">
       <description>
         <ul>
           <li>Neues responsives Prüfungsatelier-Design mit verbesserter Tastaturbedienung.</li>
           <li>Gehärtete lokale Datenspeicherung, Importvalidierung und Electron-Sandbox.</li>
           <li>Erweiterte Qualitätsprüfung für Paket, Layout, Barrierefreiheit und Sicherheit.</li>
+          <li>Kompatible AppStream-Metadaten für Ubuntu 22.04 und neuere Distributionen.</li>
         </ul>
       </description>
     </release>

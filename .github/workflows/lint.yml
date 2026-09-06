@@ -39,13 +39,39 @@ jobs:
             - name: Syntax, Lint, Format, Tests, Coverage und Audit
               run: npm run verify
 
+    metadata-compat:
+        name: Metadaten (Ubuntu 22.04)
+        needs: quality
+        runs-on: ubuntu-22.04
+        timeout-minutes: 10
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+            - name: Metadaten-Validatoren installieren
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install --yes appstream desktop-file-utils
+
+            - name: AppStream und Desktop-Datei validieren
+              run: |
+                  appstreamcli validate --no-net build/de.gr33n93.TippTrainer.metainfo.xml
+                  desktop-file-validate build/de.gr33n93.TippTrainer.desktop
+
     package-smoke:
         name: Electron-Paket und Metadaten
-        needs: quality
+        needs: [quality, metadata-compat]
+        if: always()
         runs-on: ubuntu-latest
         timeout-minutes: 20
 
         steps:
+            - name: Abhängige Qualitätsprüfungen bestätigen
+              run: |
+                  test "${{ needs.quality.result }}" = "success"
+                  test "${{ needs.metadata-compat.result }}" = "success"
+
             - name: Checkout
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

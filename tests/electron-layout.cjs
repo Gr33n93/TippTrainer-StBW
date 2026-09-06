@@ -46,6 +46,7 @@ async function clickElement(window, selector) {
                 trusted: event.isTrusted
             };
         }, { once: true });
+        element.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
         const rect = element.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;

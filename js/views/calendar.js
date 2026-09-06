@@ -59,7 +59,7 @@ const CalendarView = (() => {
         let html = '';
 
         for (let i = 0; i < firstDay; i++) {
-            html += '<div class="calendar-day empty"></div>';
+            html += '<div class="calendar-day empty" aria-hidden="true"></div>';
         }
 
         for (let day = 1; day <= daysInMonth; day++) {
@@ -77,15 +77,19 @@ const CalendarView = (() => {
             const description =
                 intensity > 0 ? `${dateStr}, ${minutes} Minuten geübt` : `${dateStr}, nicht geübt`;
 
-            html += `<div class="${classes}" title="${description}" aria-label="${description}">${day}</div>`;
+            const minutesHtml =
+                intensity > 0
+                    ? `<span class="calendar-day-minutes" aria-hidden="true">${minutes}m</span>`
+                    : '';
+            html += `<div class="${classes}" role="listitem" title="${description}" aria-label="${description}"><span>${day}</span>${minutesHtml}</div>`;
         }
 
         Dom.byId('calendarDays').innerHTML = html;
 
         const calStats = Calendar.getStats();
         Dom.byId('calendarStats').innerHTML =
-            Dom.statCard(`${calStats.currentStreak} 🔥`, 'Aktuelle Streak') +
-            Dom.statCard(calStats.longestStreak, 'Längste Streak') +
+            Dom.statCard(calStats.currentStreak, 'Aktuelle Serie') +
+            Dom.statCard(calStats.longestStreak, 'Längste Serie') +
             Dom.statCard(calStats.totalDays, 'Tage geübt') +
             Dom.statCard(calStats.totalMinutes, 'Minuten gesamt');
     }

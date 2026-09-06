@@ -22,7 +22,7 @@ const DashboardView = (() => {
             Dom.statCard(stats.avgWPM, 'Ø WPM') +
             Dom.statCard(stats.avgAccuracy + '%', 'Ø Genauigkeit', 'success') +
             Dom.statCard(stats.bestWPM, 'Beste WPM', 'warning') +
-            Dom.statCard(calStats.currentStreak, 'Tage Streak 🔥') +
+            Dom.statCard(calStats.currentStreak, 'Aktuelle Serie') +
             Dom.statCard(stats.totalMinutes, 'Minuten geübt');
     }
 
@@ -34,15 +34,15 @@ const DashboardView = (() => {
             .map((topic) => {
                 const summary = Levels.getTopicSummary(topic);
                 const name = Texts.getTopicName(topic);
-                const icon = Texts.getTopicIcon(topic);
+                const abbreviation = Texts.getTopicIcon(topic);
 
                 return `
                 <button type="button" class="topic-card" data-topic="${Dom.escapeHtml(topic)}">
-                    <div class="topic-icon">${Dom.escapeHtml(String(icon))}</div>
+                    <div class="topic-icon">${Dom.escapeHtml(String(abbreviation))}</div>
                     <div class="topic-name">${Dom.escapeHtml(name)}</div>
                     <div class="topic-desc">Level ${summary.maxUnlockedLevel} von ${Levels.MAX_LEVEL} freigeschaltet</div>
                     <div class="topic-progress-bar">
-                        <div class="topic-progress-fill" style="width: ${summary.progressPercent}%"></div>
+                    <div class="topic-progress-fill" style="--topic-progress: ${summary.progressPercent}%"></div>
                     </div>
                     <div class="topic-progress-text">${summary.totalCompletions} / ${Levels.COMPLETIONS_PER_TOPIC} bestanden (${summary.progressPercent}%)</div>
                 </button>
@@ -65,38 +65,33 @@ const DashboardView = (() => {
         if (sessions.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-icon">⌨️</div>
-                    <p>Noch keine Übungen. Wähle ein Thema oben und lege los!</p>
+                    <div class="empty-icon">—</div>
+                    <p>Noch keine Übungen. Wähle einen Themenbereich und beginne mit der ersten Zeile.</p>
                 </div>
             `;
             return;
         }
 
         let html =
-            '<table class="sessions-table"><thead><tr>' +
-            '<th>Datum</th><th>Thema</th><th>Level</th><th>WPM</th><th>Genauigkeit</th>' +
+            '<div class="sessions-scroll"><table class="sessions-table"><thead><tr>' +
+            '<th scope="col">Datum</th><th scope="col">Thema</th><th scope="col">Level</th><th scope="col">WPM</th><th scope="col">Genauigkeit</th>' +
             '</tr></thead><tbody>';
 
         for (const s of sessions) {
             const date = Dom.formatDate(s.timestamp);
             const topicName = Dom.escapeHtml(Texts.getTopicName(s.topic));
-            const accStyle =
-                s.accuracy >= 95
-                    ? 'style="color: var(--success)"'
-                    : s.accuracy >= 85
-                      ? ''
-                      : 'style="color: var(--error)"';
+            const accClass = s.accuracy >= 95 ? 'good' : s.accuracy >= 85 ? 'warn' : 'bad';
 
             html += `<tr>
                 <td>${date}</td>
                 <td>${topicName}</td>
                 <td>${Dom.escapeHtml(String(s.level))}</td>
                 <td>${Dom.escapeHtml(String(s.wpm))}</td>
-                <td ${accStyle}>${Dom.escapeHtml(String(s.accuracy))}%</td>
+                <td class="${accClass}">${Dom.escapeHtml(String(s.accuracy))}%</td>
             </tr>`;
         }
 
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
         container.innerHTML = html;
     }
 

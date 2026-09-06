@@ -30,8 +30,11 @@ jobs:
                   node-version: '22.22.2'
                   cache: 'npm'
 
-            - name: Dependencies installieren
-              run: npm ci
+            - name: Dependencies und Display-Testumgebung installieren
+              run: |
+                  npm ci
+                  sudo apt-get update
+                  sudo apt-get install --yes xvfb
 
             - name: Vollständige Qualitätsprüfung
               run: npm run verify
@@ -41,6 +44,11 @@ jobs:
               run: |
                   test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
                   git branch --remotes --contains "$GITHUB_SHA" | grep --quiet 'origin/main'
+
+            - name: Paketiertes responsives Layout prüfen
+              run: |
+                  npm run pack -- --publish never
+                  xvfb-run -a npm run test:layout -- dist-electron/linux-unpacked/resources/app.asar
 
             - name: Electron-AppImage bauen
               run: npm run dist:appimage -- --publish never

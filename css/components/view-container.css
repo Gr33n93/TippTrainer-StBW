@@ -1,9 +1,49 @@
-/* View-Container: SPA-Views werden per .active-Klasse umgeschaltet */
 .view {
     display: none;
 }
 
 .view.active {
     display: block;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 240ms ease;
+}
+
+.view-header,
+.dashboard-header,
+.level-header {
+    margin-bottom: 38px;
+}
+
+.view-header h2,
+.dashboard-header h2,
+.level-header h2 {
+    max-width: 760px;
+    font-family: var(--font-editorial);
+    font-size: clamp(2.15rem, 4vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+}
+
+.view-header.compact {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 38px 0 14px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.section-title::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    background: var(--border);
 }

@@ -1,12 +1,26 @@
-/* App-Container und Hauptbereich */
 .app-container {
     display: flex;
     min-height: 100vh;
 }
 
 .main-content {
-    margin-left: var(--sidebar-width);
     flex: 1;
+    min-width: 0;
     min-height: 100vh;
-    padding: 32px;
+    margin-left: var(--sidebar-width);
+    padding: clamp(38px, 5vw, 76px) clamp(30px, 6vw, 88px) 72px;
+}
+
+.main-content::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto var(--sidebar-width);
+    z-index: 10;
+    height: 4px;
+    background: var(--accent);
+}
+
+.main-content > .view {
+    width: min(100%, 1180px);
+    margin-inline: auto;
 }

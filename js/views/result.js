@@ -18,11 +18,14 @@ const ResultView = (() => {
 
         const achievementsHtml = newAchievements.length > 0 ? renderAchievements(newAchievements) : '';
         const recommendHtml = recommendation ? renderRecommendation(recommendation) : '';
+        const persistenceHtml = persisted
+            ? ''
+            : '<div class="result-warning" role="alert"><strong>Speichern fehlgeschlagen.</strong> Mindestens ein Teil des Fortschritts konnte nicht gespeichert werden.</div>';
 
         card.innerHTML = `
-            <h3 id="resultTitle" class="${passed ? 'passed' : 'failed'}">
-                ${passed ? '✅ Level bestanden!' : '⏳ Weiter üben!'}
-            </h3>
+            <h2 id="resultTitle" class="${passed ? 'passed' : 'failed'}">
+                ${passed ? 'Level bestanden' : 'Noch nicht bestanden'}
+            </h2>
             <div class="result-stats">
                 <div class="result-stat ${wpmClass}">
                     <div class="val">${stats.wpm}</div>
@@ -42,13 +45,14 @@ const ResultView = (() => {
                 </div>
             </div>
             <div class="result-xp">+${xpEarned} XP verdient!</div>
+            ${persistenceHtml}
             ${achievementsHtml}
             ${recommendHtml}
             <div class="result-actions">
-                <button class="btn btn-primary" id="resultRetry">🔄 Nochmal</button>
-                <button class="btn btn-secondary" id="resultNext">⏭️ Nächster Text</button>
-                ${passed && State.level < Levels.MAX_LEVEL ? '<button class="btn btn-success" id="resultNextLevel">⬆️ Nächstes Level</button>' : ''}
-                <button class="btn btn-secondary" id="resultBack">📚 Zurück</button>
+                <button class="btn btn-primary" id="resultRetry">Nochmal</button>
+                <button class="btn btn-secondary" id="resultNext">Nächster Text</button>
+                ${passed && State.level < Levels.MAX_LEVEL ? '<button class="btn btn-success" id="resultNextLevel">Nächstes Level</button>' : ''}
+                <button class="btn btn-secondary" id="resultBack">Zurück</button>
             </div>
         `;
 
@@ -57,17 +61,6 @@ const ResultView = (() => {
         bindActions(recommendation);
         bindKeyboard(overlay);
         card.focus();
-
-        for (const ach of newAchievements) {
-            Dom.showToast(ach.icon, ach.name, ach.description);
-        }
-        if (!persisted) {
-            Dom.showToast(
-                '⚠️',
-                'Speichern fehlgeschlagen',
-                'Mindestens ein Teil des Fortschritts konnte nicht gespeichert werden.'
-            );
-        }
     }
 
     function setBackgroundInert(inert) {
@@ -125,12 +118,12 @@ const ResultView = (() => {
     function renderAchievements(newAchievements) {
         return `
             <div class="new-achievements">
-                <h4>🏆 Neue Achievements freigeschaltet!</h4>
+                <h4>Neue Leistungen freigeschaltet</h4>
                 ${newAchievements
                     .map(
                         (a) => `
                     <div class="achievement-popup">
-                        <span class="ach-icon">${Dom.escapeHtml(String(a.icon))}</span>
+                        <span class="ach-icon" aria-hidden="true">+</span>
                         <div>
                             <div class="toast-title">${Dom.escapeHtml(String(a.name))}</div>
                             <div class="toast-text">${Dom.escapeHtml(String(a.description))}</div>
@@ -146,8 +139,8 @@ const ResultView = (() => {
     function renderRecommendation(recommendation) {
         return `
             <div class="result-recommendation">
-                <div class="recommendation-text">💡 <strong>Herausforderung gesucht?</strong> ${Dom.escapeHtml(String(recommendation.reason))}</div>
-                <button class="btn btn-sm btn-success" id="resultHarder">⬆️ Jetzt ${Dom.escapeHtml(String(recommendation.nextName))} probieren</button>
+                <div class="recommendation-text"><strong>Nächster Schritt:</strong> ${Dom.escapeHtml(String(recommendation.reason))}</div>
+                <button class="btn btn-sm btn-success" id="resultHarder">Jetzt ${Dom.escapeHtml(String(recommendation.nextName))} probieren</button>
             </div>
         `;
     }

@@ -1,18 +1,17 @@
-/* Levelauswahl-View: Header, Difficulty-Tabs, Level-Grid */
-.level-header {
-    margin-bottom: 24px;
-}
-
 .level-header .back-btn {
-    background: none;
-    border: 1px solid var(--border);
+    min-height: 36px;
+    margin-bottom: 27px;
+    padding: 4px 0;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
     color: var(--text-secondary);
-    padding: 6px 14px;
-    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 0.85rem;
-    margin-bottom: 12px;
-    transition: all var(--transition);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .level-header .back-btn:hover {
@@ -20,91 +19,116 @@
     color: var(--accent);
 }
 
-.level-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
 .difficulty-tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
 }
 
 .diff-tab {
-    padding: 8px 20px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-secondary);
+    min-width: 125px;
+    min-height: 46px;
+    padding: 8px 18px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
     cursor: pointer;
-    font-size: 0.85rem;
-    transition: all var(--transition);
-    font-family: inherit;
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .diff-tab:hover {
-    border-color: var(--border-light);
     color: var(--text-primary);
 }
 
 .diff-tab.active {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--text-on-accent);
+    border-bottom-color: var(--accent);
+    color: var(--accent-dim);
 }
 
 .diff-tab.locked {
-    opacity: 0.4;
+    color: var(--text-muted);
     cursor: not-allowed;
 }
 
 .levels-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--border);
+}
+
+.level-btn:focus {
+    z-index: 1;
+    outline: 0;
+    box-shadow: inset 0 0 0 3px var(--accent);
 }
 
 .level-btn {
-    color: inherit;
-    font-family: inherit;
+    min-height: 126px;
+    padding: 19px 12px;
+    border: 0;
+    border-radius: 0;
     background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 12px;
-    text-align: center;
+    color: inherit;
     cursor: pointer;
-    transition: all var(--transition);
+    text-align: center;
+    transition: background var(--transition);
 }
 
 .level-btn:hover:not(.locked) {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    background: var(--bg-secondary);
 }
 
 .level-btn.locked {
-    opacity: 0.35;
+    background: #e8e3d9;
+    color: var(--text-secondary);
     cursor: not-allowed;
 }
 
 .level-btn.completed {
-    border-color: var(--success-dim);
-    background: var(--success-bg);
+    box-shadow: inset 0 -4px 0 var(--success-dim);
 }
 
 .level-btn .level-num {
-    font-size: 1.5rem;
-    font-weight: 700;
     display: block;
+    font-family: var(--font-editorial);
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
 }
 
 .level-btn .level-status {
-    font-size: 0.7rem;
+    display: block;
+    margin-top: 11px;
     color: var(--text-muted);
-    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.055em;
+    line-height: 1.35;
+    text-transform: uppercase;
 }
 
 .level-btn.completed .level-status {
-    color: var(--success);
+    color: var(--success-dim);
+}
+
+#levelProgressInfo {
+    margin-top: 32px;
+}
+
+#levelProgressInfo .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.level-progress-value {
+    font-size: 1.2rem;
 }

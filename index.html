@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#171715" />
         <meta
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; form-action 'none'"
@@ -43,14 +44,22 @@
             aria-controls="sidebar"
             aria-expanded="false"
         >
-            ☰
+            Menü
         </button>
+        <button
+            class="sidebar-backdrop"
+            id="sidebarBackdrop"
+            type="button"
+            aria-label="Menü schließen"
+            tabindex="-1"
+        ></button>
 
         <div class="app-container">
             <!-- Sidebar -->
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-header">
-                    <h1>⌨️ TippTrainer</h1>
+                    <div class="brand-kicker">Training / StBW</div>
+                    <h1>TippTrainer</h1>
                     <div class="subtitle">Steuerberaterprüfung Baden-Württemberg</div>
                 </div>
 
@@ -60,47 +69,48 @@
                         <span id="xpPoints">0 XP</span>
                     </div>
                     <div class="xp-bar-container">
-                        <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+                        <div class="xp-bar-fill" id="xpBar"></div>
                     </div>
                 </div>
 
-                <nav>
+                <nav aria-label="Hauptnavigation">
                     <ul class="nav-list">
                         <li>
                             <button class="nav-item active" data-view="dashboard" aria-current="page">
-                                <span class="nav-icon">🏠</span> Dashboard
+                                <span class="nav-icon">01</span> Übersicht
                             </button>
                         </li>
                         <li>
                             <button class="nav-item" data-view="levels">
-                                <span class="nav-icon">📚</span> Levelauswahl
+                                <span class="nav-icon">02</span> Levelauswahl
                             </button>
                         </li>
                         <li>
                             <button class="nav-item" data-view="calendar">
-                                <span class="nav-icon">📅</span> Kalender
+                                <span class="nav-icon">03</span> Kalender
                             </button>
                         </li>
                         <li>
                             <button class="nav-item" data-view="achievements">
-                                <span class="nav-icon">🏆</span> Achievements
+                                <span class="nav-icon">04</span> Leistungen
                             </button>
                         </li>
                         <li>
                             <button class="nav-item" data-view="progress">
-                                <span class="nav-icon">📈</span> Fortschritt
+                                <span class="nav-icon">05</span> Fortschritt
                             </button>
                         </li>
                         <li>
                             <button class="nav-item" data-view="settings">
-                                <span class="nav-icon">⚙️</span> Einstellungen
+                                <span class="nav-icon">06</span> Einstellungen
                             </button>
                         </li>
                     </ul>
                 </nav>
 
                 <div class="sidebar-footer">
-                    <span class="countdown" id="sidebarCountdown"></span> Tage bis zur Prüfung
+                    <span class="countdown" id="sidebarCountdown"></span>
+                    <span class="countdown-label">Tage bis zur Prüfung</span>
                 </div>
             </aside>
 
@@ -109,14 +119,18 @@
                 <!-- ===== DASHBOARD ===== -->
                 <div class="view active" id="view-dashboard">
                     <div class="dashboard-header">
-                        <h2>Willkommen zurück!</h2>
+                        <div>
+                            <p class="view-kicker">Lernübersicht</p>
+                            <h2>Bereit für die nächste Zeile?</h2>
+                        </div>
                         <div class="countdown-badge" id="dashboardCountdown"></div>
                     </div>
 
-                    <div class="stats-grid" id="dashboardStats"></div>
-
                     <h3 class="section-title">Themenbereiche</h3>
                     <div class="topics-grid" id="dashboardTopics"></div>
+
+                    <h3 class="section-title">Trainingsstand</h3>
+                    <div class="stats-grid" id="dashboardStats"></div>
 
                     <h3 class="section-title">Letzte Übungen</h3>
                     <div id="recentSessions"></div>
@@ -126,25 +140,27 @@
                 <div class="view" id="view-levels" tabindex="-1">
                     <div class="level-header">
                         <button class="back-btn" id="backToDashboard">← Zurück</button>
+                        <p class="view-kicker">Themenbereich</p>
                         <h2 id="levelTitle">Levelauswahl</h2>
                     </div>
 
                     <div class="difficulty-tabs" id="difficultyTabs"></div>
                     <div class="levels-grid" id="levelsGrid"></div>
 
-                    <div id="levelProgressInfo" style="margin-top: 24px"></div>
+                    <div id="levelProgressInfo"></div>
                 </div>
 
                 <!-- ===== TYPING ===== -->
                 <div class="view" id="view-typing">
                     <div class="typing-container">
+                        <h2 class="visually-hidden">Tippübung</h2>
                         <div class="typing-info-bar">
                             <div class="typing-meta">
                                 <span id="typingTopic"></span>
                                 <span id="typingLevel"></span>
                                 <span id="typingDifficulty"></span>
                             </div>
-                            <button class="btn btn-sm btn-secondary" id="typingBack">← Zurück</button>
+                            <button class="btn btn-sm btn-secondary" id="typingBack">Zurück</button>
                         </div>
 
                         <div class="typing-stats-bar">
@@ -175,15 +191,15 @@
                                 class="typing-input"
                                 id="typingInput"
                                 aria-label="Übungstext eingeben"
-                                placeholder="Klicke hier und beginne zu tippen..."
+                                placeholder="Hier tippen …"
                                 autocomplete="off"
                                 autocorrect="off"
                                 autocapitalize="off"
                                 spellcheck="false"
                             />
                             <div class="typing-actions">
-                                <button class="btn btn-secondary" id="btnRestart">🔄 Neustart</button>
-                                <button class="btn btn-secondary" id="btnSkip">⏭️ Nächster Text</button>
+                                <button class="btn btn-secondary" id="btnRestart">Neustart</button>
+                                <button class="btn btn-secondary" id="btnSkip">Nächster Text</button>
                             </div>
                         </div>
                     </div>
@@ -191,7 +207,10 @@
 
                 <!-- ===== CALENDAR ===== -->
                 <div class="view" id="view-calendar">
-                    <h2 style="margin-bottom: 24px">📅 Übungskalender</h2>
+                    <div class="view-header">
+                        <p class="view-kicker">Trainingsrhythmus</p>
+                        <h2>Übungskalender</h2>
+                    </div>
 
                     <div class="calendar-container">
                         <div class="calendar-nav">
@@ -213,29 +232,19 @@
                                 <span>Mo</span><span>Di</span><span>Mi</span> <span>Do</span><span>Fr</span
                                 ><span>Sa</span><span>So</span>
                             </div>
-                            <div class="calendar-days" id="calendarDays"></div>
+                            <div
+                                class="calendar-days"
+                                id="calendarDays"
+                                role="list"
+                                aria-label="Trainingstage des ausgewählten Monats"
+                            ></div>
                             <div class="calendar-legend">
                                 <span>Weniger</span>
-                                <div
-                                    class="legend-block"
-                                    style="background: rgba(var(--success-rgb), 0.15)"
-                                ></div>
-                                <div
-                                    class="legend-block"
-                                    style="background: rgba(var(--success-rgb), 0.3)"
-                                ></div>
-                                <div
-                                    class="legend-block"
-                                    style="background: rgba(var(--success-rgb), 0.5)"
-                                ></div>
-                                <div
-                                    class="legend-block"
-                                    style="background: rgba(var(--success-rgb), 0.7)"
-                                ></div>
-                                <div
-                                    class="legend-block"
-                                    style="background: rgba(var(--success-rgb), 0.9)"
-                                ></div>
+                                <div class="legend-block intensity-1"></div>
+                                <div class="legend-block intensity-2"></div>
+                                <div class="legend-block intensity-3"></div>
+                                <div class="legend-block intensity-4"></div>
+                                <div class="legend-block intensity-5"></div>
                                 <span>Mehr</span>
                             </div>
                         </div>
@@ -246,14 +255,20 @@
 
                 <!-- ===== ACHIEVEMENTS ===== -->
                 <div class="view" id="view-achievements">
-                    <h2 style="margin-bottom: 8px">🏆 Achievements</h2>
+                    <div class="view-header compact">
+                        <p class="view-kicker">Erreichte Marken</p>
+                        <h2>Leistungen</h2>
+                    </div>
                     <div class="achievement-summary" id="achievementSummary"></div>
                     <div class="achievements-grid" id="achievementsGrid"></div>
                 </div>
 
                 <!-- ===== PROGRESS ===== -->
                 <div class="view" id="view-progress">
-                    <h2 style="margin-bottom: 24px">📈 Fortschritt</h2>
+                    <div class="view-header">
+                        <p class="view-kicker">Auswertung</p>
+                        <h2>Fortschritt</h2>
+                    </div>
 
                     <div class="progress-filters" id="progressFilters">
                         <select id="filterTopic">
@@ -270,28 +285,28 @@
                     <div class="stats-grid" id="progressStats"></div>
 
                     <div class="progress-chart">
-                        <div class="chart-title">WPM-Entwicklung</div>
+                        <h3 class="chart-title">WPM-Entwicklung</h3>
                         <div class="bar-chart" id="wpmChart"></div>
                     </div>
 
                     <div class="progress-chart">
-                        <div class="chart-title">Genauigkeit-Entwicklung</div>
+                        <h3 class="chart-title">Genauigkeit-Entwicklung</h3>
                         <div class="bar-chart" id="accuracyChart"></div>
                     </div>
 
                     <div class="progress-chart">
-                        <div class="chart-title">Letzte Übungen</div>
-                        <div style="overflow-x: auto">
+                        <h3 class="chart-title">Letzte Übungen</h3>
+                        <div class="sessions-scroll">
                             <table class="sessions-table" id="sessionsTable">
                                 <thead>
                                     <tr>
-                                        <th>Datum</th>
-                                        <th>Thema</th>
-                                        <th>Level</th>
-                                        <th>Schwierigkeit</th>
-                                        <th>WPM</th>
-                                        <th>Genauigkeit</th>
-                                        <th>Zeit</th>
+                                        <th scope="col">Datum</th>
+                                        <th scope="col">Thema</th>
+                                        <th scope="col">Level</th>
+                                        <th scope="col">Schwierigkeit</th>
+                                        <th scope="col">WPM</th>
+                                        <th scope="col">Genauigkeit</th>
+                                        <th scope="col">Zeit</th>
                                     </tr>
                                 </thead>
                                 <tbody id="sessionsBody"></tbody>
@@ -302,7 +317,10 @@
 
                 <!-- ===== SETTINGS ===== -->
                 <div class="view" id="view-settings">
-                    <h2 style="margin-bottom: 24px">⚙️ Einstellungen</h2>
+                    <div class="view-header">
+                        <p class="view-kicker">Konfiguration</p>
+                        <h2>Einstellungen</h2>
+                    </div>
 
                     <div class="settings-container">
                         <div class="settings-section">
@@ -314,7 +332,7 @@
                                 </div>
                             </div>
                             <div class="settings-row">
-                                <label id="daysUntilLabel"></label>
+                                <p class="settings-label" id="daysUntilLabel"></p>
                                 <div class="setting-control"></div>
                             </div>
                         </div>
@@ -322,28 +340,28 @@
                         <div class="settings-section">
                             <h3>Daten</h3>
                             <div class="settings-row">
-                                <label>Fortschritt exportieren</label>
+                                <span class="settings-label">Fortschritt exportieren</span>
                                 <div class="setting-control">
                                     <button class="btn btn-sm btn-secondary" id="btnExport">
-                                        📥 Exportieren
+                                        Exportieren
                                     </button>
                                 </div>
                             </div>
                             <div class="settings-row">
-                                <label>Fortschritt importieren</label>
+                                <span class="settings-label">Fortschritt importieren</span>
                                 <div class="setting-control">
-                                    <input type="file" id="importFile" accept=".json" style="display: none" />
+                                    <input class="hidden-input" type="file" id="importFile" accept=".json" />
                                     <button class="btn btn-sm btn-secondary" id="btnImport">
-                                        📤 Importieren
+                                        Importieren
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="settings-section danger-zone">
-                            <h3>⚠️ Gefahrenzone</h3>
+                            <h3>Gefahrenzone</h3>
                             <div class="settings-row">
-                                <label>Level-Fortschritt zurücksetzen</label>
+                                <span class="settings-label">Level-Fortschritt zurücksetzen</span>
                                 <div class="setting-control">
                                     <button class="btn btn-sm btn-danger" id="btnResetLevels">
                                         Zurücksetzen
@@ -351,7 +369,7 @@
                                 </div>
                             </div>
                             <div class="settings-row">
-                                <label>Alle Daten löschen</label>
+                                <span class="settings-label">Alle Daten löschen</span>
                                 <div class="setting-control">
                                     <button class="btn btn-sm btn-danger" id="btnResetAll">
                                         Alles löschen

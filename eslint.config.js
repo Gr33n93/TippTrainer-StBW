@@ -98,6 +98,20 @@ export default [
         }
     },
     {
+        files: ['tests/**/*.cjs'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'commonjs',
+            globals: globals.node
+        },
+        rules: {
+            'no-console': 'off',
+            'prefer-const': 'error',
+            'no-var': 'error',
+            eqeqeq: ['error', 'always', { null: 'ignore' }]
+        }
+    },
+    {
         ignores: ['node_modules/', 'dist/', 'dist-electron/', 'build/', '**/*.min.js']
     }
 ];

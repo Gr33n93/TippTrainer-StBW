@@ -23,7 +23,7 @@ const SettingsView = (() => {
             current.targetDate = dateInput.value;
             if (!Storage.saveSettings(current)) {
                 refresh();
-                Dom.showToast('❌', 'Speichern fehlgeschlagen', 'Das Prüfungsdatum wurde nicht geändert.');
+                Dom.showToast('!', 'Speichern fehlgeschlagen', 'Das Prüfungsdatum wurde nicht geändert.');
                 return;
             }
             DashboardView.render();
@@ -52,7 +52,7 @@ const SettingsView = (() => {
             a.download = `tipptrainer-backup-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            Dom.showToast('✅', 'Export erfolgreich', 'Daten wurden heruntergeladen.');
+            Dom.showToast('OK', 'Export erfolgreich', 'Daten wurden heruntergeladen.');
         });
     }
 
@@ -65,7 +65,7 @@ const SettingsView = (() => {
             const file = e.target.files[0];
             if (!file) return;
             if (file.size > MAX_IMPORT_BYTES) {
-                Dom.showToast('❌', 'Import fehlgeschlagen', 'Die Backup-Datei ist größer als 10 MB.');
+                Dom.showToast('!', 'Import fehlgeschlagen', 'Die Backup-Datei ist größer als 10 MB.');
                 e.target.value = '';
                 return;
             }
@@ -75,15 +75,15 @@ const SettingsView = (() => {
                 try {
                     const data = JSON.parse(evt.target.result);
                     if (Storage.importAll(data)) {
-                        Dom.showToast('✅', 'Import erfolgreich', 'Alle Daten wurden wiederhergestellt.');
+                        Dom.showToast('OK', 'Import erfolgreich', 'Alle Daten wurden wiederhergestellt.');
                         ChromeView.updateXPDisplay();
                         DashboardView.render();
                         refresh();
                     } else {
-                        Dom.showToast('❌', 'Import fehlgeschlagen', 'Ungültiges Dateiformat.');
+                        Dom.showToast('!', 'Import fehlgeschlagen', 'Ungültiges Dateiformat.');
                     }
                 } catch {
-                    Dom.showToast('❌', 'Import fehlgeschlagen', 'Datei konnte nicht gelesen werden.');
+                    Dom.showToast('!', 'Import fehlgeschlagen', 'Datei konnte nicht gelesen werden.');
                 }
             };
             reader.readAsText(file);
@@ -95,10 +95,10 @@ const SettingsView = (() => {
         Dom.byId('btnResetLevels').addEventListener('click', () => {
             if (!Dom.confirm('Level-Fortschritt wirklich zurücksetzen?')) return;
             if (!Levels.resetAllProgress()) {
-                Dom.showToast('❌', 'Zurücksetzen fehlgeschlagen', 'Der Level-Fortschritt blieb erhalten.');
+                Dom.showToast('!', 'Zurücksetzen fehlgeschlagen', 'Der Level-Fortschritt blieb erhalten.');
                 return;
             }
-            Dom.showToast('🔄', 'Zurückgesetzt', 'Level-Fortschritt wurde gelöscht.');
+            Dom.showToast('↺', 'Zurückgesetzt', 'Level-Fortschritt wurde gelöscht.');
             DashboardView.render();
         });
     }
@@ -108,11 +108,11 @@ const SettingsView = (() => {
             if (!Dom.confirm('ALLE Daten wirklich löschen? Dies kann nicht rückgängig gemacht werden!'))
                 return;
             if (!Storage.clearAll()) {
-                Dom.showToast('❌', 'Löschen fehlgeschlagen', 'Nicht alle Daten konnten entfernt werden.');
+                Dom.showToast('!', 'Löschen fehlgeschlagen', 'Nicht alle Daten konnten entfernt werden.');
                 refresh();
                 return;
             }
-            Dom.showToast('🗑️', 'Gelöscht', 'Alle Daten wurden entfernt.');
+            Dom.showToast('×', 'Gelöscht', 'Alle Daten wurden entfernt.');
             ChromeView.updateXPDisplay();
             DashboardView.render();
             refresh();

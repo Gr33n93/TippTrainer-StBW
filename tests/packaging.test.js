@@ -10,9 +10,20 @@ function read(relativePath) {
 
 describe('Packaging und CI', () => {
     const packageJson = JSON.parse(read('package.json'));
+    const packageLock = JSON.parse(read('package-lock.json'));
     const builder = read('electron-builder.yml');
     const metaInfo = read('build/de.gr33n93.TippTrainer.metainfo.xml');
     const desktopPath = `build/${packageJson.desktopName}`;
+
+    it('hält Paket-, Lockfile- und neueste AppStream-Version synchron', () => {
+        const newestAppStreamRelease = metaInfo.match(
+            /<releases>\s*<release version="([^"]+)" date="([^"]+)">/
+        );
+        assert.equal(packageLock.version, packageJson.version);
+        assert.equal(packageLock.packages[''].version, packageJson.version);
+        assert.equal(newestAppStreamRelease?.[1], packageJson.version);
+        assert.match(newestAppStreamRelease?.[2] || '', /^\d{4}-\d{2}-\d{2}$/);
+    });
 
     it('verwendet eine konsistente Desktop- und AppStream-Identität', () => {
         const appId = packageJson.desktopName.replace(/\.desktop$/, '');
@@ -39,6 +50,10 @@ describe('Packaging und CI', () => {
     it('erzeugt eine am Release-Ort prüfbare SHA-256-Datei', () => {
         const workflow = read('.github/workflows/build.yml');
         assert.match(workflow, /working-directory: dist-electron\s+run: sha256sum \.\/\*\.AppImage/);
+        assert.match(
+            builder,
+            /appImage:\s+[\s\S]*?artifactName: TippTrainer-StBW-\$\{version\}-\$\{arch\}\.AppImage/
+        );
     });
 
     it('erzwingt im AppImage keinen globalen Chromium-Sandbox-Opt-out', () => {
@@ -68,7 +83,9 @@ describe('Packaging und CI', () => {
         );
         assert.match(qualityWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
         assert.match(qualityWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
-        assert.match(releaseWorkflow, /sudo apt-get install --yes xvfb/);
+        assert.match(releaseWorkflow, /sudo apt-get install --yes appstream desktop-file-utils xvfb/);
+        assert.match(releaseWorkflow, /appstreamcli validate --no-net/);
+        assert.match(releaseWorkflow, /desktop-file-validate/);
         assert.match(
             releaseWorkflow,
             /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/
@@ -79,5 +96,7 @@ describe('Packaging und CI', () => {
         );
         assert.match(releaseWorkflow, /sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/);
         assert.match(releaseWorkflow, /sudo chmod 4755 node_modules\/electron\/dist\/chrome-sandbox/);
+        assert.match(releaseWorkflow, /tipptrainer-stbw --disable-gpu --smoke-test/);
+        assert.match(releaseWorkflow, /test "\$status" -eq 0/);
     });
 });

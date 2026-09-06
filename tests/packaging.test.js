@@ -8,6 +8,16 @@ function read(relativePath) {
     return fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 }
 
+function workflowJob(workflow, jobId) {
+    const lines = workflow.split(/\r?\n/);
+    const start = lines.findIndex((line) => line === `    ${jobId}:`);
+    assert.notEqual(start, -1, `Workflow-Job ${jobId} fehlt`);
+
+    let end = start + 1;
+    while (end < lines.length && !/^ {4}[a-zA-Z0-9_-]+:\s*$/.test(lines[end])) end += 1;
+    return lines.slice(start, end).join('\n');
+}
+
 describe('Packaging und CI', () => {
     const packageJson = JSON.parse(read('package.json'));
     const packageLock = JSON.parse(read('package-lock.json'));
@@ -31,6 +41,9 @@ describe('Packaging und CI', () => {
         assert.match(builder, /executableName: tipptrainer-stbw/);
         assert.match(builder, /syncDesktopName: true/);
         assert.match(metaInfo, new RegExp(`<launchable type="desktop-id">${packageJson.desktopName}</`));
+        assert.match(metaInfo, /<developer_name>gr33n93<\/developer_name>/);
+        assert.doesNotMatch(metaInfo, /<developer(?:\s|>)/);
+        assert.doesNotMatch(metaInfo, /<url type="vcs-browser">/);
         assert.equal(fs.existsSync(path.join(projectRoot, desktopPath)), true);
 
         const desktop = read(desktopPath);
@@ -71,8 +84,21 @@ describe('Packaging und CI', () => {
     it('prüft das responsive Layout im echten Electron-Browser', () => {
         const qualityWorkflow = read('.github/workflows/lint.yml');
         const releaseWorkflow = read('.github/workflows/build.yml');
+        const metadataCompatJob = workflowJob(qualityWorkflow, 'metadata-compat');
+        const packageSmokeJob = workflowJob(qualityWorkflow, 'package-smoke');
         assert.equal(packageJson.scripts['test:layout'], 'electron tests/electron-layout.cjs');
         assert.match(qualityWorkflow, /sudo apt-get install --yes appstream desktop-file-utils xvfb/);
+        assert.match(metadataCompatJob, /runs-on: ubuntu-22\.04/);
+        assert.match(metadataCompatJob, /sudo apt-get install --yes appstream desktop-file-utils/);
+        assert.match(
+            metadataCompatJob,
+            /appstreamcli validate --no-net build\/de\.gr33n93\.TippTrainer\.metainfo\.xml/
+        );
+        assert.match(metadataCompatJob, /desktop-file-validate build\/de\.gr33n93\.TippTrainer\.desktop/);
+        assert.match(packageSmokeJob, /needs: \[quality, metadata-compat\]/);
+        assert.match(packageSmokeJob, /if: always\(\)/);
+        assert.match(packageSmokeJob, /test "\$\{\{ needs\.quality\.result \}\}" = "success"/);
+        assert.match(packageSmokeJob, /test "\$\{\{ needs\.metadata-compat\.result \}\}" = "success"/);
         assert.match(
             qualityWorkflow,
             /node node_modules\/electron\/install\.js[\s\S]*sudo chown root:root node_modules\/electron\/dist\/chrome-sandbox/

@@ -55,13 +55,14 @@ Vollständig implementiert und einsatzbereit. Alle 4 Schwierigkeitsstufen mit Te
 - Electron mit CSP, Navigationssperre und minimalen Flatpak-Rechten gehärtet
 - GitHub Actions als Node-22/24-Quality-Matrix mit vollständigem Release-Gate ausgebaut
 
-### 2026-09-06 (Session 6) – Prüfungsatelier und Release 1.1.0
+### 2026-09-06 (Session 6) – Prüfungsatelier und Release 1.1.1
 
 - Vollständiges visuelles Redesign als ruhiges, redaktionelles Prüfungsatelier
 - Responsive Navigation, Tabellen, Diagramme, Kalender und Ergebnisdialog barriereärmer gestaltet
 - Electron-Produktionsstart, Sandbox und paketiertes ASAR durch echte Layout- und Klicktests abgesichert
 - Testsuite auf 160 Prüfungen erweitert; 97,85 % Zeilen- und 86,04 % Branch-Abdeckung erreicht
 - Release-Pipeline um Metadatenvalidierung, Binär-Smoke-Test und SHA-256-Prüfsumme ergänzt
+- Der veröffentlichte Tag 1.1.0 erzeugte weder Binärartefakt noch GitHub-Release; 1.1.1 ersetzt ihn mit kompatiblen Metadaten
 
 ## Offene Aufgaben
 

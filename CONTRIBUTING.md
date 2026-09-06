@@ -59,14 +59,20 @@ npm start               # App direkt in Electron starten (ohne Build)
 
 ### Variante B: Via GitHub Actions (empfohlen)
 
-1. **Vorprüfung:** `npm run verify`
-2. **Version setzen:** dieselbe neue Version in `package.json`, `package-lock.json` und den
-   AppStream-Metadaten eintragen
-3. **Annotierten Tag erstellen:** `git tag -a vX.Y.Z -m "Release vX.Y.Z"` und mit
-   `git push origin vX.Y.Z` veröffentlichen; vorhandene Tags nie wiederverwenden
-4. **CI baut automatisch:** Workflow `Release AppImage` startet
-5. **Artefakte herunterladen:** Im Tab "Actions" → Run → "Artifacts"
-6. **Oder Release:** Bei Tags wird automatisch ein GitHub-Release samt SHA-256-Prüfsumme erstellt
+1. **Release-Branch vorbereiten:** `npm run verify` ausführen und dieselbe neue Version in
+   `package.json`, `package-lock.json` und den AppStream-Metadaten eintragen
+2. **Release-PR prüfen:** Pull Request öffnen und alle erforderlichen Quality-Checks abwarten
+3. **Nach `main` mergen:** anschließend auch die Checks des Merge-Commits abwarten
+4. **Release-Build testen:** Workflow `Release AppImage` über "Run workflow" manuell auf
+   `main` starten, das AppImage-Artefakt herunterladen und die Datei `SHA256SUMS.txt` prüfen
+5. **Commit abgleichen:** sicherstellen, dass lokales `main`, `origin/main` und der geprüfte
+   Workflow-Commit dieselbe SHA besitzen
+6. **Neuen annotierten Tag erstellen:** `git tag -a vX.Y.Z -m "Release vX.Y.Z"` und mit
+   `git push origin vX.Y.Z` veröffentlichen; vorhandene oder bereits veröffentlichte Tags nie
+   verschieben oder wiederverwenden
+7. **Tag-Workflow abwarten:** Der Tag startet `Release AppImage` und erstellt den GitHub-Release
+8. **Release prüfen:** AppImage und `SHA256SUMS.txt` aus dem Release herunterladen und die
+   SHA-256-Prüfsumme nochmals lokal verifizieren
 
 ## Code-Qualität
 
